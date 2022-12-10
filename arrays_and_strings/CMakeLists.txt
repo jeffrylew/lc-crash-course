@@ -3,6 +3,7 @@ set(
   "check_if_palindrome"
   "check_for_target"
   "combine"
+  "is_subsequence"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
