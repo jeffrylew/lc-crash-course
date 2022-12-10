@@ -2,7 +2,7 @@
 
 #include <vector>
 
-static bool checkForTarget(std::vector<int>& nums, int target)
+static bool checkForTarget(std::vector<int> nums, int target)
 {
     //! @detail Time complexity O(n), space complexity O(1)
     
