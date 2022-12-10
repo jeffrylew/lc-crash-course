@@ -2,6 +2,7 @@ set(
   cpp_files
   "check_if_palindrome"
   "check_for_target"
+  "combine"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
