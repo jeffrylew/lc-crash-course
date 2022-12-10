@@ -4,6 +4,8 @@
 
 static bool checkIfPalindrome(std::string s)
 {
+    //! @detail Time complexity O(n), space complexity O(1)
+    
     int left {};
     int right {s.size() - 1}; // Assuming s isn't empty
 
