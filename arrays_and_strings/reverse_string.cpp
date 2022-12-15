@@ -24,6 +24,13 @@ static void reverseStringFA(std::vector<char>& s)
 
 } // static void reverseStringFA( ...
 
+//! @brief First discussion solution
+//! @param[in,out] s Vector of chars to reverse
+static void reverseStringDS1(std::vector<char>& s)
+{
+    std::reverse(s.begin(), s.end());
+}
+
 TEST(ReverseStringTest, SampleTest)
 {
     const std::vector<char> input {'h', 'e', 'l', 'l', 'o'};
@@ -31,8 +38,13 @@ TEST(ReverseStringTest, SampleTest)
 
     auto s_fa = input;
     reverseStringFA(s_fa);
-
     EXPECT_TRUE(std::equal(expected_output.cbegin(),
                            expected_output.cend(),
                            s_fa.cbegin()));
+    
+    auto s_ds1 = input;
+    reverseStringDS1(s_ds1);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           s_ds1.cbegin()));
 }
