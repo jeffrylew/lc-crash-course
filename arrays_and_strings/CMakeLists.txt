@@ -4,6 +4,7 @@ set(
   "check_for_target"
   "combine"
   "is_subsequence"
+  "reverse_string"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
