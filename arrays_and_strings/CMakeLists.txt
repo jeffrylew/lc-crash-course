@@ -5,6 +5,7 @@ set(
   "combine"
   "is_subsequence"
   "reverse_string"
+  "squares_of_a_sorted_array"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
