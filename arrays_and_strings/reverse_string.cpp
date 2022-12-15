@@ -64,6 +64,25 @@ static void reverseStringDS2(std::vector<char>& s)
     DS2Helper(s, 0, static_cast<int>(s.size()) - 1);
 }
 
+//! @brief Third discussion solution, two pointers approach like FA solution
+//! @param[in,out] s Vector of chars to reverse
+static void reverseStringDS3(std::vector<char>& s)
+{
+    //! @details Space complexity O(1)
+    //!          Time complexity O(s.size()) to swap s.size()/2 elements
+
+    int  left {};
+    auto right = static_cast<int>(s.size()) - 1;
+
+    while (left < right)
+    {
+        auto tmp   = s[left];
+        s[left++]  = s[right];
+        s[right--] = tmp;
+    }
+
+} // static void reverseStringDS3( ...
+
 TEST(ReverseStringTest, SampleTest)
 {
     const std::vector<char> input {'h', 'e', 'l', 'l', 'o'};
@@ -86,4 +105,10 @@ TEST(ReverseStringTest, SampleTest)
     EXPECT_TRUE(std::equal(expected_output.cbegin(),
                            expected_output.cend(),
                            s_ds2.cbegin()));
+    
+    auto s_ds3 = input;
+    reverseStringDS3(s_ds3);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           s_ds3.cbegin()));
 }
