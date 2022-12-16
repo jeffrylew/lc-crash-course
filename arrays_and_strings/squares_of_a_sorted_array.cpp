@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <cmath>
 #include <vector>
 
 //! @brief Helper function to compute the square
@@ -125,6 +126,39 @@ static std::vector<int> sortedSquaresDS1(std::vector<int>& nums)
 
 } // static std::vector<int> sortedSquaresDS1( ...
 
+//! @brief Second discussion solution using two pointers
+//! @param[in] nums Vector of integers in non-decreasing order (should be const)
+//! @return Vector of squares of each element sorted in non-decreasing order
+static std::vector<int> sortedSquaresDS2(std::vector<int>& nums)
+{
+    //! @details Time complexity O(N) where N = nums.size()
+    //!          Space complexity O(N) if take output into account, else O(1)
+
+    std::vector<int> output(nums.size());
+    const auto       N = static_cast<int>(nums.size());
+
+    int left {};
+    int right {N - 1};
+
+    //! Populating output vector from back so want to fill biggest squares first
+    for (int i = N - 1; i >= 0; --i)
+    {
+        int square;
+        if (std::abs(nums[left]) < std::abs(nums[right]))
+        {
+            square = nums[right--];
+        }
+        else
+        {
+            square = nums[left++];
+        }
+        result[i] = square * square;
+    }
+
+    return result;
+
+} // static std::vector<int> sortedSquaresDS2( ...
+
 TEST(SortedSquaresTest, SampleTest)
 {
     std::vector<int>       nums {-4, -1, 0, 3, 10};
@@ -139,4 +173,9 @@ TEST(SortedSquaresTest, SampleTest)
     EXPECT_TRUE(std::equal(expected_output.cbegin(),
                            expected_output.cend(),
                            resultDS1.cbegin()));
+    
+    const auto resultDS2 = sortedSquaresDS2(nums);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           resultDS2.cbegin()));
 }
