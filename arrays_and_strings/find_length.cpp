@@ -17,7 +17,7 @@ static int findLength(std::vector<int> nums, int k)
     //!          Space complexity is O(1) since only using 3 integer variables
 
     int left {};
-    int curr {};
+    int curr {}; // Tracks sum of current window/subarray
     int max_subarray_size {};
 
     for (int right = 0; right < static_cast<int>(nums.size()); ++right)
