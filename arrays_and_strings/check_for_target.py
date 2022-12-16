@@ -1,4 +1,4 @@
-def check_for_target(nums: list[int], target: int) -> bool:
+def check_for_target(nums: List[int], target: int) -> bool:
     left = 0
     right = len(nums) - 1
 
