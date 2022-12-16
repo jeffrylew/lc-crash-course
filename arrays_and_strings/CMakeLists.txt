@@ -3,6 +3,7 @@ set(
   "check_if_palindrome"
   "check_for_target"
   "combine"
+  "find_length"
   "is_subsequence"
   "reverse_string"
   "squares_of_a_sorted_array"
