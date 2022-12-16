@@ -4,6 +4,7 @@ set(
   "check_for_target"
   "combine"
   "find_length"
+  "find_length_of_binary_str"
   "is_subsequence"
   "reverse_string"
   "squares_of_a_sorted_array"
