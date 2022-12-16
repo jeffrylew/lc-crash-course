@@ -9,7 +9,7 @@ let helper = (s, left, right) => {
     s[right--] = tmp;
 
     helper(s, left, right);
-};
+}
 
 /**
  * Recursive solution
@@ -18,7 +18,7 @@ let helper = (s, left, right) => {
  */
 var reverseStringRecursive = function(s) {
     helper(s, 0, s.length - 1);
-};
+}
 
 let reverseStringTwoPointers = (s) => {
     let left  = 0;
