@@ -15,7 +15,7 @@ static int square(int num)
 //! @brief First attempt solution
 //! @param[in] nums Vector of integers in non-decreasing order (should be const)
 //! @return Vector of squares of each element sorted in non-decreasing order
-std::vector<int> sortedSquaresFA(std::vector<int>& nums)
+static std::vector<int> sortedSquaresFA(std::vector<int>& nums)
 {
     //! @details Space complexity O(nums_size)
     //!          Time complexity O(nums_size). In the worst case we will iterate
@@ -96,7 +96,34 @@ std::vector<int> sortedSquaresFA(std::vector<int>& nums)
     
     return output;
 
-} // std::vector<int> sortedSquaresFA( ...
+} // static std::vector<int> sortedSquaresFA( ...
+
+//! @brief First discussion solution using std::sort
+//! @param[in] nums Vector of integers in non-decreasing order (should be const)
+//! @return Vector of squares of each element sorted in non-decreasing order
+static std::vector<int> sortedSquaresDS1(std::vector<int>& nums)
+{
+    //! @details https://leetcode.com/problems/squares-of-a-sorted-array/
+    //!          solutions/221849/official-solution/
+    //!
+    //!          Time complexity O(N log N) where N = nums.size() since need
+    //!          to iterate through nums once and std::sort has average case
+    //!          linearithmic O(N log N) time complexity. So O(N) + O(N log N)
+    //!          is O(N log N).
+    //!          Space complexity O(N)
+
+    const auto       N = nums.size();
+    std::vector<int> output(N);
+
+    for (std::size_t i = 0ULL; i < N; ++i)
+    {
+        output[i] = nums[i] * nums[i];
+    }
+
+    std::sort(output.begin(), output.end());
+    return output;
+
+} // static std::vector<int> sortedSquaresDS1( ...
 
 TEST(SortedSquaresTest, SampleTest)
 {
@@ -107,4 +134,9 @@ TEST(SortedSquaresTest, SampleTest)
     EXPECT_TRUE(std::equal(expected_output.cbegin(),
                            expected_output.cend(),
                            resultFA.cbegin()));
+    
+    const auto resultDS1 = sortedSquaresDS1(nums);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           resultDS1.cbegin()));
 }
