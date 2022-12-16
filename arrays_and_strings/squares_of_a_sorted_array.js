@@ -13,7 +13,7 @@ var sortedSquaresDS1 = function(nums) {
 
     ans.sort((a, b) => { return a - b });
     return ans;
-};
+}
 
 let sortedSquaresDS2 = (nums) => {
     const N   = nums.length;
@@ -37,4 +37,4 @@ let sortedSquaresDS2 = (nums) => {
     }
 
     return ans;
-};
+}
