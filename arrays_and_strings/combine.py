@@ -1,4 +1,4 @@
-def combine(arr1: list[int], arr2: list[int]) -> list[int]:
+def combine(arr1: List[int], arr2: List[int]) -> List[int]:
     ans = []
     i = j = 0
 
