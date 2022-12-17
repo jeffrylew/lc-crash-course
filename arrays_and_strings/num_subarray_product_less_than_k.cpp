@@ -11,6 +11,9 @@ static int numSubarrayProductLessThanK(std::vector<int> nums, int k)
     //! @details Time complexity is O(N) where N = nums.size(). Work done in
     //!          each loop iteration is constant.
     //!          Space complexity is O(1)
+    //!
+    //!          Number of subarrays ending at index is length of window after
+    //!          reaching that index.
 
     if (k <= 1)
     {
