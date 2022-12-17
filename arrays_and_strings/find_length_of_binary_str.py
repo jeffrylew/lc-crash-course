@@ -1,4 +1,4 @@
-def find_length_of_binary_str(s):
+def find_length_of_binary_str(s: str) -> int:
     left = curr = max_substr_length = 0
     for right in range(len(s)):
         if s[right] == "0":
