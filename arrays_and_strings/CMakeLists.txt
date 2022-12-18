@@ -3,6 +3,7 @@ set(
   "check_if_palindrome"
   "check_for_target"
   "combine"
+  "find_best_subarray"
   "find_length"
   "find_length_of_binary_str"
   "is_subsequence"
