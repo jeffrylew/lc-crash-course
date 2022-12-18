@@ -11,7 +11,7 @@ static int findBestSubarray(std::vector<int> nums, int k)
 {
     //! @details Time complexity O(N) where N = nums.size()
     //!          Space complexity O(1)
-    
+
     int curr {};
     for (int i = 0; i < k; ++i)
     {
@@ -29,7 +29,27 @@ static int findBestSubarray(std::vector<int> nums, int k)
 
 } // static int findBestSubarray( ...
 
+static int findBestSubarrayDS2(std::vector<int> nums, int k)
+{
+    int curr {};
+    int largest_sum {};
+
+    for (int i = 0; i < static_cast<int>(nums.size()); ++i)
+    {
+        if (i >= k)
+        {
+            largest_sum = std::max(largest_sum, curr);
+            curr -= nums[i - k];
+        }
+        curr += nums[i];
+    }
+
+    return std::max(largest_sum, curr);
+
+} // static int findBestSubarrayDS2( ...
+
 TEST(FindBestSubarrayTest, SampleTest)
 {
     EXPECT_EQ(18, findBestSubarray({3, -1, 4, 12, -8, 5, 6}, 4));
+    EXPECT_EQ(18, findBestSubarrayDS2({3, -1, 4, 12, -8, 5, 6}, 4));
 }
