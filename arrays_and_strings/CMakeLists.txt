@@ -7,6 +7,7 @@ set(
   "find_length"
   "find_length_of_binary_str"
   "is_subsequence"
+  "maximum_average_subarray"
   "num_subarray_product_less_than_k"
   "reverse_string"
   "squares_of_a_sorted_array"
