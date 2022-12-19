@@ -8,6 +8,7 @@ set(
   "find_length_of_binary_str"
   "is_subsequence"
   "maximum_average_subarray"
+  "max_consecutive_ones_3"
   "num_subarray_product_less_than_k"
   "reverse_string"
   "squares_of_a_sorted_array"
