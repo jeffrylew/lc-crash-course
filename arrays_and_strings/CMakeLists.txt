@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "answer_queries"
   "check_if_palindrome"
   "check_for_target"
   "combine"
