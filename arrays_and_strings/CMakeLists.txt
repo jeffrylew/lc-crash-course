@@ -13,6 +13,7 @@ set(
   "num_subarray_product_less_than_k"
   "number_of_ways_to_split_array"
   "reverse_string"
+  "running_sum_of_1d_array"
   "squares_of_a_sorted_array"
 )
 
