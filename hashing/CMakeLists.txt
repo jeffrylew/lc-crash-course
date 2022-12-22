@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "check_if_sentence_is_pangram"
   "find_numbers"
   "first_letter_to_appear_twice"
   "hash_map_ops"
