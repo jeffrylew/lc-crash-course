@@ -1,6 +1,7 @@
 set(
   cpp_files
   "hash_map_ops"
+  "two_sum"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
