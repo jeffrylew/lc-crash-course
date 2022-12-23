@@ -4,6 +4,7 @@ set(
   "find_numbers"
   "first_letter_to_appear_twice"
   "hash_map_ops"
+  "missing_number"
   "two_sum"
 )
 
