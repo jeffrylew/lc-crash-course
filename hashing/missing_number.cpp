@@ -51,7 +51,43 @@ static int missingNumberFA(std::vector<int> nums)
 
 } // static int missingNumberFA( ...
 
+//! @brief Second attempt solution using sum of numbers in [1, n]
+//! @param[in] nums Vector of n distinct numbers in range [0, n]
+//! @return The only number in the range that is missing from the input vector
+static int missingNumberSA(std::vector<int> nums)
+{
+    //! Size of input is max value of n
+    const auto num_size = static_cast<int>(nums.size());
+
+    //! Sum of numbers in [1, n] is
+    //!     [1 +    2    + ... + (n - 1) + n]
+    //!   + [n + (n - 1) + ... +    2    + 1]
+    //!   = n * (n + 1)/2
+    int sum_1_to_n {num_size * (num_size + 1) / 2};
+
+    //! Flag tracking whether a zero exists or not
+    bool has_zero {};
+
+    for (const auto num : nums)
+    {
+        if (num == 0)
+        {
+            //! Zero int has been found
+            has_zero = true;
+        }
+        else
+        {
+            //! Subtract current num from sum_1_to_n
+            sum_1_to_n -= num;
+        }
+    }
+
+    return !has_zero ? 0 : sum_1_to_n;
+
+} // static int missingNumberSA( ...
+
 TEST(MissingNumberTest, SampleTest)
 {
     EXPECT_EQ(2, missingNumberFA({3, 0, 1}));
+    EXPECT_EQ(2, missingNumberSA({3, 0, 1}));
 }
