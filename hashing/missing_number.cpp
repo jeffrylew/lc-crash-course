@@ -118,9 +118,35 @@ static int missingNumberDS1(std::vector<int> nums)
 
 } // static int missingNumberDS1( ...
 
+//! @brief Second discussion solution using XOR bit manipulation
+//! @param[in] nums Vector of n distinct numbers in range [0, n]
+//! @return The only number in the range that is missing from the input vector
+static int missingNumberDS2(std::vector<int> nums)
+{
+    //! @details Time complexity O(N)
+    //!          Space complexity O(1)
+    //!
+    //!          Index: 0 1 2 3
+    //!          Value: 0 1 3 4, nums.size() = 4
+    //!          missing = 4 ^ (0 ^ 0) ^ (1 ^ 1) ^ (2 ^ 3) ^ (3 ^ 4)
+    //!                  = (4 ^ 4) ^ (0 ^ 0) ^ (1 ^ 1) ^ (3 ^ 3) ^ 2
+    //!                  =    0    ^    0    ^    0    ^    0    ^ 2
+    //!                  = 2
+
+    const auto nums_size = static_cast<int>(nums.size());
+    int        missing {nums_size};
+    for (int i = 0; i < nums_size; ++i)
+    {
+        missing ^= i ^ nums[i];
+    }
+    return missing;
+
+} // static int missingNumberDS2( ...
+
 TEST(MissingNumberTest, SampleTest)
 {
     EXPECT_EQ(2, missingNumberFA({3, 0, 1}));
     EXPECT_EQ(2, missingNumberSA({3, 0, 1}));
     EXPECT_EQ(2, missingNumberDS1({3, 0, 1}));
+    EXPECT_EQ(2, missingNumberDS2({3, 0, 1}));
 }
