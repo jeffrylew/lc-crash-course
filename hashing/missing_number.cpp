@@ -143,10 +143,26 @@ static int missingNumberDS2(std::vector<int> nums)
 
 } // static int missingNumberDS2( ...
 
+//! @brief Third discussion solution using Gauss' formula
+//! @param[in] nums Vector of n distinct numbers in range [0, n]
+//! @return The only number in the range that is missing from the input vector
+static int missingNumberDS3(std::vector<int> nums)
+{
+    //! @details Time complexity O(N)
+    //!          Space complexity O(1)
+
+    const auto nums_size   = static_cast<int>(nums.size());
+    const int  expectedSum = nums_size * (nums_size + 1) / 2;
+    const int  actualSum   = std::accumulate(nums.cbegin(), nums.cend(), 0);
+    return expectedSum - actualSum;
+
+} // static int missingNumberDS3( ...
+
 TEST(MissingNumberTest, SampleTest)
 {
     EXPECT_EQ(2, missingNumberFA({3, 0, 1}));
     EXPECT_EQ(2, missingNumberSA({3, 0, 1}));
     EXPECT_EQ(2, missingNumberDS1({3, 0, 1}));
     EXPECT_EQ(2, missingNumberDS2({3, 0, 1}));
+    EXPECT_EQ(2, missingNumberDS3({3, 0, 1}));
 }
