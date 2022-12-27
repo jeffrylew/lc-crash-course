@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "are_occurrences_equal"
   "check_if_sentence_is_pangram"
   "counting_elements"
   "find_longest_substring"
