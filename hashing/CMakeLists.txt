@@ -9,6 +9,7 @@ set(
   "hash_map_ops"
   "intersection_of_multiple_arrays"
   "missing_number"
+  "subarray_sum_equals_k"
   "two_sum"
 )
 
