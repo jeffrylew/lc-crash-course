@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 def areOccurrencesEqual(s: str) -> bool:
     counts = defaultdict(int)
@@ -7,3 +7,7 @@ def areOccurrencesEqual(s: str) -> bool:
     
     frequencies = counts.values()
     return len(set(frequencies)) == 1
+
+
+def areOccurrencesEqualOneLiner(s: str) -> bool:
+    return len(set(Counter(s).values())) == 1
