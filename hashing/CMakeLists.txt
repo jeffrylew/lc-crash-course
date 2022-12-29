@@ -2,6 +2,7 @@ set(
   cpp_files
   "are_occurrences_equal"
   "check_if_sentence_is_pangram"
+  "count_number_of_nice_subarrays"
   "counting_elements"
   "find_longest_substring"
   "find_numbers"
