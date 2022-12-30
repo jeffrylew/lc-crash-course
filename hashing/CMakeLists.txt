@@ -10,6 +10,7 @@ set(
   "first_letter_to_appear_twice"
   "hash_map_ops"
   "intersection_of_multiple_arrays"
+  "largest_unique_number"
   "missing_number"
   "subarray_sum_equals_k"
   "two_sum"
