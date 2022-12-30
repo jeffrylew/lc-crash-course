@@ -11,6 +11,7 @@ set(
   "hash_map_ops"
   "intersection_of_multiple_arrays"
   "largest_unique_number"
+  "maximum_number_of_balloons"
   "missing_number"
   "subarray_sum_equals_k"
   "two_sum"
