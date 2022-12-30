@@ -144,6 +144,65 @@ static std::vector<std::vector<int>> findWinnersDS2(
 
 } // static std::vector<std::vector<int>> findWinnersDS2( ...
 
+//! @brief Third discussion solution to find players with zero or one losses
+//! @param[in] matches Vector of matches
+//! @return List of players who have not lost and list of players that lost once
+static std::vector<std::vector<int>> findWinnersDS3(
+    std::vector<std::vector<int>> matches)
+{
+    //! @details https://leetcode.com/problems/
+    //!          find-players-with-zero-or-one-losses/solutions/2655744/
+    //!          find-players-with-zero-or-one-losses/
+    //!
+    //!          Auxiliary array lossesCount initialized with -1. For player i,
+    //!          lossesCount[i] = -1, has not played
+    //!          lossesCount[i] = 0, played at least one game and has 0 losses
+    //!          lossesCount[i] = 1, has exactly one loss
+    //!          lossesCount[i] > 1, has more than one loss
+    //!
+    //!          Let N = matches.size() and K = range of values in winner/loser
+    //!          Time complexity O(N + K), O(N) to iterate over matches and
+    //!          update two values in losses_count. O(K) to iterate over
+    //!          lossesCount to collect two kinds of players.
+    //!          Space complexity O(K) for lossesCount vector to cover players
+
+    std::vector<int> lossesCount(100001ULL, -1);
+
+    for (const auto& match : matches)
+    {
+        const int winner {match[0]};
+        const int loser {match[1]};
+        if (lossesCount[winner] == -1)
+        {
+            lossesCount[winner] = 0;
+        }
+        if (lossesCount[loser] == -1)
+        {
+            lossesCount[loser] = 1;
+        }
+        else
+        {
+            ++lossesCount[loser];
+        }
+    }
+
+    std::vector<std::vector<int>> answer(2ULL, std::vector<int> {});
+    for (int i = 1; i < 100001; ++i)
+    {
+        if (lossesCount[i] == 0)
+        {
+            answer[0].push_back(i);
+        }
+        else if (lossesCount[i] == 1)
+        {
+            answer[1].push_back(i);
+        }
+    }
+
+    return answer;
+
+} // static std::vector<std::vector<int>> findWinnersDS3( ...
+
 TEST(FindWinnersTest, SampleTest)
 {
     const std::vector<std::vector<int>> input {{1, 3},
@@ -186,4 +245,13 @@ TEST(FindWinnersTest, SampleTest)
     EXPECT_TRUE(std::equal(expected_output2.cbegin(),
                            expected_output2.cend(),
                            resultDS2.back().cbegin()));
+
+    const auto resultDS3 = findWinnersDS3(input);
+
+    EXPECT_TRUE(std::equal(expected_output1.cbegin(),
+                           expected_output1.cend(),
+                           resultDS3.front().cbegin()));
+    EXPECT_TRUE(std::equal(expected_output2.cbegin(),
+                           expected_output2.cend(),
+                           resultDS3.back().cbegin()));
 }
