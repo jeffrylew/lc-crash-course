@@ -89,6 +89,61 @@ static std::vector<std::vector<int>> findWinnersDS1(
 
 } // static std::vector<std::vector<int>> findWinnersDS1( ...
 
+//! @brief Second discussion solution to find players with zero or one losses
+//! @param[in] matches Vector of matches
+//! @return List of players who have not lost and list of players that lost once
+static std::vector<std::vector<int>> findWinnersDS2(
+    std::vector<std::vector<int>> matches)
+{
+    //! @details https://leetcode.com/problems/
+    //!          find-players-with-zero-or-one-losses/solutions/2655744/
+    //!          find-players-with-zero-or-one-losses/
+    //!
+    //!          Time complexity O(N log N), N = matches.size(). Iteration over
+    //!          matches takes O(N) and need to store/sort players in two arrays
+    //!          where worst case is O(N) players in them.
+    //!          Space complexity O(N) for hash map with O(N) players
+
+    std::unordered_map<int, int> lossesCount {};
+
+    for (const auto& match : matches)
+    {
+        const int winner = match[0];
+        const int loser  = match[1];
+        if (lossesCount.find(winner) == lossesCount.end())
+        {
+            lossesCount[winner] = 0;
+        }
+        ++lossesCount[loser];
+    }
+
+    std::vector<std::vector<int>> answer(2ULL, std::vector<int>{});
+    /*
+    for (auto [player, count] : lossesCount)
+    {
+        // ...
+    }
+    */
+    for (const auto& kv : lossesCount)
+    {
+        const auto player = kv.first;
+        const auto count  = kv.second;
+        if (count == 0)
+        {
+            answer[0].push_back(player);
+        }
+        else if (count == 1)
+        {
+            answer[1].push_back(player);
+        }
+    }
+
+    std::sort(answer[0].begin(), answer[0].end());
+    std::sort(answer[1].begin(), answer[1].end());
+    return answer;
+
+} // static std::vector<std::vector<int>> findWinnersDS2( ...
+
 TEST(FindWinnersTest, SampleTest)
 {
     const std::vector<std::vector<int>> input {{1, 3},
@@ -122,4 +177,13 @@ TEST(FindWinnersTest, SampleTest)
     EXPECT_TRUE(std::equal(expected_output2.cbegin(),
                            expected_output2.cend(),
                            resultDS1.back().cbegin()));
+    
+    const auto resultDS2 = findWinnersDS2(input);
+
+    EXPECT_TRUE(std::equal(expected_output1.cbegin(),
+                           expected_output1.cend(),
+                           resultDS2.front().cbegin()));
+    EXPECT_TRUE(std::equal(expected_output2.cbegin(),
+                           expected_output2.cend(),
+                           resultDS2.back().cbegin()));
 }
