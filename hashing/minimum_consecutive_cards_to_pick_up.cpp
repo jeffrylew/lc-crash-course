@@ -43,7 +43,33 @@ static int minimumCardPickup1(std::vector<int> cards)
 
 } // static int minimumCardPickup1( ...
 
+static int minimumCardPickup2(std::vector<int> cards)
+{
+    //! @details Improves solution 1 above by not storing all indices, only the
+    //!          most recent one for each number. Space complexity becomes O(N)
+    //!          only in the worst case, when there are no duplicates
+    //!          Time complexity still O(N) where N = cards.size()
+
+    std::unordered_map<int, int> dic {};
+
+    int ans {std::numeric_limits<int>::max()};
+
+    for (int i = 0; i < static_cast<int>(cards.size()); ++i)
+    {
+        if (dic.find(cards[i]) != dic.end())
+        {
+            ans = std::min(ans, i - dic[cards[i]] + 1);
+        }
+        
+        dic[cards[i]] = i;
+    }
+
+    return ans == std::numeric_limits<int>::max() ? -1 : ans;
+
+} // static int minimumCardPickup2( ...
+
 TEST(MinimumCardPickupTest, SampleTest)
 {
     EXPECT_EQ(2, minimumCardPickup1({1, 2, 6, 2, 1}));
+    EXPECT_EQ(2, minimumCardPickup2({1, 2, 6, 2, 1}));
 }
