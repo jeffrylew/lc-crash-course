@@ -13,6 +13,7 @@ set(
   "intersection_of_multiple_arrays"
   "largest_unique_number"
   "maximum_number_of_balloons"
+  "minimum_consecutive_cards_to_pick_up"
   "missing_number"
   "subarray_sum_equals_k"
   "two_sum"
