@@ -8,6 +8,7 @@ set(
   "find_numbers"
   "find_players_with_zero_or_one_losses"
   "first_letter_to_appear_twice"
+  "group_anagrams"
   "hash_map_ops"
   "intersection_of_multiple_arrays"
   "largest_unique_number"
