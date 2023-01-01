@@ -59,7 +59,39 @@ static int maximumSum1(std::vector<int> nums)
 
 } // static int maximumSum1( ...
 
+//! @brief Find max nums[i] + nums[j] where nums[i]/nums[j] have same digit sum
+//! @param[in] num Vector of integers
+//! @return Maximum sum of nums[i] + nums[j] with equal sum of digits
+static int maximumSum2(std::vector<int> nums)
+{
+    //! @details Don't need to store all numbers in group, only save largest
+    //!          number seen so far for each digit sum.
+    //!
+    //!          Time complexity O(N) where average case uses less space since
+    //!          each key only stores an int instead of a vector of ints. Save
+    //!          on an extra iteration and sort in each iteration. N = nums.size
+    //!          Space complexity O(N) for storing elements in hash map
+
+    std::unordered_map<int, int> dic {};
+    
+    int ans {-1};
+
+    for (const int num : nums)
+    {
+        const int digitSum = getDigitSum(num);
+        if (dic.find(digitSum) != dic.end())
+        {
+            ans = std::max(ans, num + dic[digitSum]);
+        }
+        dic[digitSum] = std::max(dic[digitSum], num);
+    }
+
+    return ans;
+
+} // static int maximumSum2( ...
+
 TEST(MaximumSumTest, SampleTest)
 {
     EXPECT_EQ(54, maximumSum1({18, 43, 36, 13, 7}));
+    EXPECT_EQ(54, maximumSum2({18, 43, 36, 13, 7}));
 }
