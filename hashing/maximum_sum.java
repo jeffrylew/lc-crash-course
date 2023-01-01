@@ -36,3 +36,22 @@ public int maximumSum1(int[] nums)
 
     return ans;
 }
+
+public int maximumSum2(int[] nums)
+{
+    Map<Integer, Integer> dic = new HashMap<>();
+
+    int ans = -1;
+
+    for (int num : nums)
+    {
+        int digitSum = getDigitSum(num);
+        if (dic.containsKey(digitSum))
+        {
+            ans = Math.max(ans, num + dic.get(digitSum));
+        }
+        dic.put(digitSum, Math.max(dic.getOrDefault(digitSum, 0), num));
+    }
+
+    return ans;
+}
