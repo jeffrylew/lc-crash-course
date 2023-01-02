@@ -4,6 +4,7 @@ set(
   "check_if_sentence_is_pangram"
   "count_number_of_nice_subarrays"
   "counting_elements"
+  "equal_row_and_column_pairs"
   "find_longest_substring"
   "find_numbers"
   "find_players_with_zero_or_one_losses"
