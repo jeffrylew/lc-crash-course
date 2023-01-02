@@ -22,3 +22,16 @@ def maximumSum1(nums: List[int]) -> int:
             ans = max(ans, curr[0] + curr[1])
     
     return ans
+
+def maximumSum2(nums: List[int]) -> int:
+    dic = defaultdict(int)
+    ans = -1
+
+    for num in nums:
+        digit_sum = get_digit_sum(num)
+        if digit_sum in dic:
+            ans = max(ans, num + dic[digit_sum])
+        
+        dic[digit_sum] = max(dic[digit_sum], num)
+    
+    return ans
