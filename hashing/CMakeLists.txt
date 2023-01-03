@@ -17,6 +17,7 @@ set(
   "maximum_sum"
   "minimum_consecutive_cards_to_pick_up"
   "missing_number"
+  "ransom_note"
   "subarray_sum_equals_k"
   "two_sum"
 )
