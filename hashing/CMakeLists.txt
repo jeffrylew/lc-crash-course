@@ -12,6 +12,7 @@ set(
   "group_anagrams"
   "hash_map_ops"
   "intersection_of_multiple_arrays"
+  "jewels_and_stones"
   "largest_unique_number"
   "maximum_number_of_balloons"
   "maximum_sum"
