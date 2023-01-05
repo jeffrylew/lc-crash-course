@@ -37,7 +37,44 @@ static int lengthOfLongestSubstringFA(std::string s)
 
 } // static int lengthOfLongestSubstringFA( ...
 
+//! @brief Discussion solution to find length of longest substring
+//! @param[in] s String to check
+//! @return Length of longest substring without repeating characters
+static int lengthOfLongestSubstringDS1(std::string s)
+{
+    //! @details https://leetcode.com/problems/
+    //!          longest-substring-without-repeating-characters/solutions/
+    //!          127839/official-solution/
+    //!
+    //!          Time complexity O(2N) = O(N) where N = s.size(). In the worst
+    //!          case each character will be visited twice by left and right
+    //!          Space complexity O(min(M, N)), need O(K) space for the sliding
+    //!          window where K is size of hash map. K is upper bounded by
+    //!          N = s.size() and M = size of the charset/alphabet
+
+    std::unordered_map<char, int> char_count {};
+
+    int left {};
+    int right {};
+
+    int substr_len {};
+    while (right < static_cast<int>(s.size()))
+    {
+        while (++char_count[s[right]] > 1)
+        {
+            --char_count[s[left++]];
+        }
+
+        substr_len = std::max(substr_len, right - left + 1);
+        ++right;
+    }
+
+    return substr_len;
+
+} // static int lengthOfLongestSubstringDS1( ...
+
 TEST(LengthOfLongestSubstringTest, SampleTest)
 {
     EXPECT_EQ(3, lengthOfLongestSubstringFA("abcabcbb"));
+    EXPECT_EQ(3, lengthOfLongestSubstringDS1("abcabcbb"));
 }
