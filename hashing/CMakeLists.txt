@@ -14,6 +14,7 @@ set(
   "intersection_of_multiple_arrays"
   "jewels_and_stones"
   "largest_unique_number"
+  "length_of_longest_substring"
   "maximum_number_of_balloons"
   "maximum_sum"
   "minimum_consecutive_cards_to_pick_up"
