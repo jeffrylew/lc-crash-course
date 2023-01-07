@@ -1,6 +1,7 @@
 set(
   cpp_files
   "doubly_linked_list"
+  "get_middle"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
