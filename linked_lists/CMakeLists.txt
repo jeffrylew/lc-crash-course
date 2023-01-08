@@ -2,6 +2,7 @@ set(
   cpp_files
   "doubly_linked_list"
   "get_middle"
+  "has_cycle"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
