@@ -9,6 +9,13 @@ struct ListNode
 
 static bool hasCycle(ListNode* head)
 {
+    //! @details https://leetcode.com/explore/interview/card/
+    //!          leetcodes-interview-crash-course-data-structures-and-algorithms
+    //!          /704/linked-lists/4507/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in linked list
+    //!          Space complexity O(1)
+
     ListNode* slow = head;
     ListNode* fast = head;
 
