@@ -1,6 +1,7 @@
 set(
   cpp_files
   "doubly_linked_list"
+  "find_node"
   "get_middle"
   "has_cycle"
 )
