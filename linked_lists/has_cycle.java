@@ -25,3 +25,19 @@ public boolean hasCycle(ListNode head)
 
     return false;
 }
+
+public boolean hasCycleSet(ListNode head)
+{
+    Set<ListNode> seen = new HashSet<>();
+    while (head != null)
+    {
+        if (seen.contains(head))
+        {
+            return true;
+        }
+        seen.add(head);
+        head = head.next;
+    }
+
+    return false;
+}
