@@ -26,3 +26,23 @@ const hasCycle = head => {
 
     return false;
 }
+
+/**
+ * @param {ListNode} head
+ * @returns {boolean}
+ */
+const hasCycleSet = head => {
+    let seen = new Set();
+    while (head)
+    {
+        if (seen.has(head))
+        {
+            return true;
+        }
+
+        seen.add(head);
+        head = head.next;
+    }
+
+    return false;
+}
