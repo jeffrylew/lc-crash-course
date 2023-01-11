@@ -4,6 +4,7 @@ set(
   "find_node"
   "get_middle"
   "has_cycle"
+  "middle_of_the_linked_list"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
