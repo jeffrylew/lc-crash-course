@@ -6,6 +6,7 @@ set(
   "has_cycle"
   "middle_of_the_linked_list"
   "remove_duplicates_from_sorted_list"
+  "reversing_a_linked_list"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
