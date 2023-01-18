@@ -7,6 +7,7 @@ set(
   "middle_of_the_linked_list"
   "remove_duplicates_from_sorted_list"
   "reversing_a_linked_list"
+  "swap_nodes_in_pairs"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
