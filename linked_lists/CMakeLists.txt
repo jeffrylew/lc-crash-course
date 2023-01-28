@@ -6,6 +6,7 @@ set(
   "has_cycle"
   "middle_of_the_linked_list"
   "remove_duplicates_from_sorted_list"
+  "reverse_linked_list_ii"
   "reversing_a_linked_list"
   "swap_nodes_in_pairs"
 )
