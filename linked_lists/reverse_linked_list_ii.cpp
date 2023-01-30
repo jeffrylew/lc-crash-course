@@ -9,16 +9,16 @@ struct ListNode
 
 //! @brief First attempt to reverse nodes of list from position left to right
 //! @param[in] head  Pointer to head of singly linked list
-//! @param[in] left  Index of left position to start reversing list from
-//! @param[in] right Index of right position to end reversing list from
+//! @param[in] left  Index from 1 of left position to start reversing list from
+//! @param[in] right Index from 1 of right position to end reversing list from
 //! @return Pointer to head of reversed list
 static ListNode* reverseBetweenFA(ListNode* head, int left, int right)
 {
     auto ret_head = head;
-    int  idx {};
+    int  idx {1};
     
     //! Keep track of node just before reversed portion of list
-    auto before_rev = head;
+    ListNode* before_rev {nullptr};
     while (idx < left && head != nullptr)
     {
         before_rev = head;
@@ -46,14 +46,30 @@ static ListNode* reverseBetweenFA(ListNode* head, int left, int right)
     }
 
     //! Set connections before and after reversed portion of list
-    before_rev->next = prev;
-    end_rev->next    = nextNode;
+    if (before_rev != nullptr)
+    {
+        before_rev->next = prev;
+    }
+    end_rev->next = curr;
 
-    return ret_head;
+    return (before_rev != nullptr) ? ret_head : prev;
 
 } // static ListNode* reverseBetweenFA( ...
 
 TEST(ReverseBetweenTest, SampleTest)
 {
+    ListNode one {1};
+    ListNode two {2};
+    ListNode three {3};
+    ListNode four {4};
+    ListNode five {5};
 
+    one.next   = &two;
+    two.next   = &three;
+    three.next = &four;
+    four.next  = &five;
+
+    auto       head   = &one;
+    const auto result = reverseBetweenFA(head, 2, 4);
+    EXPECT_EQ(one.val, result->val);
 }
