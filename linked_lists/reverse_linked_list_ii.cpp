@@ -56,6 +56,67 @@ static ListNode* reverseBetweenFA(ListNode* head, int left, int right)
 
 } // static ListNode* reverseBetweenFA( ...
 
+//! @brief Iterative discussion solution to reverse nodes of list
+//! @param[in] head  Pointer to head of singly linked list
+//! @param[in] left  Index from 1 of left position to start reversing list from
+//! @param[in] right Index from 1 of right position to end reversing list from
+//! @return Pointer to head of reversed list
+static ListNode* reverseBetweenDS1(ListNode* head, int left, int right)
+{
+    //! @details https://leetcode.com/problems/reverse-linked-list-ii/solutions/
+    //!          215957/official-solution/
+    //!
+    //!          Time complexity O(N) where N = Number of nodes in list
+    //!          Space complexity O(1)
+
+    //! Empty list
+    if (head == nullptr)
+    {
+        return nullptr;
+    }
+
+    //! Move two pointers until they reach the
+    //! proper starting point in the list
+    auto      curr = head;
+    ListNode* prev {nullptr};
+    while (left > 1)
+    {
+        prev = curr;
+        curr = curr->next;
+        --left;
+        --right;
+    }
+
+    //! Two pointers that will fix the final connections
+    auto con  = prev;
+    auto tail = curr;
+
+    //! Iteratively reverse the nodes until right becomes 0
+    ListNode* third {nullptr};
+    while (right > 0)
+    {
+        third      = curr->next;
+        curr->next = prev;
+        prev       = curr;
+        curr       = third;
+        --right;
+    }
+
+    //! Adjust final connections
+    if (con != nullptr)
+    {
+        con->next = prev;
+    }
+    else
+    {
+        head = prev;
+    }
+
+    tail->next = curr;
+    return head;
+
+} // static ListNode* reverseBetweenDS1( ...
+
 TEST(ReverseBetweenTest, SampleTest)
 {
     ListNode one {1};
@@ -70,6 +131,15 @@ TEST(ReverseBetweenTest, SampleTest)
     four.next  = &five;
 
     auto       head   = &one;
-    const auto result = reverseBetweenFA(head, 2, 4);
-    EXPECT_EQ(one.val, result->val);
+    const auto resultFA = reverseBetweenFA(head, 2, 4);
+    EXPECT_EQ(one.val, resultFA->val);
+
+    one.next   = &two;
+    two.next   = &three;
+    three.next = &four;
+    four.next  = &five;
+    head       = &one;
+
+    const auto resultDS1 = reverseBetweenDS1(head, 2, 4);
+    EXPECT_EQ(one.val, resultDS1->val);
 }
