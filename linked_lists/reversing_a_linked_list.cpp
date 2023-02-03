@@ -39,6 +39,25 @@ static ListNode* reverseList(ListNode* head)
     return prev;
 }
 
+//! @brief Reverse a linked list recursively
+//! @param[in] head Pointer to head of linked list
+//! @return Pointer to head of reversed linked list
+static ListNode* reverseListRecursive(ListNode* head)
+{
+    //! @details https://leetcode.com/problems/reverse-linked-list-ii/solutions/
+    //!          215957/official-solution/
+    
+    if (head->next == nullptr)
+    {
+        return head;
+    }
+
+    ListNode* last   = reverseListRecursive(head->next);
+    head->next->next = head;
+    head->next       = nullptr;
+    return last;
+}
+
 TEST(ReverseListTest, SampleTest)
 {
     ListNode zero {0};
@@ -53,4 +72,12 @@ TEST(ReverseListTest, SampleTest)
     auto       head   = &zero;
     const auto result = reverseList(head);
     EXPECT_EQ(result->val, three.val);
+
+    zero.next = &one;
+    one.next  = &two;
+    two.next  = &three;
+
+    auto       headRecursive   = &zero;
+    const auto resultRecursive = reverseListRecursive(headRecursive);
+    EXPECT_EQ(resultRecursive->val, three.val);
 }
