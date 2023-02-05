@@ -117,6 +117,75 @@ static ListNode* reverseBetweenDS1(ListNode* head, int left, int right)
 
 } // static ListNode* reverseBetweenDS1( ...
 
+//! @brief Recursive discussion solution to reverse nodes of list
+//! @param[in] head  Pointer to head of singly linked list
+//! @param[in] m     Index from 1 of left position to start reversing list from
+//! @param[in] n     Index from 1 of right position to end reversing list from
+//! @return Pointer to head of reversed list
+static ListNode* reverseBetweenDS2(ListNode* head, int m, int n)
+{
+    //! @details https://leetcode.com/problems/reverse-linked-list-ii/solutions/
+    //!          215957/official-solution/
+    //!
+    //!          Time complexity O(N) where N = Number of nodes in list.
+    //!          Worst case is reversing all nodes in list (perform N/2 swaps).
+    //!          Space complexity O(N). In worst case, will have N/2 recursive
+    //!          calls on stack for each swap.
+
+    ListNode* left = head;
+    bool      stop {};
+
+    recurseAndReverse(head, left, m, n, stop);
+    return head;
+
+} // static ListNode* reverseBetweenDS2( ...
+
+static void recurseAndReverse(ListNode* right,
+                              ListNode* left,
+                              int       m,
+                              int       n,
+                              bool&     stop)
+{
+    //! Base case, don't proceed any further
+    if (n == 1)
+    {
+        return;
+    }
+
+    //! Keep moving the right pointer one step forward until (n == 1)
+    right = right->next;
+
+    //! Keep moving left pointer to the right until we reach
+    //! the proper node from where the reversal is to start
+    if (m > 1)
+    {
+        left = left->next;
+    }
+
+    //! Recursve with m and n reduced
+    recurseAndReverse(right, left, m - 1, n - 1, stop);
+
+    //! In case both the pointers cross each other or become equal, we stop
+    //! i.e. don't swap data any further. Done reversing at this point.
+    if (left == right || right->next == left)
+    {
+        stop = true;
+    }
+
+    //! Until boolean stop is false, swap data between two pointers
+    if (not stop)
+    {
+        const int init_left_val = left->val;
+        left->val               = right->val;
+        right->val              = init_left_val;
+
+        //! Move left one step to the right
+        //! Right pointer moves ones step back via backtracking
+        left = left->next;
+    }
+
+} // static void recurseAndReverse( ...
+
 TEST(ReverseBetweenTest, SampleTest)
 {
     ListNode one {1};
@@ -142,4 +211,13 @@ TEST(ReverseBetweenTest, SampleTest)
 
     const auto resultDS1 = reverseBetweenDS1(head, 2, 4);
     EXPECT_EQ(one.val, resultDS1->val);
+
+    one.next   = &two;
+    two.next   = &three;
+    three.next = &four;
+    four.next  = &five;
+    head       = &one;
+
+    const auto resultDS2 = reverseBetweenDS2(head, 2, 4);
+    EXPECT_EQ(one.val, resultDS2->val);
 }
