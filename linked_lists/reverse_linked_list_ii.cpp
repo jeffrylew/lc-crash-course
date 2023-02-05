@@ -140,6 +140,12 @@ static ListNode* reverseBetweenDS2(ListNode* head, int m, int n)
 
 } // static ListNode* reverseBetweenDS2( ...
 
+//! @brief Recursive helper function
+//! @param[in,out] right Starts at nth node and moves backwards with recursion
+//! @param[in,out] left  Starts at mth node and moves forwards
+//! @param[in]     m     Starting point of reversal
+//! @param[in]     n     Ending point of reversal
+//! @param[in,out] stop  Flag to stop swaps for odd or even sized sublists
 static void recurseAndReverse(ListNode* right,
                               ListNode* left,
                               int       m,
@@ -149,6 +155,9 @@ static void recurseAndReverse(ListNode* right,
     //! Base case, don't proceed any further
     if (n == 1)
     {
+        //! right is last node of sublist we want to reverse
+        //! left has reached the first node of this sublist
+        //! We swap the data and move left pointer one step forward
         return;
     }
 
@@ -169,6 +178,8 @@ static void recurseAndReverse(ListNode* right,
     //! i.e. don't swap data any further. Done reversing at this point.
     if (left == right || right->next == left)
     {
+        //! Stop swaps when right == left for odd sublist size or when
+        //! right->next == left, which occurs during backtracking for even size
         stop = true;
     }
 
