@@ -1,6 +1,7 @@
 set(
   cpp_files
   "stack_example"
+  "valid_parentheses"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
