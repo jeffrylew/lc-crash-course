@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "remove_all_adjacent_duplicates"
   "stack_example"
   "valid_parentheses"
 )
