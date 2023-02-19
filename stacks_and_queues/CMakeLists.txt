@@ -2,6 +2,7 @@ set(
   cpp_files
   "backspace_string_compare"
   "remove_all_adjacent_duplicates"
+  "simplify_path"
   "stack_example"
   "valid_parentheses"
 )
