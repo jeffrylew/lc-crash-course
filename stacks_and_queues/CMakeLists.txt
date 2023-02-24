@@ -1,6 +1,7 @@
 set(
   cpp_files
   "backspace_string_compare"
+  "make_the_string_great"
   "remove_all_adjacent_duplicates"
   "simplify_path"
   "stack_example"
