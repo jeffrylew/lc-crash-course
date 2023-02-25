@@ -35,6 +35,12 @@ static std::string makeGoodFA(std::string s)
 static std::string makeGoodDS1(std::string s)
 {
     //! @details https://leetcode.com/problems/make-the-string-great/editorial/
+    //!
+    //!          Time complexity O(N^2) where N = s.size(). Each iteration for s
+    //!          takes O(N) time. Worst case scenario remove one pair each
+    //!          iterations, there might be O(N) pairs
+    //!
+    //!          Space complexity O(N) for making copies of rest of s
 
     //! If s has less than 2 characters, return it
     while (s.size() > 1)
