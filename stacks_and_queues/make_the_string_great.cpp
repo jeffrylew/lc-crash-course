@@ -29,8 +29,49 @@ static std::string makeGoodFA(std::string s)
     return output;
 }
 
+//! @brief Iterative solution from LC discussion section
+//! @param[in] s String containing lower and upper case letters
+//! @return A good string
+static std::string makeGoodDS1(std::string s)
+{
+    //! @details https://leetcode.com/problems/make-the-string-great/editorial/
+
+    //! If s has less than 2 characters, return it
+    while (s.size() > 1)
+    {
+        //! Flag to record if we find any pair to remove
+        bool find {};
+
+        //! Check every two adjacent chars, currChar and nextChar
+        for (int i = 0; i < s.size() - 1; ++i)
+        {
+            char currChar {s[i]};
+            char nextChar {s[i + 1]};
+
+            //! If they make a pair, remove them from s and set find flag
+            if (std::abs(currChar - nextChar) == 32)
+            {
+                s    = s.substr(0, i) + s.substr(i + 2);
+                find = true;
+                break;
+            }
+        }
+
+        //! If cannot find any pair to remove, break the loop
+        if (not find)
+        {
+            break;
+        }
+    }
+    return s;
+
+} // static std::string makeGoodDS1( ...
+
 TEST(MakeGoodTest, SampleTest)
 {
     EXPECT_EQ("leetcode", makeGoodFA("leEeetcode"));
     EXPECT_EQ("", makeGoodFA("Pp"));
+
+    EXPECT_EQ("leetcode", makeGoodDS1("leEeetcode"));
+    EXPECT_EQ("", makeGoodDS1("Pp"));
 }
