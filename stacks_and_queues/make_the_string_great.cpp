@@ -73,6 +73,39 @@ static std::string makeGoodDS1(std::string s)
 
 } // static std::string makeGoodDS1( ...
 
+//! @brief Recursive solution from LC discussion section
+//! @param[in] s String containing lower and upper case letters
+//! @return A good string
+static std::string makeGoodDS2(std::string s)
+{
+    //! @details Time complexity O(N^2), takes O(N) to iterate through s to find
+    //!          pair to remove and in worst-case there will be O(N) pairs
+    //!
+    //!          Space complexity O(N^2), space complexity proportional to max
+    //!          depth of recursion tree. We have up to N/2 pairs which is a
+    //!          recursion tree of depth O(N). Each function call takes O(N)
+    //!          space so overall complexity is O(N^2)
+
+    //! If the string is empty, just return it
+    if (s.empty())
+    {
+        return s;
+    }
+
+    //! If we find a pair in s, remove this pair from s
+    //! and solve the remaining string recursively
+    for (int i = 0; i < size() - 1; ++i)
+    {
+        if (std::abs(s[i] - s[i + 1]) == 32)
+        {
+            return makeGoodDS2(s.substr(0, i) + s.substr(i + 2));
+        }
+    }
+
+    //! Base case, if we can't find a pair, just return s
+    return s;
+}
+
 TEST(MakeGoodTest, SampleTest)
 {
     EXPECT_EQ("leetcode", makeGoodFA("leEeetcode"));
@@ -80,4 +113,7 @@ TEST(MakeGoodTest, SampleTest)
 
     EXPECT_EQ("leetcode", makeGoodDS1("leEeetcode"));
     EXPECT_EQ("", makeGoodDS1("Pp"));
+
+    EXPECT_EQ("leetcode", makeGoodDS2("leEeetcode"));
+    EXPECT_EQ("", makeGoodDS2("Pp"));
 }
