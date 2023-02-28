@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <cctype>
+#include <cmath>
 #include <string>
+#include <vector>
 
 //! @brief Remove two adjacent characters that make string bad until it is good
 //! @param[in] s String containing lower and upper case letters
@@ -106,6 +108,37 @@ static std::string makeGoodDS2(std::string s)
     return s;
 }
 
+//! @brief Stack solution from LC discussion section
+//! @param[in] s String containing lower and upper case letters
+//! @return A good string
+static std::string makeGoodDS3(std::string s)
+{
+    //! @details Time complexity O(N)
+    //!          Space complexity O(N)
+    
+    //! Use stack to store the visited characters
+    std::vector<char> stack;
+
+    //! Iterate over s
+    for (const auto currChar : s)
+    {
+        //! If the current char makes a pair with the last char in the stack,
+        //! remove both of them. Otherwise, add the current char to stack
+        if (not stack.empty() && std::abs(stack.back() - currChar) == 32)
+        {
+            stack.pop_back();
+        }
+        else
+        {
+            stack.push_back(currChar);
+        }
+    }
+
+    //! Return string concatenated by all chars left in stack
+    std::string ans {stack.begin(), stack.end()};
+    return ans;
+}
+
 TEST(MakeGoodTest, SampleTest)
 {
     EXPECT_EQ("leetcode", makeGoodFA("leEeetcode"));
@@ -116,4 +149,7 @@ TEST(MakeGoodTest, SampleTest)
 
     EXPECT_EQ("leetcode", makeGoodDS2("leEeetcode"));
     EXPECT_EQ("", makeGoodDS2("Pp"));
+
+    EXPECT_EQ("leetcode", makeGoodDS3("leEeetcode"));
+    EXPECT_EQ("", makeGoodDS3("Pp"));
 }
