@@ -115,7 +115,7 @@ static std::string makeGoodDS3(std::string s)
 {
     //! @details Time complexity O(N)
     //!          Space complexity O(N)
-    
+
     //! Use stack to store the visited characters
     std::vector<char> stack;
 
@@ -139,6 +139,37 @@ static std::string makeGoodDS3(std::string s)
     return ans;
 }
 
+//! @brief Two pointers solution from LC discussion section
+//! @param[in] s String containing lower and upper case letters
+//! @return A good string
+static std::string makeGoodDS4(std::string s)
+{
+    //! @details Time complexity O(N), only iterate once over s and update two
+    //!          pointers which takes constant time.
+    //!          Space complexity O(1) since modify input string in place
+
+    //! Initialize end = 0 since the good string is empty
+    int end {};
+
+    for (int cur = 0; cur < s.size(); ++cur)
+    {
+        //! If s[cur] makes a pair with the last char s[end - 1] in good string,
+        //! remove s[end - 1] by decrementing end by 1
+        //! Else, add s[cur] to the good string by overwriting s[end] by s[cur]
+        if (end > 0 && std::abs(s[cur] - s[end - 1]) == 32)
+        {
+            --end;
+        }
+        else
+        {
+            s[end++] = s[cur];
+        }
+    }
+
+    //! Once the iteration ends, the string before end is the good string
+    return s.substr(0, end);
+}
+
 TEST(MakeGoodTest, SampleTest)
 {
     EXPECT_EQ("leetcode", makeGoodFA("leEeetcode"));
@@ -152,4 +183,7 @@ TEST(MakeGoodTest, SampleTest)
 
     EXPECT_EQ("leetcode", makeGoodDS3("leEeetcode"));
     EXPECT_EQ("", makeGoodDS3("Pp"));
+
+    EXPECT_EQ("leetcode", makeGoodDS4("leEeetcode"));
+    EXPECT_EQ("", makeGoodDS4("Pp"));
 }
