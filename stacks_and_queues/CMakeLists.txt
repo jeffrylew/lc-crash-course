@@ -2,6 +2,7 @@ set(
   cpp_files
   "backspace_string_compare"
   "make_the_string_great"
+  "number_of_recent_calls"
   "queue_example"
   "remove_all_adjacent_duplicates"
   "simplify_path"
