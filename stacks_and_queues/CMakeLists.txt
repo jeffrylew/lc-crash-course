@@ -8,6 +8,7 @@ set(
   "queue_example"
   "remove_all_adjacent_duplicates"
   "simplify_path"
+  "sliding_window_maximum"
   "stack_example"
   "valid_parentheses"
 )
