@@ -5,6 +5,7 @@ set(
   "longest_subarray"
   "make_the_string_great"
   "moving_average_from_data_stream"
+  "next_greater_element_i"
   "number_of_recent_calls"
   "queue_example"
   "remove_all_adjacent_duplicates"
