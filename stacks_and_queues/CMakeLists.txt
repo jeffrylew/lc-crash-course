@@ -7,6 +7,7 @@ set(
   "moving_average_from_data_stream"
   "next_greater_element_i"
   "number_of_recent_calls"
+  "online_stock_span"
   "queue_example"
   "remove_all_adjacent_duplicates"
   "simplify_path"
