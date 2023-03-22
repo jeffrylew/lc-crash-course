@@ -1,6 +1,7 @@
 set(
   cpp_files
-  "treenode.cpp"
+  "dfs"
+  "treenode"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
