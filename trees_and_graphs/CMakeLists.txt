@@ -1,7 +1,7 @@
 set(
   cpp_files
   "dfs"
-  "treenode"
+  "preorder_dfs"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
