@@ -1,4 +1,4 @@
-class TreeNode
+export default class TreeNode
 {
     constructor(val)
     {
