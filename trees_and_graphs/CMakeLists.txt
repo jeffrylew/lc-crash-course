@@ -1,6 +1,7 @@
 set(
   cpp_files
   "dfs"
+  "inorder_dfs"
   "preorder_dfs"
 )
 
