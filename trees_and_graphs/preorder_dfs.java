@@ -1,4 +1,4 @@
-public void preorderDfs(Node node)
+public void preorderDfs(TreeNode node)
 {
     if (node == null)
     {
