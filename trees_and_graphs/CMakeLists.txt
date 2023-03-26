@@ -2,6 +2,7 @@ set(
   cpp_files
   "dfs"
   "inorder_dfs"
+  "maximum_depth_of_binary_tree"
   "postorder_dfs"
   "preorder_dfs"
 )
