@@ -44,3 +44,21 @@ TEST(MaxDepthTest, SampleTest)
 
     EXPECT_EQ(4, maxDepthRecursive(&zero));
 }
+
+TEST(MaxDepthTest, TestCase1)
+{
+    TreeNode three {3};
+    TreeNode twenty {20};
+
+    const TreeNode nine {9};
+    const TreeNode fifteen {15};
+    const TreeNode seven {7};
+
+    three.left  = &nine;
+    three.right = &twenty;
+
+    twenty.left  = &fifteen;
+    twenty.right = &seven;
+
+    EXPECT_EQ(3, maxDepthRecursive(&three));
+}
