@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <limits>
 
+//! @brief Recursive solution helper function returns answer to original problem
+//! @param[in] node     Pointer to current TreeNode
+//! @param[in] maxSoFar Largest value between root and current node
+//! @return Number of nodes that are good
 static int dfs(TreeNode* node, int maxSoFar)
 {
     if (node == nullptr)
@@ -23,6 +27,9 @@ static int dfs(TreeNode* node, int maxSoFar)
     return ans;
 }
 
+//! @brief Find number of good nodes (path has no nodes with greater value)
+//! @param[in] root Pointer to root of binary tree
+//! @return Number of nodes that are good
 static int goodNodesRecursive(TreeNode* root)
 {
     return dfs(root, std::numeric_limits<int>::min());
