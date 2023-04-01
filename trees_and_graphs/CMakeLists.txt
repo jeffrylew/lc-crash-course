@@ -3,6 +3,7 @@ set(
   "dfs"
   "inorder_dfs"
   "maximum_depth_of_binary_tree"
+  "path_sum"
   "postorder_dfs"
   "preorder_dfs"
 )
