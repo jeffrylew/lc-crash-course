@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <limits>
+#include <stack>
+#include <utility>
 
 //! @brief Recursive solution helper function returns answer to original problem
 //! @param[in] node     Pointer to current TreeNode
@@ -35,6 +37,45 @@ static int goodNodesRecursive(TreeNode* root)
     return dfs(root, std::numeric_limits<int>::min());
 }
 
+//! @brief Iterative solution to find number of good nodes
+//! @param[in] root Pointer to root of binary tree
+//! @return Number of nodes that are good
+static int goodNodesIterative(TreeNode* root)
+{
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
+    std::stack<std::pair<TreeNode*, int>> stack {};
+    stack.emplace(root, std::numeric_limits<int>::min());
+    int ans {};
+
+    while (not stack.empty())
+    {
+        const auto [node, maxSoFar] = stack.top();
+        stack.pop();
+
+        if (node->val >= maxSoFar)
+        {
+            ++ans;
+        }
+
+        if (node->left != nullptr)
+        {
+            stack.emplace(node->left, std::max(maxSoFar, node->val));
+        }
+
+        if (node->right != nullptr)
+        {
+            stack.emplace(node->right, std::max(maxSoFar, node->val));
+        }
+    }
+
+    return ans;
+
+} // static int goodNodesIterative( ...
+
 TEST(GoodNodesTest, SampleTest)
 {
     TreeNode four_lhs {4};
@@ -62,4 +103,5 @@ TEST(GoodNodesTest, SampleTest)
     four_rhs.right = &one;
 
     EXPECT_EQ(4, goodNodesRecursive(&five));
+    EXPECT_EQ(4, goodNodesIterative(&five));
 }
