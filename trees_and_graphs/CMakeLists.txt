@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "count_good_nodes_in_binary_tree"
   "dfs"
   "inorder_dfs"
   "maximum_depth_of_binary_tree"
