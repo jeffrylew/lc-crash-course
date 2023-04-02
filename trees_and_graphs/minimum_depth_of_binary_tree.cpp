@@ -33,10 +33,50 @@ static int minDepthFARecursive(TreeNode* root)
     return 1 + ((lhs_depth == 0) ? rhs_depth : lhs_depth);
 }
 
+//! @brief Recursive discussion solution to find minimum depth of binary tree
+//! @param[in] root Pointer to root of binary tree
+//! @return Number of nodes along shortest depth from root node to leaf node
+static int minDepthRecursive(TreeNode* root)
+{
+    //! @details https://leetcode.com/problems/minimum-depth-of-binary-tree/
+    //!          editorial/
+    //!
+    //!          Time complexity O(N) where N is number of nodes. Visit each
+    //!          node exactly once.
+    //!          Space complexity O(N) in the worst case where tree is
+    //!          completely unbalanced (each node has only one child node).
+    //!          Recursion call would occur N times (height of tree) so storage
+    //!          for call stack would be O(N). In best case of a balanced tree,
+    //!          height of tree would be log(N) leading to O(log(N)).
+
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
+    if (root->left == nullptr && root->right == nullptr)
+    {
+        return 1;
+    }
+
+    int min_depth {std::numeric_limits<int>::max()};
+    if (root->left != nullptr)
+    {
+        min_depth = std::min(minDepthRecursive(root->left), min_depth);
+    }
+
+    if (root->right != nullptr)
+    {
+        min_depth = std::min(minDepthRecursive(root->right), min_depth);
+    }
+
+    return min_depth + 1;
+}
+
 //! @brief First attempt iterative solution to find minimum depth of binary tree
 //! @param[in] root Pointer to root of binary tree
 //! @return Number of nodes along shortest depth from root node to leaf node
-static int minDepthIterative(TreeNode* root)
+static int minDepthFAIterative(TreeNode* root)
 {
     if (root == nullptr)
     {
@@ -89,6 +129,7 @@ TEST(MinDepthTest, SampleTest)
     twenty.right = &seven;
 
     EXPECT_EQ(2, minDepthFARecursive(&three));
+    EXPECT_EQ(2, minDepthRecursive(&three));
     EXPECT_EQ(2, minDepthFAIterative(&three));
 }
 
@@ -107,5 +148,6 @@ TEST(MinDepthTest, LinearTreeTest)
     five.right  = &six;
 
     EXPECT_EQ(5, minDepthFARecursive(&two));
+    EXPECT_EQ(5, minDepthRecursive(&two));
     EXPECT_EQ(5, minDepthFAIterative(&two));
 }
