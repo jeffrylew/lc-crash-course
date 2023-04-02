@@ -5,6 +5,7 @@ set(
   "inorder_dfs"
   "lowest_common_ancestor"
   "maximum_depth_of_binary_tree"
+  "minimum_depth_of_binary_tree"
   "path_sum"
   "postorder_dfs"
   "preorder_dfs"
