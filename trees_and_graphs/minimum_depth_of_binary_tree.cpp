@@ -3,6 +3,9 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <limits>
+#include <stack>
+#include <utility>
 
 //! @brief First attempt recursive solution to find minimum depth of binary tree
 //! @param[in] root Pointer to root of binary tree
@@ -30,6 +33,46 @@ static int minDepthFARecursive(TreeNode* root)
     return 1 + ((lhs_depth == 0) ? rhs_depth : lhs_depth);
 }
 
+//! @brief First attempt iterative solution to find minimum depth of binary tree
+//! @param[in] root Pointer to root of binary tree
+//! @return Number of nodes along shortest depth from root node to leaf node
+static int minDepthIterative(TreeNode* root)
+{
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
+    int min_depth {std::numeric_limits<int>::max()};
+
+    std::stack<std::pair<TreeNode*, int>> stack {};
+    stack.emplace(root, 1);
+
+    while (not stack.empty())
+    {
+        const auto [node, depth] = stack.top();
+        stack.pop();
+
+        if (node->left == nullptr && node->right == nullptr)
+        {
+            min_depth = std::min(min_depth, depth);
+            continue;
+        }
+        
+        if (node->left != nullptr)
+        {
+            stack.emplace(node->left, 1 + depth);
+        }
+
+        if (node->right != nullptr)
+        {
+            stack.emplace(node->right, 1 + depth);
+        }
+    }
+
+    return min_depth;
+}
+
 TEST(MinDepthTest, SampleTest)
 {
     TreeNode three {3};
@@ -46,6 +89,7 @@ TEST(MinDepthTest, SampleTest)
     twenty.right = &seven;
 
     EXPECT_EQ(2, minDepthFARecursive(&three));
+    EXPECT_EQ(2, minDepthFAIterative(&three));
 }
 
 TEST(MinDepthTest, LinearTreeTest)
@@ -63,4 +107,5 @@ TEST(MinDepthTest, LinearTreeTest)
     five.right  = &six;
 
     EXPECT_EQ(5, minDepthFARecursive(&two));
+    EXPECT_EQ(5, minDepthFAIterative(&two));
 }
