@@ -1,6 +1,6 @@
 import treenode
 
-def goodNodesIterative(root: treenode.TreeNode) -> int:
+def goodNodesRecursive(root: treenode.TreeNode) -> int:
     def dfs(node, max_so_far):
         if not node:
             return 0
@@ -14,3 +14,23 @@ def goodNodesIterative(root: treenode.TreeNode) -> int:
         return ans
     
     return dfs(root, float("-inf"))
+
+def goodNodesIterative(root: treenode.TreeNode) -> int:
+    if not root:
+        return 0
+    
+    stack = [(root, float("-inf"))]
+    ans = 0
+
+    while stack:
+        node, max_so_far = stack.pop()
+        if node.val >= max_so_far:
+            ans += 1
+
+        if node.left:
+            stack.append((node.left, max(max_so_far, node.val)))
+        
+        if node.right:
+            stack.append((node.right, max(max_so_far, node.val)))
+    
+    return ans
