@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <queue>
 #include <stack>
 #include <utility>
 
@@ -154,6 +155,53 @@ static int minDepthDFSIterative(TreeNode* root)
     return min_depth;
 }
 
+//! @brief Iterative BFS discussion solution to find min depth of binary tree
+//! @param[in] root Pointer to root of binary tree
+//! @return Number of nodes along shortest depth from root node to leaf node
+static int minDepthBFSIterative(TreeNode* root)
+{
+    //! @details Drawback of DFS approach is all nodes must be visited, O(N).
+    //!          BFS strategy iterates the tree level by level - the first leaf
+    //!          reached corresponds to the minimum depth. As a result, do not
+    //!          need to iterate all nodes.
+    //!
+    //!          Time complexity O(N). In the worst case for a balanced tree,
+    //!          need to visit all nodes level by level up to the tree height
+    //!          (excludes the bottom level only). Visit N/2 nodes.
+    //!          Space complexity O(N)
+
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
+    std::queue<std::pair<TreeNode*, int>> queue {};
+    queue.emplace(root, 1);
+
+    while (not queue.empty())
+    {
+        const auto [node, current_depth] = queue.front();
+        queue.pop();
+
+        if (node->left == nullptr && node->right == nullptr)
+        {
+            return current_depth;
+        }
+
+        if (node->left != nullptr)
+        {
+            queue.emplace(node->left, current_depth + 1);
+        }
+
+        if (node->right != nullptr)
+        {
+            queue.emplace(node->right, current_depth + 1);
+        }
+    }
+
+    return 0;
+}
+
 TEST(MinDepthTest, SampleTest)
 {
     TreeNode three {3};
@@ -173,6 +221,7 @@ TEST(MinDepthTest, SampleTest)
     EXPECT_EQ(2, minDepthRecursive(&three));
     EXPECT_EQ(2, minDepthFAIterative(&three));
     EXPECT_EQ(2, minDepthDFSIterative(&three));
+    EXPECT_EQ(2, minDepthBFSIterative(&three));
 }
 
 TEST(MinDepthTest, LinearTreeTest)
@@ -193,4 +242,5 @@ TEST(MinDepthTest, LinearTreeTest)
     EXPECT_EQ(5, minDepthRecursive(&two));
     EXPECT_EQ(5, minDepthFAIterative(&two));
     EXPECT_EQ(5, minDepthDFSIterative(&two));
+    EXPECT_EQ(5, minDepthBFSIterative(&two));
 }
