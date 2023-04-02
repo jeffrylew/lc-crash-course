@@ -113,6 +113,47 @@ static int minDepthFAIterative(TreeNode* root)
     return min_depth;
 }
 
+//! @brief Iterative DFS discussion solution to find min depth of binary tree
+//! @param[in] root Pointer to root of binary tree
+//! @return Number of nodes along shortest depth from root node to leaf node
+static int minDepthDFSIterative(TreeNode* root)
+{
+    //! @details Time complexity O(N), each node is visited exactly once
+    //!          Space complexity O(N) in worst case of storing entire tree
+
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
+    std::stack<std::pair<TreeNode*, int>> stack {};
+    stack.emplace(root, 1);
+
+    int min_depth {std::numeric_limits<int>::max()};
+    while (not stack.empty())
+    {
+        const auto [node, current_depth] = stack.top();
+        stack.pop();
+
+        if (node->left == nullptr && node->right == nullptr)
+        {
+            min_depth = std::min(min_depth, current_depth);
+        }
+
+        if (node->left != nullptr)
+        {
+            stack.emplace(node->left, current_depth + 1);
+        }
+
+        if (node->right != nullptr)
+        {
+            stack.emplace(node->right, current_depth + 1);
+        }
+    }
+
+    return min_depth;
+}
+
 TEST(MinDepthTest, SampleTest)
 {
     TreeNode three {3};
@@ -131,6 +172,7 @@ TEST(MinDepthTest, SampleTest)
     EXPECT_EQ(2, minDepthFARecursive(&three));
     EXPECT_EQ(2, minDepthRecursive(&three));
     EXPECT_EQ(2, minDepthFAIterative(&three));
+    EXPECT_EQ(2, minDepthDFSIterative(&three));
 }
 
 TEST(MinDepthTest, LinearTreeTest)
@@ -150,4 +192,5 @@ TEST(MinDepthTest, LinearTreeTest)
     EXPECT_EQ(5, minDepthFARecursive(&two));
     EXPECT_EQ(5, minDepthRecursive(&two));
     EXPECT_EQ(5, minDepthFAIterative(&two));
+    EXPECT_EQ(5, minDepthDFSIterative(&two));
 }
