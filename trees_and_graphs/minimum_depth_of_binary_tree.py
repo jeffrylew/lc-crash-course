@@ -1,3 +1,4 @@
+from collections import deque
 import treenode
 
 def minDepthRecursive(root: treenode.TreeNode) -> int:
@@ -43,3 +44,24 @@ def minDepthDFSIterative(root: treenode.TreeNode) -> int:
                 stack.append((node, current_depth + 1))
     
     return min_depth
+
+def minDepthBFSIterative(root: treenode.TreeNode) -> int:
+    """
+    :type root: TreeNode
+    :rtype: int
+    """
+    if not root:
+        return 0
+    
+    node_deque = deque([(root, 1),])
+
+    while node_deque:
+        curr, current_depth = node_deque.popleft()
+        children = [curr.left, curr.right]
+
+        if not any(children):
+            return current_depth
+        
+        for node in children:
+            if node:
+                node_deque.append((node, current_depth + 1))
