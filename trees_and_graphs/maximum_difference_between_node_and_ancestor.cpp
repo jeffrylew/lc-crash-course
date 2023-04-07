@@ -55,6 +55,51 @@ static int maxAncestorDiffRecursive1(TreeNode* root)
     return result;
 }
 
+//! @brief Record max and min of all root-to-leav paths and return max diff
+//! @param[in] node   Pointer to current TreeNode
+//! @param[in] curMax Current maximum value along path from root to node
+//! @param[in] curMin Current minimum value along path from root to node
+//! @return cur_max - cur_min when encountering leaves
+static int helper2(TreeNode* node, int curMax, int curMin)
+{
+    //! If encounter a leaf, return max - min along the path
+    if (node == nullptr)
+    {
+        return curMax - curMin;
+    }
+
+    //! Else update max and min and return max of left and right subtrees
+    curMax = std::max(curMax, node->val);
+    curMin = std::min(curMin, node->val);
+
+    const int left {helper(node->left, curMax, curMin)};
+    const int right {helper(node->right, curMax, curMin)};
+
+    return std::max(left, right);
+
+} // static int helper2( ...
+
+//! @brief Second recursive solution to get max |a.val - b.val|
+//! @param[in] root Pointer to root of binary tree
+//! @return Max value |a.val - b.val| where a is an ancestor of b
+static int maxAncestorDiffRecursive2(TreeNode* root)
+{
+    //! @details https://leetcode.com/problems/
+    //!          maximum-difference-between-node-and-ancestor/editorial/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in binary tree.
+    //!          We visit all nodes once.
+    //!          Space complexity O(N) since max depth of recursion is height of
+    //!          tree, which is O(N) in worst case and O(log(N)) in best case.
+
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
+    return helper2(root, root->val, root->val);
+}
+
 TEST(MaxAncestorDiffTest, ExampleTest1)
 {
     TreeNode three {3};
@@ -82,6 +127,7 @@ TEST(MaxAncestorDiffTest, ExampleTest1)
     fourteen.left = &thirteen;
 
     EXPECT_EQ(7, maxAncestorDiffRecursive1(&eight));
+    EXPECT_EQ(7, maxAncestorDiffRecursive2(&eight));
 }
 
 TEST(MaxAncestorDiffTest, ExampleTest2)
@@ -96,4 +142,5 @@ TEST(MaxAncestorDiffTest, ExampleTest2)
     zero.left = &three;
 
     EXPECT_EQ(3, maxAncestorDiffRecursive1(&one));
+    EXPECT_EQ(3, maxAncestorDiffRecursive2(&one));
 }
