@@ -2,6 +2,7 @@ set(
   cpp_files
   "count_good_nodes_in_binary_tree"
   "dfs"
+  "diameter_of_binary_tree"
   "inorder_dfs"
   "lowest_common_ancestor"
   "maximum_depth_of_binary_tree"
