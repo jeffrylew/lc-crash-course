@@ -11,6 +11,7 @@ set(
   "path_sum"
   "postorder_dfs"
   "preorder_dfs"
+  "print_all_nodes"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
