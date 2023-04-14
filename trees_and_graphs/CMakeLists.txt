@@ -4,6 +4,7 @@ set(
   "count_good_nodes_in_binary_tree"
   "dfs"
   "diameter_of_binary_tree"
+  "find_largest_value_in_each_tree_row"
   "inorder_dfs"
   "lowest_common_ancestor"
   "maximum_depth_of_binary_tree"
