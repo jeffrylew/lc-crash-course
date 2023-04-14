@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "binary_tree_right_side_view"
   "count_good_nodes_in_binary_tree"
   "dfs"
   "diameter_of_binary_tree"
