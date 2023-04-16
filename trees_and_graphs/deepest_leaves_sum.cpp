@@ -65,16 +65,16 @@ static int deepestLeavesSumDS1(TreeNode* root)
         const auto p = stack.top();
         stack.pop();
 
-        root      = p.first;
-        currDepth = p.second;
+        const auto node = p.first;
+        currDepth       = p.second;
 
-        if (root->left == nullptr && root->right == nullptr)
+        if (node->left == nullptr && node->right == nullptr)
         {
             //! If this leaf is the deepest one seen so far
             if (depth < currDepth)
             {
                 //! Start new sum
-                deepestSum = root->val;
+                deepestSum = node->val;
 
                 //! Note new depth
                 depth = currDepth;
@@ -83,19 +83,19 @@ static int deepestLeavesSumDS1(TreeNode* root)
             {
                 //! If there were already leaves at this depth
                 //! Update existing sum
-                deepestSum += root->val;
+                deepestSum += node->val;
             }
         }
         else
         {
-            if (root->right != nullptr)
+            if (node->right != nullptr)
             {
-                stack.emplace(root->right, currDepth + 1);
+                stack.emplace(node->right, currDepth + 1);
             }
 
-            if (root->left != nullptr)
+            if (node->left != nullptr)
             {
-                stack.emplace(root->left, currDepth + 1);
+                stack.emplace(node->left, currDepth + 1);
             }
         }
     }
@@ -103,6 +103,66 @@ static int deepestLeavesSumDS1(TreeNode* root)
     return deepestSum;
 
 } // static int deepestLeavesSumDS1( ...
+
+//! @brief Get deepest leaves sum with iterative BFS Traversal
+//! @param[in] root Pointer to root of binary tree
+//! @return Sum of values of deepest leaves
+static int deepestLeavesSumDS2(TreeNode* root)
+{
+    //! @details Time complexity O(N) since one has to visit each node
+    //!          Space complexity up to O(N) to keep the queue
+    //!          The last level can contain up to N/2 tree nodes
+
+    int deepestSum {};
+    int depth {};
+    int currDepth {};
+
+    std::queue<std::pair<TreeNode*, int>> queue {};
+    queue.emplace(root, 0);
+
+    while (not queue.empty())
+    {
+        const auto p = queue.front();
+        queue.pop();
+
+        const auto node = p.first;
+        currDepth       = p.second;
+
+        if (node->left == nullptr && node->right == nullptr)
+        {
+            //! If this leaf is the deepest one seen so far
+            if (depth < currDepth)
+            {
+                //! Start new sum
+                deepestSum = node->val;
+
+                //! Note new depth
+                depth = currDepth;
+            }
+            else if (depth == currDepth)
+            {
+                //! If there were already leaves at this depth
+                //! Update existing sum
+                deepestSum += node->val;
+            }
+        }
+        else
+        {
+            if (node->right != nullptr)
+            {
+                queue.emplace(node->right, currDepth + 1);
+            }
+
+            if (node->left != nullptr)
+            {
+                queue.emplace(node->left, currDepth + 1);
+            }
+        }
+    }
+
+    return deepestSum;
+
+} // static int deepestLeavesSumDS2( ...
 
 TEST(DeepestLeavesSumTest, SampleTest)
 {
@@ -130,4 +190,5 @@ TEST(DeepestLeavesSumTest, SampleTest)
 
     EXPECT_EQ(15, deepestLeavesSumFA(&one));
     EXPECT_EQ(15, deepestLeavesSumDS1(&one));
+    EXPECT_EQ(15, deepestLeavesSumDS2(&one));
 }
