@@ -36,7 +36,7 @@ var deepestLeavesSumDFS = function(root) {
             {
                 stack.push([node.right, currDepth + 1]);
             }
-            
+
             if (node.left)
             {
                 stack.push([node.left, currDepth + 1]);
@@ -44,5 +44,43 @@ var deepestLeavesSumDFS = function(root) {
         }
     }
 
+    return deepestSum;
+};
+
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var deepestLeavesSumBFS = function(root) {
+    let nextLevel = [root];
+    let currLevel = [];
+
+    while (nextLevel.length)
+    {
+        // Prepare for the next level
+        currLevel = [...nextLevel];
+        nextLevel = [];
+
+        for (const node of currLevel)
+        {
+            // Add child nodes of the current level
+            // in the queue for the next level
+            if (node.left)
+            {
+                nextLevel.push(node.left);
+            }
+
+            if (node.right)
+            {
+                nextLevel.push(node.right);
+            }
+        }
+    }
+
+    let deepestSum = 0;
+    for (const node of currLevel)
+    {
+        deepestSum += node.val;
+    }
     return deepestSum;
 };
