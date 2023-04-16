@@ -152,14 +152,14 @@ static int deepestLeavesSumDS2(TreeNode* root)
         }
         else
         {
-            if (node->right != nullptr)
-            {
-                queue.emplace(node->right, currDepth + 1);
-            }
-
             if (node->left != nullptr)
             {
                 queue.emplace(node->left, currDepth + 1);
+            }
+            
+            if (node->right != nullptr)
+            {
+                queue.emplace(node->right, currDepth + 1);
             }
         }
     }
