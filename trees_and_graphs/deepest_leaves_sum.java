@@ -44,3 +44,39 @@ public int deepestLeavesSumDFS(TreeNode root)
 
     return deepestSum;
 }
+
+public int deepestLeavesSumBFS(TreeNode root)
+{
+    ArrayDeque<TreeNode> nextLevel = new ArrayDeque();
+    ArrayDeque<TreeNode> currLevel = new ArrayDeque();
+    nextLevel.offer(root);
+
+    while (!nextLevel.isEmpty())
+    {
+        // Prepare for the next level
+        currLevel = nextLevel.clone();
+        nextLevel.clear();
+
+        for (TreeNode node: currLevel)
+        {
+            // Add child nodes of the current level
+            // in the queue for the next level
+            if (node.left != null)
+            {
+                nextLevel.offer(node.left);
+            }
+
+            if (node.right != null)
+            {
+                nextLevel.offer(node.right);
+            }
+        }
+    }
+
+    int deepestSum = 0;
+    for (TreeNode node: currLevel)
+    {
+        deepestSum += node.val;
+    }
+    return deepestSum;
+}
