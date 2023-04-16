@@ -2,9 +2,12 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <numeric>
 #include <queue>
 #include <stack>
 #include <utility>
+#include <vector>
 
 //! @brief First attempt solution to get sum of values of deepest leaves
 //! @param[in] root Pointer to root of binary tree
@@ -111,7 +114,8 @@ static int deepestLeavesSumDS2(TreeNode* root)
 {
     //! @details Time complexity O(N) since one has to visit each node
     //!          Space complexity up to O(N) to keep the queue
-    //!          The last level can contain up to N/2 tree nodes
+    //!          The last level can contain up to N/2 tree nodes for a complete
+    //!          binary tree
 
     int deepestSum {};
     int depth {};
@@ -164,6 +168,51 @@ static int deepestLeavesSumDS2(TreeNode* root)
 
 } // static int deepestLeavesSumDS2( ...
 
+//! @brief Get deepest leaves sum with optimized iterative BFS Traversal
+//! @param[in] root Pointer to root of binary tree
+//! @return Sum of values of deepest leaves
+static int deepestLeavesSumDS3(TreeNode* root)
+{
+    //! @details Time complexity O(N) since one has to visit each node
+    //!          Space complexity up to O(N) to keep the queues
+    //!          The last level can contain up to N/2 tree nodes for a complete
+    //!          binary tree
+
+    std::vector<TreeNode*> nextLevel {};
+    std::vector<TreeNode*> currLevel {};
+    nextLevel.push_back(root);
+
+    while (not nextLevel.empty())
+    {
+        //! Prepare for the next level
+        currLevel = std::move(nextLevel);
+        nextLevel.clear();
+
+        for (const auto node : currLevel)
+        {
+            //! Add child nodes of the current level
+            //! in the queue for the next level
+            if (node->left != nullptr)
+            {
+                nextLevel.push_back(node->left);
+            }
+
+            if (node->right != nullptr)
+            {
+                nextLevel.push_back(node->right);
+            }
+        }
+    }
+
+    return std::accumulate(currLevel.cbegin(),
+                           currLevel.cend(),
+                           0,
+                           [](int acc, TreeNode* node) -> int {
+                               return acc + node->val;
+                           });
+
+} // static int deepestLeavesSumDS3( ...
+
 TEST(DeepestLeavesSumTest, SampleTest)
 {
     TreeNode one {1};
@@ -191,4 +240,5 @@ TEST(DeepestLeavesSumTest, SampleTest)
     EXPECT_EQ(15, deepestLeavesSumFA(&one));
     EXPECT_EQ(15, deepestLeavesSumDS1(&one));
     EXPECT_EQ(15, deepestLeavesSumDS2(&one));
+    EXPECT_EQ(15, deepestLeavesSumDS3(&one));
 }
