@@ -1,5 +1,7 @@
 import treenode
 
+from collections import deque
+
 def deepestLeavesSumDFS(root: treenode.TreeNode) -> int:
     deepest_sum = depth = 0
     stack = [(root, 0)]
@@ -27,3 +29,23 @@ def deepestLeavesSumDFS(root: treenode.TreeNode) -> int:
                 stack.append((node.left, curr_depth + 1))
     
     return deepest_sum
+
+def deepestLeavesSumBFS(root: treenode.TreeNode) -> int:
+    next_level = deque([root,])
+
+    while next_level:
+        # Prepare for the next level
+        curr_level = next_level
+        next_level = deque()
+
+        for node in curr_level:
+            # Add child nodes of the current level
+            # in the queue for the next level
+            if node.left:
+                next_level.append(node.left)
+            
+            if node.right:
+                next_level.append(node.right)
+        
+    return sum([node.val for node in curr_level])
+        
