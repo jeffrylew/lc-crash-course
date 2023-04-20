@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <deque>
 #include <queue>
 #include <vector>
 
@@ -82,6 +83,87 @@ static std::vector<std::vector<int>> zigzagLevelOrderFA(TreeNode* root)
 
 } // static std::vector<std::vector<int>> zigzagLevelOrderFA( ...
 
+//! @brief BFS solution to get zigzag level order traversal of nodes' values
+//! @param[in] root Pointer to root of binary tree
+//! @return Zigzag level order traversal of node values
+static std::vector<std::vector<int>> zigzagLevelOrderBFS(TreeNode* root)
+{
+    //! @details https://leetcode.com/problems/
+    //!          binary-tree-zigzag-level-order-traversal/editorial/
+    //!
+    //!          Time complexity O(N) where N is the number of nodes. We visit
+    //!          each node once. The insertion operation on either end of the
+    //!          deque takes a constant time.
+    //!          Space complexity O(N). The main memory is node_queue used for
+    //!          the loop - at any given moment it would hold the nodes that are
+    //!          at most across two levels. If L is the max number of nodes that
+    //!          reside on the same level then the size of node_queue is 2L at
+    //!          most. For a complete/full binary tree, L is roughly N/2. So in
+    //!          the worst case 2 * N/2 = N.
+
+    if (root == nullptr)
+    {
+        return {};
+    }
+
+    std::vector<std::vector<int>> results {};
+
+    //! Add the root element with a delimiter to kick off the BFS loop
+    std::queue<TreeNode*> node_queue {};
+    node_queue.push(root);
+    node_queue.push(nullptr);
+
+    std::deque<int> level_list {};
+    bool            is_order_left {true};
+
+    while (not node_queue.empty())
+    {
+        const auto curr_node = node_queue.front();
+        node_queue.pop();
+
+        if (curr_node != nullptr)
+        {
+            if (is_order_left)
+            {
+                level_list.push_back(curr_node->val);
+            }
+            else
+            {
+                level_list.push_front(curr_node->val);
+            }
+
+            if (curr_node->left != nullptr)
+            {
+                node_queue.push(curr_node->left);
+            }
+
+            if (curr_node->right != nullptr)
+            {
+                node_queue.push(curr_node->right);
+            }
+        }
+        else
+        {
+            //! We finished the scan of one level
+            results.emplace_back(level_list.cbegin(), level_list.cend());
+            level_list.clear();
+
+            //! Prepare for the next level
+            if (not node_queue.empty())
+            {
+                node_queue.push(nullptr);
+            }
+
+            is_order_left = not is_order_left;
+
+        } // else -> if (curr_node != nullptr)
+
+    } // while (not node_queue.empty())
+
+    return results;
+
+} // static std::vector<std::vector<int>> zigzagLevelOrderBFS( ...
+
 TEST(ZigzagLevelOrderTest, SampleTest)
 {
     TreeNode three {3};
@@ -103,6 +185,11 @@ TEST(ZigzagLevelOrderTest, SampleTest)
     EXPECT_TRUE(std::equal(expected_output.cbegin(),
                            expected_output.cend(),
                            resultFA.cbegin()));
+
+    const auto resultBFS = zigzagLevelOrderBFS(&three);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           resultBFS.cbegin()));
 }
 
 TEST(ZigzagLevelOrderTest, VTree)
@@ -128,4 +215,9 @@ TEST(ZigzagLevelOrderTest, VTree)
     EXPECT_FALSE(std::equal(expected_output.cbegin(),
                             expected_output.cend(),
                             resultFA.cbegin()));
+    
+    const auto resultBFS = zigzagLevelOrderBFS(&one);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           resultBFS.cbegin()));
 }
