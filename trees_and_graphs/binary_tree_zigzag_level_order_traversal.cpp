@@ -164,6 +164,78 @@ static std::vector<std::vector<int>> zigzagLevelOrderBFS(TreeNode* root)
 
 } // static std::vector<std::vector<int>> zigzagLevelOrderBFS( ...
 
+//! @brief Recursive helper function for DFS solution
+//! @param[in]  node    Pointer to current node
+//! @param[in]  level   Current level in tree
+//! @param[out] results Global structure indexed by level containing level nodes
+static void DFS_helper(TreeNode*                      node,
+                       int                            level,
+                       std::vector<std::vector<int>>& results)
+{
+    if (level >= static_cast<int>(results.size()))
+    {
+        //! First time we visit any node for level
+        //! Create level with current node value as initial element
+        results.emplace_back({node->val});
+    }
+    else
+    {
+        //! Level exists - depending on ordering, insert current node value
+        //! either to head or tail
+
+        if (level % 2 == 0)
+        {
+            results[level].push_back(node->val);
+        }
+        else
+        {
+            results[level].insert(results[level].begin(), node->val);
+        }
+
+    } // else -> if (level >= static_cast<int>(results.size()))
+
+    if (node->left != nullptr)
+    {
+        DFS_helper(node->left, level + 1, results);
+    }
+
+    if (node->right != nullptr)
+    {
+        DFS_helper(node->right, level + 1, results);
+    }
+
+} // static void DFS_helper( ...
+
+//! @brief DFS solution to get zigzag level order traversal of nodes' values
+//! @param[in] root Pointer to root of binary tree
+//! @return Zigzag level order traversal of node values
+static std::vector<std::vector<int>> zigzagLevelOrderDFS(TreeNode* root)
+{
+    //! @details https://leetcode.com/problems/
+    //!          binary-tree-zigzag-level-order-traversal/editorial/
+    //!
+    //!          Time complexity O(N) where N is the number of nodes. We visit
+    //!          each node once.
+    //!          Space complexity O(N). Unlike the BFS approach we do not need
+    //!          to maintain a node_queue. However, the size of the call stack
+    //!          for any invocation of DFS_helper(node, level) will be exactly
+    //!          level. The space complexity is O(H) where H is the height of
+    //!          the tree. In the worst-case when the tree is skewed, the tree
+    //!          height could be N. If the tree were guaranteed to be balanced
+    //!          then the max height of the tree would be log N which would
+    //!          result in a better space complexity than the BFS approach.
+
+    if (root == nullptr)
+    {
+        return {};
+    }
+
+    std::vector<std::vector<int>> results {};
+    DFS_helper(root, 0, results);
+    return results;
+
+} // static std::vector<std::vector<int>> zigzagLevelOrderDFS( ...
+
 TEST(ZigzagLevelOrderTest, SampleTest)
 {
     TreeNode three {3};
@@ -190,6 +262,11 @@ TEST(ZigzagLevelOrderTest, SampleTest)
     EXPECT_TRUE(std::equal(expected_output.cbegin(),
                            expected_output.cend(),
                            resultBFS.cbegin()));
+    
+    const auto resultDFS = zigzagLevelOrderDFS(&three);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           resultDFS.cbegin()));
 }
 
 TEST(ZigzagLevelOrderTest, VTree)
@@ -220,4 +297,9 @@ TEST(ZigzagLevelOrderTest, VTree)
     EXPECT_TRUE(std::equal(expected_output.cbegin(),
                            expected_output.cend(),
                            resultBFS.cbegin()));
+    
+    const auto resultDFS = zigzagLevelOrderDFS(&one);
+    EXPECT_TRUE(std::equal(expected_output.cbegin(),
+                           expected_output.cend(),
+                           resultDFS.cbegin()));
 }
