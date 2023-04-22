@@ -43,3 +43,30 @@ def zigzagLevelOrderBFS(root: treenode.TreeNode) -> list[list[int]]:
             is_order_left = not is_order_left
 
     return results
+
+def zigzagLevelOrderDFS(root: treenode.TreeNode) -> list[list[int]]:
+    """
+    :type root: TreeNode
+    :rtype: List[List[int]]
+    """
+    if root is None:
+        return []
+    
+    results = []
+    def DFS_helper(node: treenode.TreeNode, level: int):
+        if level >= len(results):
+            results.append(deque([node.val]))
+        else:
+            if level % 2 == 0:
+                results[level].append(node.val)
+            else:
+                results[level].appendleft(node.val)
+
+        for next_node in [node.left, node.right]:
+            if next_node is not None:
+                DFS_helper(next_node, level + 1)
+    
+    # Normal level order traversal with DFS
+    DFS_helper(root, 0)
+    
+    return results
