@@ -57,3 +57,46 @@ public List<List<Integer>> zigzagLevelOrderBFS(TreeNode root)
 
     return results;
 }
+
+public void DFS_helper(TreeNode node, int level, List<List<Integer>> results)
+{
+    if (level >= results.size())
+    {
+        LinkedList<Integer> newLevel = new LinkedList<>();
+        newLevel.add(node.val);
+        results.add(newLevel);
+    }
+    else
+    {
+        if (level % 2 == 0)
+        {
+            results.get(level).add(node.val);
+        }
+        else
+        {
+            results.get(level).add(0, node.val);
+        }
+    }
+
+    if (node.left != null)
+    {
+        DFS_helper(node.left, level + 1, results);
+    }
+
+    if (node.right != null)
+    {
+        DFS_helper(node.right, level + 1, results);
+    }
+}
+
+public List<List<Integer>> zigzagLevelOrderDFS(TreeNode root)
+{
+    if (root == null)
+    {
+        return new ArrayList<List<Integer>>();
+    }
+
+    List<List<Integer>> results = new ArrayList<List<Integer>>();
+    DFS_helper(root, 0, results);
+    return results;
+}
