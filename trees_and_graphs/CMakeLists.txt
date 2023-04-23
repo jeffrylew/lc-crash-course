@@ -16,6 +16,7 @@ set(
   "postorder_dfs"
   "preorder_dfs"
   "print_all_nodes"
+  "range_sum_of_bst"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
