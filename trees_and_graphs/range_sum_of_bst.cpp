@@ -46,6 +46,11 @@ static int rangeSumBSTIterative(TreeNode* root, int low, int high)
     //! @details Time complexity O(N) where N is number of nodes in tree
     //!          Space complexity O(N)
 
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
     std::stack<TreeNode*> stack {};
     stack.push(root);
     int ans {};
