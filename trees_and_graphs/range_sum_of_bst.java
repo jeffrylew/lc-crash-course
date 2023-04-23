@@ -23,3 +23,32 @@ public int rangeSumBSTRecursive(TreeNode root, int low, int high)
 
     return ans;
 }
+
+public int rangeSumBSTIterative(TreeNode root, int low, int high)
+{
+    Stack<TreeNode> stack = new Stack<>();
+    stack.push(root);
+    int ans = 0;
+
+    while (!stack.empty())
+    {
+        TreeNode node = stack.pop();
+
+        if (low <= node.val && node.val <= high)
+        {
+            ans += node.val;
+        }
+
+        if (node.left != null && low < node.val)
+        {
+            stack.push(node.left);
+        }
+
+        if (node.right != null && node.val < high)
+        {
+            stack.push(node.right);
+        }
+    }
+
+    return ans;
+}
