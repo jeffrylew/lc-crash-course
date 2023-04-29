@@ -63,6 +63,41 @@ static TreeNode* insertIntoBSTFA(TreeNode* root, int val)
 
 } // static TreeNode* insertIntoBSTFA( ...
 
+//! @brief Recursive solution to insert val into BST
+//! @param[in] root Pointer to root of binary search tree
+//! @param[in] val  Value to insert into the tree
+//! @return Root node of BST after insertion
+static TreeNode* insertIntoBSTRecursive(TreeNode* root, int val)
+{
+    //! @details https://leetcode.com/problems/insert-into-a-binary-search-tree/
+    //!          editorial/
+    //!
+    //!          Time complexity O(H = log N) in the average case where H is the
+    //!          tree height. Computed using the master theorem. O(N) in the
+    //!          worst case.
+    //!          Space complexity O(H = log N) to keep the recursion stack in
+    //!          the average case. O(N) in the worst case.
+    
+    if (root == nullptr)
+    {
+        return new TreeNode(val);
+    }
+
+    if (val > root->val)
+    {
+        //! Insert into the right subtree
+        root->right = insertIntoBSTRecursive(root->right, val);
+    }
+    else
+    {
+        //! Insert into the left subtree
+        root->left = insertIntoBSTRecursive(root->left, val);
+    }
+
+    return root;
+
+} // static TreeNode* insertIntoBSTRecursive( ...
+
 TEST(InsertIntoBSTTest, SampleTest)
 {
     TreeNode two {2};
