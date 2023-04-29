@@ -77,7 +77,7 @@ static TreeNode* insertIntoBSTRecursive(TreeNode* root, int val)
     //!          worst case.
     //!          Space complexity O(H = log N) to keep the recursion stack in
     //!          the average case. O(N) in the worst case.
-    
+
     if (root == nullptr)
     {
         return new TreeNode(val);
@@ -97,6 +97,57 @@ static TreeNode* insertIntoBSTRecursive(TreeNode* root, int val)
     return root;
 
 } // static TreeNode* insertIntoBSTRecursive( ...
+
+//! @brief Iterative solution to insert val into BST
+//! @param[in] root Pointer to root of binary search tree
+//! @param[in] val  Value to insert into the tree
+//! @return Root node of BST after insertion
+static TreeNode* insertIntoBSTIterative(TreeNode* root, int val)
+{
+    //! @details https://leetcode.com/problems/insert-into-a-binary-search-tree/
+    //!          editorial/
+    //!
+    //!          Time complexity O(H = log N) in the average case where H is the
+    //!          tree height. Computed using the master theorem. O(N) in the
+    //!          worst case.
+    //!          Space complexity O(1)
+
+    auto node = root;
+
+    while (node != nullptr)
+    {
+        if (val > node->val)
+        {
+            //! Insert into the right subtree
+            if (node->right == nullptr)
+            {
+                node->right = new TreeNode(val);
+                return root;
+            }
+            else
+            {
+                node = node->right;
+            }
+        }
+        else
+        {
+            //! Insert into the left subtree
+            if (node->left == nullptr)
+            {
+                node->left = new TreeNode(val);
+                return root;
+            }
+            else
+            {
+                node = node->left;
+            }
+        }
+
+    } // while (node != nullptr)
+
+    return new TreeNode(val);
+
+} // static TreeNode* insertIntoBSTIterative( ...
 
 TEST(InsertIntoBSTTest, SampleTest)
 {
