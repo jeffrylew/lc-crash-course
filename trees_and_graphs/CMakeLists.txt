@@ -18,6 +18,7 @@ set(
   "preorder_dfs"
   "print_all_nodes"
   "range_sum_of_bst"
+  "validate_binary_search_tree"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
