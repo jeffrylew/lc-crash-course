@@ -2,6 +2,7 @@ set(
   cpp_files
   "binary_tree_right_side_view"
   "binary_tree_zigzag_level_order_traversal"
+  "closest_binary_search_tree_value"
   "count_good_nodes_in_binary_tree"
   "deepest_leaves_sum"
   "dfs"
