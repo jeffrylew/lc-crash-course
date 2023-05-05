@@ -179,6 +179,40 @@ static int closestValueIterative(TreeNode* root, double target)
 
 } // static int closestValueIterative( ...
 
+//! @brief Binary search solution to get smallest value in BST closest to target
+//! @param[in] root   Pointer to root of binary search tree
+//! @param[in] target Target value to get value in BST that is closest
+//! @return Value in BST closest to target. If have multiple, print smallest
+static int closestValueBinarySearch(TreeNode* root, double target)
+{
+    //! @details https://leetcode.com/problems/closest-binary-search-tree-value/
+    //!          editorial/
+    //!
+    //!          Iterative solution above is fine when index k of closest
+    //!          element is much smaller than the tree height H. In the limit of
+    //!          relatively large k comparable with N, use binary search.
+    //!
+    //!          Time complexity O(H) since one goes from root down to leaf
+    //!          Space complexity O(1)
+
+    auto node = root;
+    int  val {node->val};
+    int  closest {node->val};
+
+    while (node != nullptr)
+    {
+        val = node->val;
+
+        closest = std::abs(static_cast<double>(val) - target)
+            <= std::abs(static_cast<double>(closest) - target) ? val : closest;
+
+        node = target < static_cast<double>(val) ? node->left : node->right;
+    }
+
+    return closest;
+
+} // static int closestValueBinarySearch( ...
+
 TEST(ClosestValueTest, SampleTest)
 {
     TreeNode two {2};
@@ -197,6 +231,7 @@ TEST(ClosestValueTest, SampleTest)
     EXPECT_EQ(4, closestValueFA(&four, 3.714286));
     EXPECT_EQ(4, closestValueRecursive(&four, 3.714286));
     EXPECT_EQ(4, closestValueIterative(&four, 3.714286));
+    EXPECT_EQ(4, closestValueBinarySearch(&four, 3.714286));
 }
 
 TEST(ClosestValueTest, OneTwoTest)
@@ -209,4 +244,5 @@ TEST(ClosestValueTest, OneTwoTest)
     EXPECT_EQ(2, closestValueFA(&one, 3.428571));
     EXPECT_EQ(2, closestValueRecursive(&one, 3.428571));
     EXPECT_EQ(2, closestValueIterative(&one, 3.428571));
+    EXPECT_EQ(2, closestValueBinarySearch(&one, 3.428571));
 }
