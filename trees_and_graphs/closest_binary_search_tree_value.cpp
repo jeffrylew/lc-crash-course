@@ -4,7 +4,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <limits>
+#include <stack>
 #include <vector>
 
 //! @brief First attempt solution to get smallest value in BST closest to target
@@ -116,6 +118,67 @@ static int closestValueRecursive(TreeNode* root, double target)
 
 } // static int closestValueRecursive( ...
 
+//! @brief Iterative solution to get smallest value in BST closest to target
+//! @param[in] root   Pointer to root of binary search tree
+//! @param[in] target Target value to get value in BST that is closest
+//! @return Value in BST closest to target. If have multiple, print smallest
+static int closestValueIterative(TreeNode* root, double target)
+{
+    //! @details https://leetcode.com/problems/closest-binary-search-tree-value/
+    //!          editorial/
+    //!
+    //!          Optimize recursive solution in case when index k of closest
+    //!          node is much smaller than the tree height H.
+    //!
+    //!          Time complexity O(k) in the average case and O(H + k) in the
+    //!          worst case where k is the index of the closest element and
+    //!          H = O(log N). The average case is a balanced tree - one does 2k
+    //!          operations to go to kth element in inorder traversal (k times
+    //!          to push into stack and then k times to pop out of stack)
+    //!          resulting in O(k) time complexity. Worst case is completely
+    //!          unbalanced tree - first push H elements into stack then pop out
+    //           k elements, resulting in O(H + k) time complexity.
+    //!          Space complexity O(H) to keep stack for non-balanced tree
+
+    auto node = root;
+
+    std::stack<TreeNode*> stack {};
+
+    //! Initialize predecessor value as a small number
+    double pred {std::numeric_limits<double>::min()};
+
+    while (not stack.empty() || node != nullptr)
+    {
+        //! Go left as far as you can and add all nodes to stack
+        while (node != nullptr)
+        {
+            stack.push(node);
+            node = node->left;
+        }
+
+        //! node is nullptr so set to top of stack
+        node = stack.top();
+        stack.pop();
+
+        const auto node_val = static_cast<double>(node->val);
+
+        //! If target is in-between pred and node_val, return closest node val
+        if (pred <= target && target < node_val)
+        {
+            return std::abs(pred - target) < std::abs(node_val - target)
+                ? static_cast<int>(pred) : node->val;
+        }
+
+        pred = node_val;
+        node = node->right;
+    }
+
+    //! Could not identify closest value during loop. This means closest value
+    //! is last value in inorder traversal, i.e. current predecessor value
+    return static_cast<int>(pred);
+
+} // static int closestValueIterative( ...
+
 TEST(ClosestValueTest, SampleTest)
 {
     TreeNode two {2};
@@ -133,6 +196,7 @@ TEST(ClosestValueTest, SampleTest)
 
     EXPECT_EQ(4, closestValueFA(&four, 3.714286));
     EXPECT_EQ(4, closestValueRecursive(&four, 3.714286));
+    EXPECT_EQ(4, closestValueIterative(&four, 3.714286));
 }
 
 TEST(ClosestValueTest, OneTwoTest)
@@ -144,4 +208,5 @@ TEST(ClosestValueTest, OneTwoTest)
 
     EXPECT_EQ(2, closestValueFA(&one, 3.428571));
     EXPECT_EQ(2, closestValueRecursive(&one, 3.428571));
+    EXPECT_EQ(2, closestValueIterative(&one, 3.428571));
 }
