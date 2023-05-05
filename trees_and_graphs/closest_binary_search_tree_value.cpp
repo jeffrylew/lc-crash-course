@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <vector>
 
 //! @brief First attempt solution to get smallest value in BST closest to target
 //! @param[in] root   Pointer to root of binary search tree
@@ -72,6 +73,49 @@ static int closestValueFA(TreeNode* root, double target)
 
 } // static int closestValueFA( ...
 
+//! @brief Recursively build inorder traversal vector
+//! @param[in]  node Pointer to current node in binary search tree
+//! @param[out] nums Reference to vector of sorted node values
+static void inorder(TreeNode* node, std::vector<int>& nums)
+{
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    inorder(node->left, nums);
+    nums.push_back(node->val);
+    inorder(node->right, nums);
+}
+
+//! @brief Recursive solution to get smallest value in BST closest to target
+//! @param[in] root   Pointer to root of binary search tree
+//! @param[in] target Target value to get value in BST that is closest
+//! @return Value in BST closest to target. If have multiple, print smallest
+static int closestValueRecursive(TreeNode* root, double target)
+{
+    //! @details https://leetcode.com/problems/closest-binary-search-tree-value/
+    //!          editorial/
+    //!
+    //!          Build inorder traversal and then find closest element in sorted
+    //!          vector.
+    //!
+    //!          Time complexity O(N) where N = number of nodes in BST. Linear
+    //!          time to build inorder traversal and perform linear search.
+    //!          Space complexity O(N) to keep inorder traversal.
+
+    std::vector<int> nums {};
+    inorder(root, nums);
+    return *std::min_element(nums.cbegin(),
+                             nums.cend(),
+                             [tgt = target](int lhs, int rhs) -> bool {
+                                 const auto l = static_cast<double>(lhs);
+                                 const auto r = static_cast<double>(rhs);
+                                 return std::abs(l - tgt) < std::abs(r - tgt);
+                             });
+
+} // static int closestValueRecursive( ...
+
 TEST(ClosestValueTest, SampleTest)
 {
     TreeNode two {2};
@@ -88,6 +132,7 @@ TEST(ClosestValueTest, SampleTest)
     two.right = &three;
 
     EXPECT_EQ(4, closestValueFA(&four, 3.714286));
+    EXPECT_EQ(4, closestValueRecursive(&four, 3.714286));
 }
 
 TEST(ClosestValueTest, OneTwoTest)
@@ -98,4 +143,5 @@ TEST(ClosestValueTest, OneTwoTest)
     one.right = &two;
 
     EXPECT_EQ(2, closestValueFA(&one, 3.428571));
+    EXPECT_EQ(2, closestValueRecursive(&one, 3.428571));
 }
