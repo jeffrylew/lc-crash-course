@@ -52,4 +52,20 @@ class Solution
 
         return (int)pred;
     }
+
+    public int closestValueBinarySearch(TreeNode root, double target)
+    {
+        int val = root.val;
+        int closest = root.val;
+
+        while (root != null)
+        {
+            val = root.val;
+            closest = Math.abs(val - target) <= Math.abs(closest - target)
+                ? val : closest;
+            root = target < root.val ? root.left : root.right;
+        }
+
+        return closest;
+    }
 }
