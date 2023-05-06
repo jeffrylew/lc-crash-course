@@ -198,6 +198,7 @@ static int closestValueBinarySearch(TreeNode* root, double target)
     //!          Time complexity O(H) since one goes from root down to leaf
     //!          Space complexity O(1)
 
+    //! Editorial assumes root is not nullptr here
     auto node = root;
     int  val {node->val};
     int  closest {node->val};
