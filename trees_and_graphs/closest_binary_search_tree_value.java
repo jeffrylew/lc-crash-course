@@ -64,8 +64,26 @@ class Solution
         while (root != null)
         {
             val = root.val;
+
+            /*
+             * Editorial solution does not pass all cases, see modification
+             * 
             closest = Math.abs(val - target) <= Math.abs(closest - target)
                 ? val : closest;
+             */
+
+            double val_diff = Math.abs(val - target);
+            double close_diff = Math.abs(closest - target);
+
+            if (val_diff < close_diff)
+            {
+                closest = val;
+            }
+            else if (val_diff == close_diff)
+            {
+                closest = Math.min(val, closest);
+            }
+
             root = target < root.val ? root.left : root.right;
         }
 
