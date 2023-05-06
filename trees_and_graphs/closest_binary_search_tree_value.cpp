@@ -204,8 +204,24 @@ static int closestValueBinarySearch(TreeNode* root, double target)
     {
         val = node->val;
 
+        /*
+         * Editorial solution does not pass all cases, see modification below
+         *
         closest = std::abs(static_cast<double>(val) - target)
             <= std::abs(static_cast<double>(closest) - target) ? val : closest;
+         */
+
+        const auto val_diff   = std::abs(static_cast<double>(val) - target);
+        const auto close_diff = std::abs(static_cast<double>(closest) - target);
+
+        if (val_diff < close_diff)
+        {
+            closest = val;
+        }
+        else if (val_diff == close_diff)
+        {
+            closest = std::min(val, closest);
+        }
 
         node = target < static_cast<double>(val) ? node->left : node->right;
     }
