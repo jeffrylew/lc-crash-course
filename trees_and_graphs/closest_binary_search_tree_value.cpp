@@ -166,7 +166,9 @@ static int closestValueIterative(TreeNode* root, double target)
         //! If target is in-between pred and node_val, return closest node val
         if (pred <= target && target < node_val)
         {
-            return std::abs(pred - target) < std::abs(node_val - target)
+            // Need to use <= instead of < to get smallest value that is closest
+            // to the target. e.g. target = 3.5, BST contains 3 and 4, return 3
+            return std::abs(pred - target) <= std::abs(node_val - target)
                 ? static_cast<int>(pred) : node->val;
         }
 
