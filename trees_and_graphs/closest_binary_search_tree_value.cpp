@@ -145,7 +145,8 @@ static int closestValueIterative(TreeNode* root, double target)
     std::stack<TreeNode*> stack {};
 
     //! Initialize predecessor value as a small number
-    double pred {std::numeric_limits<double>::min()};
+    //! Don't use numeric_limits<double>::lowest() since we subtract from it
+    auto pred = static_cast<double>(std::numeric_limits<std::int64_t>::min());
 
     while (not stack.empty() || node != nullptr)
     {
