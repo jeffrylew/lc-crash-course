@@ -59,3 +59,36 @@ var closestValueIterative = function(root, target)
     
     return pred;
 };
+
+/**
+ * @param {TreeNode} root
+ * @param {number} target
+ * @return {number}
+ */
+var closestValueBinarySearch = function(root, target)
+{
+    let val = root.val;
+    let closest = root.val;
+
+    while (root)
+    {
+        val = root.val;
+
+        // Editorial is incorrect here, fixed now
+        const val_diff = Math.abs(val - target);
+        const close_diff = Math.abs(closest - target);
+
+        if (val_diff < close_diff)
+        {
+            closest = val;
+        }
+        else if (val_diff == close_diff)
+        {
+            closest = Math.min(val, closest);
+        }
+
+        root = target < root.val ? root.left : root.right;
+    }
+
+    return closest;
+};
