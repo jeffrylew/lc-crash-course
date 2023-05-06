@@ -42,7 +42,10 @@ class Solution
 
             if (pred <= target && target < root.val)
             {
-                return Math.abs(pred - target) < Math.abs(root.val - target)
+                // Editorial is incorrect here. Need to use <= instead of < to
+                // get smallest value that is closest to the target.
+                // e.g. target = 3.5, BST contains 3 and 4, return 3
+                return Math.abs(pred - target) <= Math.abs(root.val - target)
                     ? (int)pred : root.val;
             }
 
