@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
+#include <stack>
 #include <unordered_map>
 #include <vector>
 
-static int dfs_recursive(int                                        node,
-                         std::vector<bool>&                         seen,
-                         std::unordered_map<int, std::vector<int>>& graph)
+static int dfs_recursive(int                                              node,
+                         std::vector<bool>&                               seen,
+                         const std::unordered_map<int, std::vector<int>>& graph)
 {
     for (const int neighbor : graph.at(node))
     {
@@ -14,6 +15,50 @@ static int dfs_recursive(int                                        node,
             //! The next line is needed to prevent cycles
             seen[neighbor] = true;
             dfs(neighbor, seen, graph);
+        }
+    }
+}
+
+static int dfs_iterative(int                                              node,
+                         std::vector<bool>&                               seen,
+                         const std::unordered_map<int, std::vector<int>>& graph)
+{
+    //! @details Time complexity for DFS on graphs is usually O(N + E) where N
+    //!          is the number of nodes and E is the number of edges. Each node
+    //!          is visited once so a node's edges can only be iterated over
+    //!          once. In the worst case scenario where every node is connected
+    //!          to every other node, E = N^2.
+    //!
+    //!          In this problem, the time complexity is O(N^2) because the
+    //!          input is given as an adjacency matrix so always need O(N^2) to
+    //!          build hash map. E is dominated by N^2 because O(E < N^2) so it
+    //!          is ignored.
+    //!
+    //!          When building graph, edges are stored in vectors. Therefore the
+    //!          space complexity is O(N + E). For this problem, the complexity
+    //!          isn't O(N^2) because E is not necessarily dominated by N. In
+    //!          the worst case scenario E = N^2 but E is still independent of N
+    //!          In the time complexity analysis, always iterate over entire
+    //!          matrix to build the graph but in terms of space complexity, the
+    //!          hash map only grows if the edges exist. We are using O(N) space
+    //!          to build seen but this does not change the complexity.
+
+    std::stack<int> stack {};
+    stack.push(node);
+
+    while (not stack.empty())
+    {
+        int node = stack.top();
+        stack.pop();
+
+        for (const int neighbor : graph.at(node))
+        {
+            if (not seen[neighbor])
+            {
+                //! The next line is needed to prevent cycles
+                seen[neighbor] = true;
+                stack.push(neighbor);
+            }
         }
     }
 }
@@ -49,7 +94,9 @@ static int findCircleNum(std::vector<std::vector<int>> isConnected)
             //! Add all nodes of a connected component to the set
             ++ans;
             seen[i] = true;
-            dfs(i, seen, graph);
+            dfs_recursive(i, seen, graph);
+            // or
+            // dfs_iterative(i, seen, graph);
         }
     }
 
