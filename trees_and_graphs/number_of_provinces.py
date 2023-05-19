@@ -9,6 +9,15 @@ class Solution:
                     seen.add(neighbor)
                     dfsRecursive(neighbor)
         
+        def dfsIterative(start):
+            stack = [start]
+            while stack:
+                node = stack.pop()
+                for neighbor in graph[node]:
+                    if neighbor not in seen:
+                        seen.add(neighbor)
+                        stack.append(neighbor)
+        
         # Build the graph
         n = len(isConnected)
         graph = defaultdict(list)
@@ -27,5 +36,6 @@ class Solution:
                 ans += 1
                 seen.add(i)
                 dfsRecursive(i)
+                # dfsIterative(i)
         
         return ans
