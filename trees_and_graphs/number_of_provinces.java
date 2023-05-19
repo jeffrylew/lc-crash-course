@@ -15,6 +15,25 @@ class Solution
         }
     }
 
+    public void dfsIterative(int node)
+    {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(node);
+
+        while (!stack.empty())
+        {
+            int node = stack.pop();
+            for (int neighbor: graph.get(node))
+            {
+                if (!seen[neighbor])
+                {
+                    seen[neighbor] = true;
+                    stack.push(neighbor);
+                }
+            }
+        }
+    }
+
     public int findCircleNum(int[][] isConnected)
     {
         // Build the graph
@@ -51,6 +70,7 @@ class Solution
                 ans++;
                 seen[i] = true;
                 dfsRecursive(i);
+                // dfsIterative(i);
             }
         }
 
