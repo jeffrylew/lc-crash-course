@@ -8,6 +8,11 @@ static int dfs_recursive(int                                              node,
                          std::vector<bool>&                               seen,
                          const std::unordered_map<int, std::vector<int>>& graph)
 {
+    if (graph.count(node) == 0)
+    {
+        return;
+    }
+
     for (const int neighbor : graph.at(node))
     {
         if (not seen[neighbor])
@@ -42,6 +47,11 @@ static int dfs_iterative(int                                              node,
     //!          matrix to build the graph but in terms of space complexity, the
     //!          hash map only grows if the edges exist. We are using O(N) space
     //!          to build seen but this does not change the complexity.
+
+    if (graph.count(node) == 0)
+    {
+        return;
+    }
 
     std::stack<int> stack {};
     stack.push(node);
