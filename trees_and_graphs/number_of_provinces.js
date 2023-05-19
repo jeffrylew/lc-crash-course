@@ -15,6 +15,23 @@ var findCircleNum = function(isConnected) {
         }
     }
 
+    let dfsIterative = start => {
+        let stack = [start];
+
+        while (stack.length)
+        {
+            let node = stack.pop();
+            for (const neighbor of graph.get(node))
+            {
+                if (!seen[neighbor])
+                {
+                    seen[neighbor] = true;
+                    stack.push(neighbor);
+                }
+            }
+        }
+    }
+
     // Build the graph
     const n = isConnected.length;
     let graph = new Map();
@@ -45,6 +62,7 @@ var findCircleNum = function(isConnected) {
             ans++;
             seen[i] = true;
             dfsRecursive(i);
+            // dfsIterative(i);
         }
     }
 
