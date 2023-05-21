@@ -35,6 +35,34 @@ class Solution
         }
     }
 
+    public void dfsIterative(int startRow, int startCol, char[][] grid)
+    {
+        Stack<Integer> rowStack = new Stack<>();
+        Stack<Integer> colStack = new Stack<>();
+        rowStack.push(startRow);
+        colStack.push(startCol);
+
+        while (!rowStack.empty())
+        {
+            int row = rowStack.pop();
+            int col = colStack.pop();
+
+            for (int[] direction : directions)
+            {
+                int nextRow = row + direction[0];
+                int nextCol = col + direction[1];
+                String hash = convertToHash(nextRow, nextCol);
+
+                if (valid(nextRow, nextCol, grid) && !seen.contains(hash))
+                {
+                    seen.add(hash);
+                    rowStack.push(nextRow);
+                    colStack.push(nextCol);
+                }
+            }
+        }
+    }
+
     public int numIslands(char[][] grid)
     {
         int ans = 0;
@@ -51,6 +79,7 @@ class Solution
                     ans++;
                     seen.add(hash);
                     dfsRecursive(row, col, grid);
+                    // dfsIterative(row, col, grid);
                 }
             }
         }
