@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <set>
+#include <stack>
 #include <unordered_map>
 #include <vector>
 
@@ -36,6 +37,45 @@ static int dfsRecursive(int                              node,
     return ans;
 }
 
+//! @brief DFS starting at node for determining number of edges to swap
+//! @param[in]     start Starting node to travel from
+//! @param[in]     graph Undirected mapping of node to its neighbors
+//! @param[in]     roads Set of original directed edges between nodes
+//! @param[in,out] seen  Vector of nodes that have been visited
+//! @return Number of edges to swap to make all paths lead to node
+static int dfsIterative(int                              start,
+                        const Graph_t&                   graph,
+                        const std::set<std:vector<int>>& roads,
+                        std::vector<bool>&               seen)
+{
+    int ans {};
+
+    std::stack<int> stack {};
+    stack.push(start);
+
+    while (not stack.empty())
+    {
+        const int node {stack.top()};
+        stack.pop();
+
+        for (const int neighbor : graph.at(node))
+        {
+            if (not seen[neighbor])
+            {
+                if (roads.find({node, neighbor}) != roads.cend())
+                {
+                    ++ans;
+                }
+
+                seen[neighbor] = true;
+                stack.push(neighbor);
+            }
+        }
+    }
+
+    return ans;
+}
+
 //! @brief Get min number of swaps to make all paths lead to the city zero
 //! @param[in] n           Number of cities numbered from 0 to n - 1
 //! @param[in] connections Roads between city x and city y
@@ -63,4 +103,5 @@ static int minReorder(int n, const std::vector<std::vector<int>>& connections)
 
     seen[0] = true;
     return dfsRecursive(0, graph, roads, seen);
+    // return dfsIterative(0, graph, roads, seen);
 }
