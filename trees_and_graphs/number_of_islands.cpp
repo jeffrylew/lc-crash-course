@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <stack>
 #include <vector>
 
 //! @brief Helper function to check if location is in bounds and if node is land
@@ -52,6 +53,46 @@ static void dfsRecursive(int                                  row,
     }
 }
 
+//! @brief Iterative dfs helper to find connected adjacent lands in an island
+//! @param[in]     srow  Current row to start dfs from
+//! @param[in]     scol  Current column to start dfs from
+//! @param[in]     nrows Total rows in input grid
+//! @param[in]     ncols Total columns in input grid
+//! @param[in,out] seen  Reference to matrix of nodes in grid that were visited
+//! @param[in]     grid  Reference to input m x n map of 1 (land) and 0 (water)
+static void dfsIterative(int                                  srow,
+                         int                                  scol,
+                         int                                  nrows,
+                         int                                  ncols,
+                         std::vector<std::vector<bool>>&      seen,
+                         const std::vector<std::vector<int>>& grid)
+{
+    static constexpr std::vector<std::vector<int>> directions {
+        {0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    std::stack<std::pair<int, int>> stack {};
+    stack.emplace(srow, scol);
+
+    while (not stack.empty())
+    {
+        const auto [row, col] = stack.top();
+        stack.pop();
+
+        for (const auto& direction : directions)
+        {
+            const int nextRow = row + direction[0];
+            const int nextCol = col + direction[1];
+
+            if (isValid(row, col, nrows, ncols, grid)
+                && not seen[nextRow][nextCol])
+            {
+                seen[nextRow][nextCol] = true;
+                stack.emplace(nextRow, nextCol);
+            }
+        }
+    }
+}
+
 //! @brief Get number of islands from m x n grid of 1 (land) and 0 (water)
 //! @param[in] grid m x n 2D grid containing map of 1 (land) and 0 (water)
 //! @return Number of islands (adjacent lands horizontally or vertically)
@@ -87,6 +128,7 @@ static int numIslands(const std::vector<std::vector<int>>& grid)
                 ++ans;
                 seen[row][col] = true;
                 dfsRecursive(row, col, nrows, ncols, seen, grid);
+                // dfsIterative(row, col, nrows, ncols, seen, grid);
             }
         }
     }
