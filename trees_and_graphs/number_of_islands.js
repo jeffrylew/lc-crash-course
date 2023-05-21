@@ -1,3 +1,7 @@
+/**
+ * @param {character[][]} grid
+ * @returns {number}
+ */
 var numIslands = function(grid) {
     const valid = (row, col) => {
         return 0 <= row
@@ -17,6 +21,25 @@ var numIslands = function(grid) {
             {
                 seen[nextRow][nextCol] = true;
                 dfsRecursive(nextRow, nextCol);
+            }
+        }
+    }
+
+    const dfsIterative = (startRow, startCol) => {
+        stack = [[startRow, startCol]]
+        while (stack.length)
+        {
+            const [row, col] = stack.pop();
+            for (const [drow, dcol] of directions)
+            {
+                const nextRow = row + drow;
+                const nextCol = col + dcol;
+
+                if (valid(nextRow, nextCol) && !seen[nextRow][nextCol])
+                {
+                    seen[nextRow][nextCol] = true;
+                    stack.push([nextRow, nextCol]);
+                }
             }
         }
     }
@@ -41,6 +64,7 @@ var numIslands = function(grid) {
                 ans++;
                 seen[row][col] = true;
                 dfsRecursive(row, col);
+                // dfsIterative(row, col);
             }
         }
     }
