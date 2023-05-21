@@ -23,6 +23,7 @@ set(
   "preorder_dfs"
   "print_all_nodes"
   "range_sum_of_bst"
+  "reorder_routes_to_make_all_paths_lead_to_the_city_zero"
   "validate_binary_search_tree"
 )
 
