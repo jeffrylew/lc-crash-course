@@ -16,6 +16,7 @@ set(
   "maximum_difference_between_node_and_ancestor"
   "minimum_absolute_difference_in_bst"
   "minimum_depth_of_binary_tree"
+  "number_of_islands"
   "number_of_provinces"
   "path_sum"
   "postorder_dfs"
