@@ -37,7 +37,7 @@ static void dfsRecursive(int                                  row,
                          std::vector<std::vector<bool>>&      seen,
                          const std::vector<std::vector<int>>& grid)
 {
-    static constexpr std::vector<std::vector<int>> directions {
+    static const std::vector<std::vector<int>> directions {
         {0, 1}, {1, 0}, {0, -1}, {-1, 0}};
     
     for (const auto& direction : directions)
@@ -45,7 +45,8 @@ static void dfsRecursive(int                                  row,
         const int nextRow = row + direction[0];
         const int nextCol = col + direction[1];
 
-        if (isValid(row, col, nrows, ncols, grid) && not seen[nextRow][nextCol])
+        if (isValid(nextRow, nextCol, nrows, ncols, grid)
+            && not seen[nextRow][nextCol])
         {
             seen[nextRow][nextCol] = true;
             dfsRecursive(nextRow, nextCol, nrows, ncols, grid);
@@ -67,7 +68,7 @@ static void dfsIterative(int                                  srow,
                          std::vector<std::vector<bool>>&      seen,
                          const std::vector<std::vector<int>>& grid)
 {
-    static constexpr std::vector<std::vector<int>> directions {
+    static const std::vector<std::vector<int>> directions {
         {0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
     std::stack<std::pair<int, int>> stack {};
@@ -83,7 +84,7 @@ static void dfsIterative(int                                  srow,
             const int nextRow = row + direction[0];
             const int nextCol = col + direction[1];
 
-            if (isValid(row, col, nrows, ncols, grid)
+            if (isValid(nextRow, nextCol, nrows, ncols, grid)
                 && not seen[nextRow][nextCol])
             {
                 seen[nextRow][nextCol] = true;
@@ -138,7 +139,7 @@ static int numIslands(const std::vector<std::vector<int>>& grid)
 
 TEST(NumIslandsTest, SampleTest)
 {
-    constexpr std::vector<std::vector<int>> grid {
+    const std::vector<std::vector<int>> grid {
         {1, 1, 0, 0, 0, 1},
         {0, 1, 0, 0, 0, 0},
         {0, 1, 1, 0, 1, 1},
