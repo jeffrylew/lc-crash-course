@@ -30,6 +30,35 @@ class Solution
         return ans;
     }
 
+    public int dfsIterative(int start)
+    {
+        int ans = 0;
+
+        Stack<Integer> stack = new Stack<>();
+        stack.push(start);
+
+        while (!stack.empty())
+        {
+            int node = stack.pop();
+
+            for (int neighbor : graph.get(node))
+            {
+                if (!seen.contains(neighbor))
+                {
+                    if (roads.contains(convertToHash(node, neighbor)))
+                    {
+                        ans++;
+                    }
+
+                    seen.add(neighbor);
+                    stack.push(neighbor);
+                }
+            }
+        }
+
+        return ans;
+    }
+
     public int minReorder(int n, int[][] connections)
     {
         for (int i = 0; i < n; i++)
@@ -49,5 +78,6 @@ class Solution
 
         seen.add(0);
         return dfsRecursive(0);
+        // return dfsIterative(0);
     }
 }
