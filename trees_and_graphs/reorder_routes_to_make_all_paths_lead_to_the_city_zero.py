@@ -21,5 +21,20 @@ def minReorder(n: int, connections: list[list[int]]) -> int:
 
         return ans
     
+    def dfsIterative(start):
+        ans = 0
+        stack = [start]
+        while stack:
+            node = stack.pop()
+            for neighbor in graph[node]:
+                if neighbor not in seen:
+                    if (node, neighbor) in roads:
+                        ans += 1
+                    seen.add(neighbor)
+                    stack.append(neighbor)
+        
+        return ans
+    
     seen = {0}
     return dfsRecursive(0)
+    # return dfsIterative(0)
