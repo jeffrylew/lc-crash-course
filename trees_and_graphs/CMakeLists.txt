@@ -11,6 +11,7 @@ set(
   "find_largest_value_in_each_tree_row"
   "inorder_dfs"
   "insert_into_a_binary_search_tree"
+  "keys_and_rooms"
   "lowest_common_ancestor"
   "maximum_depth_of_binary_tree"
   "maximum_difference_between_node_and_ancestor"
