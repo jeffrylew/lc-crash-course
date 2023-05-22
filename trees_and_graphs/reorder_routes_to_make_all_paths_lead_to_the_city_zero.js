@@ -27,6 +27,32 @@ var minReorder = function(n, connections) {
         return ans;
     }
 
+    const dfsIterative = start => {
+        let ans = 0;
+
+        let stack = [start];
+        while (stack.length)
+        {
+            const node = stack.pop();
+            
+            for (const neighbor of graph.get(node))
+            {
+                if (!seen[neighbor])
+                {
+                    if (roads.has(convertToHash(node, neighbor)))
+                    {
+                        ans++;
+                    }
+
+                    seen[neighbor] = true;
+                    stack.push(neighbor);
+                }
+            }
+        }
+
+        return ans;
+    }
+
     let roads = new Set();
     let graph = new Map();
     let seen = new Array(n).fill(false);
@@ -45,4 +71,5 @@ var minReorder = function(n, connections) {
 
     seen[0] = true;
     return dfsRecursive(0);
+    // return dfsIterative(0);
 };
