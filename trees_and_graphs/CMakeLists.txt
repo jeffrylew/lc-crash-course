@@ -8,6 +8,7 @@ set(
   "deepest_leaves_sum"
   "dfs"
   "diameter_of_binary_tree"
+  "find_if_path_exists_in_graph"
   "find_largest_value_in_each_tree_row"
   "inorder_dfs"
   "insert_into_a_binary_search_tree"
