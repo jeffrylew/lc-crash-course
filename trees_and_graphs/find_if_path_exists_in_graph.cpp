@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <numeric>
 #include <queue>
 #include <stack>
 #include <unordered_map>
@@ -240,6 +242,84 @@ static bool validPathIDFS(int                                  n,
 
 } // static bool validPathIDFS( ...
 
+class UnionFind
+{
+    //! Root of node i
+    std::vector<int> root {};
+
+    //! Group size of node i
+    std::vector<int> rank {};
+
+public:
+    //! @brief Each node i initialized with distinct root and group size of 1 
+    UnionFind(int n)
+        : root(n)
+        , rank(n, 1)
+    {
+        //! e.g. if n = 5 then root = {0, 1, 2, 3, 4}
+        std::iota(root.begin(), root.end(), 0);
+    }
+
+    //! @brief Find root of the node x
+    int find(int x)
+    {
+        if (x != root[x])
+        {
+            root[x] = find(root[x]);
+        }
+        return root[x];
+    }
+
+    //! @brief Modify smaller group root as root of the larger group
+    void join(int x, int y)
+    {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX != rootY)
+        {
+            if (rank[rootX] > rank[rootY])
+            {
+                std::swap(rootX, rootY);
+            }
+
+            //! Modify the root of the smaller group as the root of the larger
+            //! group, also increment the size of the larger group
+            root[rootX] = rootY;
+            rank[rootY] += rank[rootX];
+        }
+    }
+};
+
+//! @brief Disjoint Set Union solution
+//! @param[in] n           Number of vertices
+//! @param[in] edges       Vector of bi-directional edges
+//! @param[in] source      Starting vertex of path
+//! @param[in] destination Ending vertex of path
+//! @return True if there is a valid path between source and destination
+static bool validPathDSU(int                                  n,
+                         const std::vector<std::vector<int>>& edges,
+                         int                                  source,
+                         int                                  destination)
+{
+    //! @details Time complexity O(E * a(N)) where N = number of nodes and
+    //!          E = number of edges. This is the amortized complexity for
+    //!          performing E union find operations where a() is the inverse
+    //!          Ackermann Function.
+    //!          Space complexity O(N). Used two vectors root and rank to save
+    //!          the root and rank of each node in the DSU data structure, with
+    //!          each using O(N) space.
+
+    UnionFind uf {n};
+
+    for (const auto& edge : edges)
+    {
+        uf.join(edge.front(), edge.back());
+    }
+
+    return uf.find(source) == uf.find(destination);
+}
+
 TEST(ValidPathTest, SampleTest1)
 {
     const std::vector<std::vector<int>> edges {{0, 1}, {1, 2}, {2, 0}};
@@ -247,6 +327,7 @@ TEST(ValidPathTest, SampleTest1)
     EXPECT_TRUE(validPathBFS(3, edges, 0, 2));
     EXPECT_TRUE(validPathRDFS(3, edges, 0, 2));
     EXPECT_TRUE(validPathIDFS(3, edges, 0, 2));
+    EXPECT_TRUE(validPathDSU(3, edges, 0, 2));
 }
 
 TEST(ValidPathTest, SampleTest2)
@@ -257,4 +338,5 @@ TEST(ValidPathTest, SampleTest2)
     EXPECT_FALSE(validPathBFS(6, edges, 0, 5));
     EXPECT_FALSE(validPathRDFS(6, edges, 0, 5));
     EXPECT_FALSE(validPathIDFS(6, edges, 0, 5));
+    EXPECT_FALSE(validPathDSU(6, edges, 0, 5));
 }
