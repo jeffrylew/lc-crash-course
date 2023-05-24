@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <queue>
+#include <stack>
 #include <unordered_map>
 #include <vector>
 
@@ -125,11 +126,74 @@ static bool validPathBFS(int                                  n,
 
 } // static bool validPathBFS( ...
 
+//! @brief Recursive DFS to determine if currNode can reach destination
+//! @param[in]     graph       Map of vertex to its neighbors
+//! @param[in,out] seen        Vector containing visited vertices
+//! @param[in]     currNode    Starting vertex of path
+//! @param[in]     destination Ending vertex of path
+//! @return True if a path exists between currNode and destination, else false
+static bool dfsRecursive(
+    const std::unordered_map<int, std::vector<int>>& graph,
+    std::vector<bool>&                               seen,
+    int                                              currNode,
+    int                                              destination)
+{
+    if (currNode == destination)
+    {
+        return true;
+    }
+
+    if (not seen[currNode])
+    {
+        seen[currNode] = true;
+
+        for (const int nextNode : graph.at(currNode))
+        {
+            if (dfsRecursive(graph, seen, nextNode, destination))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+
+} // static bool dfsRecursive( ...
+
+//! @brief Recursive Depth First Search solution
+//! @param[in] n           Number of vertices
+//! @param[in] edges       Vector of bi-directional edges
+//! @param[in] source      Starting vertex of path
+//! @param[in] destination Ending vertex of path
+//! @return True if there is a valid path between source and destination
+static bool validPathRDFS(int                                  n,
+                          const std::vector<std::vector<int>>& edges,
+                          int                                  source,
+                          int                                  destination)
+{
+    //! @details Time complexity O(N + E)
+    //!          Space complexity O(N + E)
+
+    std::unordered_map<int, std::vector<int>> graph {};
+    for (const auto& edge : edges)
+    {
+        const int a {edge.front()};
+        const int b {edge.back()};
+        graph[a].push_back(b);
+        graph[b].push_back(a);
+    }
+
+    std::vector<bool> seen(n);
+    return dfsRecursive(graph, seen, source, destination);
+
+} // static bool validPathRDFS( ...
+
 TEST(ValidPathTest, SampleTest1)
 {
     const std::vector<std::vector<int>> edges {{0, 1}, {1, 2}, {2, 0}};
     EXPECT_TRUE(validPathFA(3, edges, 0, 2));
     EXPECT_TRUE(validPathBFS(3, edges, 0, 2));
+    EXPECT_TRUE(validPathRDFS(3, edges, 0, 2));
 }
 
 TEST(ValidPathTest, SampleTest2)
@@ -138,4 +202,5 @@ TEST(ValidPathTest, SampleTest2)
         {0, 1}, {0, 2}, {3, 5}, {5, 4}, {4, 3}};
     EXPECT_FALSE(validPathFA(6, edges, 0, 5));
     EXPECT_FALSE(validPathBFS(6, edges, 0, 5));
+    EXPECT_FALSE(validPathRDFS(6, edges, 0, 5));
 }
