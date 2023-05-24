@@ -86,7 +86,7 @@ static bool validPathBFS(int                                  n,
     //!          nodes stored in queue, requiring O(N) space.
 
     //! Store all edges in 'graph'
-    std::unordered_map<int, std::vector<int>> graph;
+    std::unordered_map<int, std::vector<int>> graph {};
     for (const auto& edge : edges)
     {
         const int a {edge.front()};
@@ -188,12 +188,65 @@ static bool validPathRDFS(int                                  n,
 
 } // static bool validPathRDFS( ...
 
+//! @brief Iterative Depth First Search solution
+//! @param[in] n           Number of vertices
+//! @param[in] edges       Vector of bi-directional edges
+//! @param[in] source      Starting vertex of path
+//! @param[in] destination Ending vertex of path
+//! @return True if there is a valid path between source and destination
+static bool validPathIDFS(int                                  n,
+                          const std::vector<std::vector<int>>& edges,
+                          int                                  source,
+                          int                                  destination)
+{
+    //! @details Time complexity O(N + E)
+    //!          Space complexity O(N + E)
+
+    //! Store all edges according to nodes in 'graph'
+    std::unordered_map<int, std::vector<int>> graph {};
+    for (const auto& edge : edges)
+    {
+        const int a {edge.front()};
+        const int b {edge.back()};
+        graph[a].push_back(b);
+        graph[b].push_back(a);
+    }
+
+    std::vector<bool> seen(n);
+    seen[source] = true;
+
+    std::stack<int> dfsStack({source});
+    while (not dfsStack.empty())
+    {
+        const int currNode {dfsStack.top()};
+        dfsStack.pop();
+
+        if (currNode == destination)
+        {
+            return true;
+        }
+
+        for (const int nextNode : graph[currNode])
+        {
+            if (not seen[nextNode])
+            {
+                seen[nextNode] = true;
+                dfsStack.push(nextNode);
+            }
+        }
+    }
+
+    return false;
+
+} // static bool validPathIDFS( ...
+
 TEST(ValidPathTest, SampleTest1)
 {
     const std::vector<std::vector<int>> edges {{0, 1}, {1, 2}, {2, 0}};
     EXPECT_TRUE(validPathFA(3, edges, 0, 2));
     EXPECT_TRUE(validPathBFS(3, edges, 0, 2));
     EXPECT_TRUE(validPathRDFS(3, edges, 0, 2));
+    EXPECT_TRUE(validPathIDFS(3, edges, 0, 2));
 }
 
 TEST(ValidPathTest, SampleTest2)
@@ -203,4 +256,5 @@ TEST(ValidPathTest, SampleTest2)
     EXPECT_FALSE(validPathFA(6, edges, 0, 5));
     EXPECT_FALSE(validPathBFS(6, edges, 0, 5));
     EXPECT_FALSE(validPathRDFS(6, edges, 0, 5));
+    EXPECT_FALSE(validPathIDFS(6, edges, 0, 5));
 }
