@@ -19,6 +19,7 @@ set(
   "minimum_absolute_difference_in_bst"
   "minimum_depth_of_binary_tree"
   "minimum_number_of_vertices_to_reach_all_nodes"
+  "number_of_connected_components_in_an_undirected_graph.cpp"
   "number_of_islands"
   "number_of_provinces"
   "path_sum"
