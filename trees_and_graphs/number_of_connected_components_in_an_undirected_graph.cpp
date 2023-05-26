@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <numeric>
 #include <stack>
 #include <unordered_map>
 #include <vector>
@@ -119,12 +120,83 @@ static int countComponentsDFS(int n, const std::vector<std::vector<int>>& edges)
 
 } // static int countComponentsDFS( ...
 
+static int find(std::vector<int>& representative, int vertex)
+{
+    if (vertex == representative[vertex])
+    {
+        return vertex;
+    }
+
+    return
+        representative[vertex] = find(representative, representative[vertex]);
+}
+
+static int combine(std::vector<int>& representative,
+                   std::vector<int>& size,
+                   int               vertex1,
+                   int               vertex2)
+{
+    vertex1 = find(representative, vertex1);
+    vertex2 = find(representative, vertex2);
+
+    if (vertex1 == vertex2)
+    {
+        return 0;
+    }
+    else
+    {
+        if (size[vertex1] > size[vertex2])
+        {
+            size[vertex1] += size[vertex2];
+            representative[vertex2] = vertex1;
+        }
+        else
+        {
+            size[vertex2] += size[vertex1];
+            representative[vertex1] = vertex2;
+        }
+        return 1;
+    }
+
+} // static int combine( ...
+
+//! @brief Disjoint Set Union solution to get number of connected components
+//! @param[in] n     Number of nodes in graph
+//! @param[in] edges Vector of connected nodes where edges[i] = [a_i, b_i]
+//! @return Number of connected components in an undirected graph
+static int countComponentsDSU(int n, const std::vector<std::vector<int>>& edges)
+{
+    //! @details Time complexity O(E * alpha(n)) where E = number of edges and
+    //!          alpha(n) is the inverse Ackermann function. Iterating over each
+    //!          edge requires O(E) operations and for every operation we
+    //!          perform the combine method which is O(alpha(n)).
+    //!          Space complexity O(V) where V = number of vertices. Storing the
+    //!          representative/immediate parent of each vertex takes O(V) space
+    //!          and storing the size of components takes O(V) space.
+
+    std::vector<int> representative(n);
+    std::vector<int> size(n, 1);
+
+    std::iota(representative.begin(), representative.end(), 0);
+
+    int components {n};
+
+    for (const auto& edge : edges)
+    {
+        components -= combine(representative, size, edge.at(0), edge.at(1));
+    }
+
+    return components;
+
+} // static int countComponentsDSU( ...
+
 TEST(CountComponentsTest, SampleTest1)
 {
     const std::vector<std::vector<int>> edges {{0, 1}, {1, 2}, {3, 4}};
     
     EXPECT_EQ(2, countComponentsFA(5, edges));
     EXPECT_EQ(2, countComponentsDFS(5, edges));
+    EXPECT_EQ(2, countComponentsDSU(5, edges));
 }
 
 TEST(CountComponentsTest, SampleTest2)
@@ -133,6 +205,7 @@ TEST(CountComponentsTest, SampleTest2)
     
     EXPECT_EQ(1, countComponentsFA(5, edges));
     EXPECT_EQ(1, countComponentsDFS(5, edges));
+    EXPECT_EQ(1, countComponentsDSU(5, edges));
 }
 
 TEST(CountComponentsTest, TrickTest3)
@@ -141,4 +214,5 @@ TEST(CountComponentsTest, TrickTest3)
     
     EXPECT_EQ(2, countComponentsFA(4, edges));
     EXPECT_EQ(2, countComponentsDFS(4, edges));
+    EXPECT_EQ(2, countComponentsDSU(4, edges));
 }
