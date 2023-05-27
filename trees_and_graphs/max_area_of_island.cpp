@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <stack>
+#include <utility>
 #include <vector>
 
 //! @brief Helper function to check if current location is within the grid
@@ -139,6 +141,79 @@ static int maxAreaOfIslandDFSRecursive(
 
 } // static int maxAreaOfIslandDFSRecursive( ...
 
+//! @brief Iterative DFS solution to get max area of an island in m x n grid
+//! @param[in] grid m x n binary matrix where 1s represent land
+//! @return Max area of an island in grid
+static int maxAreaOfIslandDFSIterative(
+    const std::vector<std::vector<int>>& grid)
+{
+    //! @details https://leetcode.com/problems/max-area-of-island/editorial/
+    //!
+    //!          Time complexity O(R * C) where R is the number of rows in grid
+    //!          and C is the number of columns. We visit every square once.
+    //!          Space complexity O(R * C) for seen to keep track of visited
+    //!          squares and the space used by stack.
+
+    std::vector<std::vector<bool>> seen(
+        grid.size(), std::vector<bool>(grid.front(), false));
+
+    static const std::vector<std::pair<int, int>> directions {
+        {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    
+    int ans {};
+
+    const auto nrows = static_cast<int>(grid.size());
+    const auto ncols = static_cast<int>(grid.front().size());
+
+    for (int row = 0; row < nrows; ++row)
+    {
+        for (int col = 0; col < ncols; ++col)
+        {
+            if (grid.at(row).at(col) == 1 && not seen[row][col])
+            {
+                //! Track total number of squares seen for current island
+                int shape {};
+
+                std::stack<std::pair<int, int>> stack({row, col});
+                seen[row][col] = true;
+
+                while (not stack.empty())
+                {
+                    const auto [curr_row, curr_col] = stack.top();
+                    stack.pop();
+
+                    ++shape;
+
+                    for (const auto& [drow, dcol] : directions)
+                    {
+                        const int neighbor_row {curr_row + drow};
+                        const int neighbor_col {curr_col + dcol};
+
+                        if (neighbor_row >= 0
+                            && neighbor_row < nrows
+                            && neighbor_col >= 0
+                            && neighbor_col < ncols
+                            && grid.at(neighbor_row).at(neighbor_col) == 1
+                            && not seen[neighbor_row][neighbor_col])
+                        {
+                            stack.emplace(neighbor_row, neighbor_col);
+                            seen[neighbor_row][neighbor_col] = true;
+                        }
+                    }
+                }
+
+                ans = std::max(ans, shape);
+
+            } // if (grid.at(row).at(col) == 1 && not seen[row][col])
+
+        } // for (int col = 0; ...
+
+    } // for (int row = 0; ...
+
+    return ans;
+
+} // static int maxAreaOfIslandDFSIterative( ...
+
 TEST(MaxAreaOfIslandTest, SampleTest1)
 {
     const std::vector<std::vector<int>> grid {
@@ -153,6 +228,7 @@ TEST(MaxAreaOfIslandTest, SampleTest1)
 
     EXPECT_EQ(6, maxAreaOfIslandFA(grid));
     EXPECT_EQ(6, maxAreaOfIslandDFSRecursive(grid));
+    EXPECT_EQ(6, maxAreaOfIslandDFSIterative(grid));
 }
 
 TEST(MaxAreaOfIslandTest, SampleTest2)
@@ -161,4 +237,5 @@ TEST(MaxAreaOfIslandTest, SampleTest2)
 
     EXPECT_EQ(0, maxAreaOfIslandFA(grid));
     EXPECT_EQ(0, maxAreaOfIslandDFSRecursive(grid));
+    EXPECT_EQ(0, maxAreaOfIslandDFSIterative(grid));
 }
