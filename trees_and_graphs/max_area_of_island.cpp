@@ -79,6 +79,66 @@ static int maxAreaOfIslandFA(const std::vector<std::vector<int>>& grid)
 
 } // static int maxAreaOfIslandFA( ...
 
+//! @brief Recursive helper function to determine island area at (row, col)
+//! @param[in]     row  Current row
+//! @param[in]     col  Current col
+//! @param[in]     grid Reference to m x n binary matrix of land and water
+//! @param[in,out] seen Reference to m x n matrix of visited locations
+//! @return Area of island 
+static int area(int                                  row,
+                int                                  col,
+                const std::vector<std::vector<int>>& grid,
+                std::vector<std::vector<bool>>&      seen)
+{
+    if (row < 0
+        || row >= static_cast<int>(grid.size())
+        || col < 0
+        || col >= static_cast<int>(grid.front().size())
+        || seen[row][col]
+        || grid.at(row).at(col) == 0)
+    {
+        return 0;
+    }
+
+    seen[row][col] = true;
+
+    return 1                 //
+        + area(row + 1, col) //
+        + area(row - 1, col) //
+        + area(row, col - 1) //
+        + area(row, col + 1);
+}
+
+//! @brief Recursive DFS solution to get max area of an island in m x n grid
+//! @param[in] grid m x n binary matrix where 1s represent land
+//! @return Max area of an island in grid
+static int maxAreaOfIslandDFSRecursive(
+    const std::vector<std::vector<int>>& grid)
+{
+    //! @details https://leetcode.com/problems/max-area-of-island/editorial/
+    //!
+    //!          Time complexity O(R * C) where R is the number of rows in grid
+    //!          and C is the number of columns. We visit every square once.
+    //!          Space complexity O(R * C) for seen to keep track of visited
+    //!          squares and the space used by call stack during recursion.
+
+    std::vector<std::vector<bool>> seen(
+        grid.size(), std::vector<bool>(grid.front().size(), false));
+
+    int ans {};
+
+    for (int row = 0; row < static_cast<int>(grid.size()); ++row)
+    {
+        for (int col = 0; col < static_cast<int>(grid.front().size()); ++col)
+        {
+            ans = std::max(ans, area(row, col, grid, seen));
+        }
+    }
+
+    return ans;
+
+} // static int maxAreaOfIslandDFSRecursive( ...
+
 TEST(MaxAreaOfIslandTest, SampleTest1)
 {
     const std::vector<std::vector<int>> grid {
@@ -92,6 +152,7 @@ TEST(MaxAreaOfIslandTest, SampleTest1)
         {0,0,0,0,0,0,0,1,1,0,0,0,0}};
 
     EXPECT_EQ(6, maxAreaOfIslandFA(grid));
+    EXPECT_EQ(6, maxAreaOfIslandDFSRecursive(grid));
 }
 
 TEST(MaxAreaOfIslandTest, SampleTest2)
@@ -99,4 +160,5 @@ TEST(MaxAreaOfIslandTest, SampleTest2)
     const std::vector<std::vector<int>> grid {{0,0,0,0,0,0,0,0}};
 
     EXPECT_EQ(0, maxAreaOfIslandFA(grid));
+    EXPECT_EQ(0, maxAreaOfIslandDFSRecursive(grid));
 }
