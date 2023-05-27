@@ -14,6 +14,7 @@ set(
   "insert_into_a_binary_search_tree"
   "keys_and_rooms"
   "lowest_common_ancestor"
+  "max_area_of_island"
   "maximum_depth_of_binary_tree"
   "maximum_difference_between_node_and_ancestor"
   "minimum_absolute_difference_in_bst"
