@@ -135,6 +135,70 @@ static int reachableNodesBFS(int                                  n,
 
 } // static int reachableNodesBFS( ...
 
+//! @brief Recursive helper function to get number of nodes reachable from start
+//! @param[in]      currNode  Current node
+//! @param[out]     ans       Number of nodes reachable from start
+//! @param[in]      neighbors Vector of nodes and connected neighbors
+//! @param[in, out] seen      Reference to vector of visited nodes
+static void dfsRecursive(int                                  currNode,
+                         int&                                 ans,
+                         const std::vector<std::vector<int>>& neighbors,
+                         std::vector<bool>&                   seen)
+{
+    ++ans;
+    seen[currNode] = true;
+
+    for (const auto nextNext : neighbors[currNode])
+    {
+        if (not seen[nextNode])
+        {
+            dfsRecursive(nextNode, ans, neighbors, seen);
+        }
+    }
+
+} // static void dfsRecursive( ...
+
+//! @brief Get max nodes you can reach from 0 without visiting a restricted node
+//! @param[in] n          Number of nodes in undirected tree
+//! @param[in] edges      2D vector of length n - 1 where edges[i] = [a_i, b_i]
+//! @param[in] restricted Vector of restricted nodes
+//! @return Max number of nodes can reach from node 0 while avoiding restricted
+static int reachableNodesDFSRecursive(
+    int                                  n,
+    const std::vector<std::vector<int>>& edges,
+    const std::vector<int>&              restricted)
+{
+    //! @details https://leetcode.com/problems/reachable-nodes-with-restrictions
+    //!          /editorial/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in tree
+    //!          Space complexity O(N). Recursive function takes O(N) space,
+    //!          along with neighbors and seen.
+
+    //! Store all edges in neighbors
+    std::vector<std::vector<int>> neighbors(n);
+    for (const auto& edge : edges)
+    {
+        const int nodeA {edge.front()};
+        const int nodeB {edge.back()};
+
+        neighbors[nodeA].push_back(nodeB);
+        neighbors[nodeB].push_back(nodeA);
+    }
+
+    //! Mark the nodes in restricted as visited
+    std::vector<bool> seen(n, false);
+    for (const auto node : restricted)
+    {
+        seen[node] = true;
+    }
+
+    int ans {};
+    dfsRecursive(0, ans, neighbors, seen);
+    return ans;
+
+} // static int reachableNodesDFSRecursive( ...
+
 TEST(ReachableNodesTest, SampleTest0)
 {
     const std::vector<std::vector<int>> edges {
@@ -143,6 +207,7 @@ TEST(ReachableNodesTest, SampleTest0)
 
     EXPECT_EQ(4, reachableNodesFA(7, edges, restricted));
     EXPECT_EQ(4, reachableNodesBFS(7, edges, restricted));
+    EXPECT_EQ(4, reachableNodesDFSRecursive(7, edges, restricted));
 }
 
 TEST(ReachableNodesTest, SampleTest1)
@@ -153,6 +218,7 @@ TEST(ReachableNodesTest, SampleTest1)
 
     EXPECT_EQ(3, reachableNodesFA(7, edges, restricted));
     EXPECT_EQ(3, reachableNodesBFS(7, edges, restricted));
+    EXPECT_EQ(3, reachableNodesDFSRecursive(7, edges, restricted));
 }
 
 TEST(ReachableNodesTest, SimpleTest)
@@ -162,4 +228,5 @@ TEST(ReachableNodesTest, SimpleTest)
 
     EXPECT_EQ(1, reachableNodesFA(2, edges, restricted));
     EXPECT_EQ(1, reachableNodesBFS(2, edges, restricted));
+    EXPECT_EQ(1, reachableNodesDFSRecursive(2, edges, restricted));
 }
