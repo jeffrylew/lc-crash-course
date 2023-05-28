@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <queue>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -199,6 +200,69 @@ static int reachableNodesDFSRecursive(
 
 } // static int reachableNodesDFSRecursive( ...
 
+//! @brief Get max nodes you can reach from 0 without visiting a restricted node
+//! @param[in] n          Number of nodes in undirected tree
+//! @param[in] edges      2D vector of length n - 1 where edges[i] = [a_i, b_i]
+//! @param[in] restricted Vector of restricted nodes
+//! @return Max number of nodes can reach from node 0 while avoiding restricted
+static int reachableNodesDFSIterative(
+    int                                  n,
+    const std::vector<std::vector<int>>& edges,
+    const std::vector<int>&              restricted)
+{
+    //! @details https://leetcode.com/problems/reachable-nodes-with-restrictions
+    //!          /editorial/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in tree
+    //!          Space complexity O(N). stack stores all nodes to be visited.
+    //!          In worst-case scenario, there may be O(N) nodes in stack.
+
+    //! Store all edges in neighbors
+    std::vector<std::vector<int>> neighbors(n);
+    for (const auto& edge : edges)
+    {
+        const int nodeA {edge.front()};
+        const int nodeB {edge.back()};
+
+        neighbors[nodeA].push_back(nodeB);
+        neighbors[nodeB].push_back(nodeA);
+    }
+
+    //! Mark the nodes in restricted as visited
+    std::vector<bool> seen(n, false);
+    for (const auto node : restricted)
+    {
+        seen[node] = true;
+    }
+
+    //! Use stack to store all nodes to be visited, start from node 0
+    int ans {};
+
+    std::stack<int> stack({0});
+    seen[0] = true;
+
+    while (not stack.empty())
+    {
+        const int currNode {stack.top()};
+        stack.pop();
+        ++ans;
+
+        //! Add all unvisited neighbors of the current node to stack
+        //! and mark them as visited
+        for (const auto nextNode : neighbors[currNode])
+        {
+            if (not seen[nextNode])
+            {
+                seen[nextNode] = true;
+                stack.push(nextNode);
+            }
+        }
+    }
+
+    return ans;
+
+} // static int reachableNodesDFSIterative( ...
+
 TEST(ReachableNodesTest, SampleTest0)
 {
     const std::vector<std::vector<int>> edges {
@@ -208,6 +272,7 @@ TEST(ReachableNodesTest, SampleTest0)
     EXPECT_EQ(4, reachableNodesFA(7, edges, restricted));
     EXPECT_EQ(4, reachableNodesBFS(7, edges, restricted));
     EXPECT_EQ(4, reachableNodesDFSRecursive(7, edges, restricted));
+    EXPECT_EQ(4, reachableNodesDFSIterative(7, edges, restricted));
 }
 
 TEST(ReachableNodesTest, SampleTest1)
@@ -219,6 +284,7 @@ TEST(ReachableNodesTest, SampleTest1)
     EXPECT_EQ(3, reachableNodesFA(7, edges, restricted));
     EXPECT_EQ(3, reachableNodesBFS(7, edges, restricted));
     EXPECT_EQ(3, reachableNodesDFSRecursive(7, edges, restricted));
+    EXPECT_EQ(3, reachableNodesDFSIterative(7, edges, restricted));
 }
 
 TEST(ReachableNodesTest, SimpleTest)
@@ -229,4 +295,5 @@ TEST(ReachableNodesTest, SimpleTest)
     EXPECT_EQ(1, reachableNodesFA(2, edges, restricted));
     EXPECT_EQ(1, reachableNodesBFS(2, edges, restricted));
     EXPECT_EQ(1, reachableNodesDFSRecursive(2, edges, restricted));
+    EXPECT_EQ(1, reachableNodesDFSIterative(2, edges, restricted));
 }
