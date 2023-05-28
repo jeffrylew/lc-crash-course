@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <numeric>
 #include <queue>
 #include <stack>
 #include <unordered_map>
@@ -263,6 +265,88 @@ static int reachableNodesDFSIterative(
 
 } // static int reachableNodesDFSIterative( ...
 
+class UnionFind
+{
+    std::vector<int> root;
+    std::vector<int> rank;
+
+public:
+    UnionFind(int n)
+        : root(n)
+        , rank(n, 1)
+    {
+        std::iota(root.begin(), root.end(), 0);
+    }
+
+    int find(int x)
+    {
+        if (x != root[x])
+        {
+            root[x] = find(root[x]);
+        }
+        return root[x];
+    }
+
+    void join(int x, int y)
+    {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX != rootY)
+        {
+            if (rank[rootX] > rank[rootY])
+            {
+                std::swap(rootX, rootY);
+            }
+
+            root[rootX] = rootY;
+            rank[rootY] += rank[rootX];
+        }
+    }
+
+    int getSize(int x)
+    {
+        return rank[find(x)];
+    }
+};
+
+//! @brief Get max nodes you can reach from 0 without visiting a restricted node
+//! @param[in] n          Number of nodes in undirected tree
+//! @param[in] edges      2D vector of length n - 1 where edges[i] = [a_i, b_i]
+//! @param[in] restricted Vector of restricted nodes
+//! @return Max number of nodes can reach from node 0 while avoiding restricted
+static int reachableNodesDSU(
+    int                                  n,
+    const std::vector<std::vector<int>>& edges,
+    const std::vector<int>&              restricted)
+{
+    //! @details https://leetcode.com/problems/reachable-nodes-with-restrictions
+    //!          /editorial/
+    //!
+    //!          Time complexity O(N * alpha(N)) where N = number of tree nodes.
+    //!          The amortize complexity for performing N union find operations
+    //!          is the latter where alpha(N) is the Inverse Ackermann Function.
+    //!          Space complexity O(N). Used two vectors root and rank to save
+    //!          the root and rank of each cell in the union find data structure
+
+    UnionFind uf {n};
+    std::unordered_set<int> restSet(restricted.begin(), restricted.end());
+
+    for (const auto& edge : edges)
+    {
+        const int a {edge.front()};
+        const int b {edge.back()};
+
+        if (restSet.count(a) == 0 && restSet.count(b) == 0)
+        {
+            uf.join(a, b);
+        }
+    }
+
+    return uf.getSize(0);
+
+} // static int reachableNodesDSU( ...
+
 TEST(ReachableNodesTest, SampleTest0)
 {
     const std::vector<std::vector<int>> edges {
@@ -273,6 +357,7 @@ TEST(ReachableNodesTest, SampleTest0)
     EXPECT_EQ(4, reachableNodesBFS(7, edges, restricted));
     EXPECT_EQ(4, reachableNodesDFSRecursive(7, edges, restricted));
     EXPECT_EQ(4, reachableNodesDFSIterative(7, edges, restricted));
+    EXPECT_EQ(4, reachableNodesDSU(7, edges, restricted));
 }
 
 TEST(ReachableNodesTest, SampleTest1)
@@ -285,6 +370,7 @@ TEST(ReachableNodesTest, SampleTest1)
     EXPECT_EQ(3, reachableNodesBFS(7, edges, restricted));
     EXPECT_EQ(3, reachableNodesDFSRecursive(7, edges, restricted));
     EXPECT_EQ(3, reachableNodesDFSIterative(7, edges, restricted));
+    EXPECT_EQ(3, reachableNodesDSU(7, edges, restricted));
 }
 
 TEST(ReachableNodesTest, SimpleTest)
@@ -296,4 +382,5 @@ TEST(ReachableNodesTest, SimpleTest)
     EXPECT_EQ(1, reachableNodesBFS(2, edges, restricted));
     EXPECT_EQ(1, reachableNodesDFSRecursive(2, edges, restricted));
     EXPECT_EQ(1, reachableNodesDFSIterative(2, edges, restricted));
+    EXPECT_EQ(1, reachableNodesDSU(2, edges, restricted));
 }
