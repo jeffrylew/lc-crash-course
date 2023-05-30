@@ -89,3 +89,39 @@ def reachableNodeDFSIterative(
                 stack.append(next_node)
     
     return ans
+
+class UnionFind:
+    def __init__(self, n):
+        self.root = list(range(n))
+        self.rank = [1] * n
+    
+    def find(self, x):
+        if self.root[x] != x:
+            self.root[x] = self.find(self.root[x])
+        return self.root[x]
+    
+    def union(self, x, y):
+        root_x, root_y = self.find(x), self.find(y)
+        if root_x != root_y:
+            if self.rank[root_x] > self.rank[root_y]:
+                root_x, root_y = root_y, root_x
+            
+            self.rank[root_y] += self.rank[root_x]
+            self.root[root_x] = root_y
+    
+    def getSize(self, x):
+        return self.rank[self.find(x)]
+
+def reachableNodesDSU(
+    n: int,
+    edges: list[list[int]],
+    restricted: list[int]
+) -> int:
+    rest_set_ = set(restricted)
+    uf = UnionFind(n)
+
+    for node_a, node_b in edges:
+        if node_a not in rest_set_ and node_b not in rest_set_:
+            uf.union(node_a, node_b)
+    
+    return uf.getSize(0)
