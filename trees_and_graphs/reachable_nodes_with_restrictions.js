@@ -77,7 +77,7 @@ var reachableNodesDFSRecursive = function(n, edges, restricted)
     const dfsRecursive = (start) => {
         ans++;
         seen[start] = true;
-        
+
         for (const nextNode of neighbors.get(start))
         {
             if (!seen[nextNode])
@@ -88,5 +88,54 @@ var reachableNodesDFSRecursive = function(n, edges, restricted)
     }
 
     dfsRecursive(0);
+    return ans;
+};
+
+/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @param {number[]} restricted
+ * @return {number}
+ */
+var reachableNodesDFSIterative = function(n, edges, restricted)
+{
+    let neighbors = new Map();
+    for (let node = 0; node < n; node++)
+    {
+        neighbors.set(node, []);
+    }
+
+    for (const [nodeA, nodeB] of edges)
+    {
+        neighbors.get(nodeA).push(nodeB);
+        neighbors.get(nodeB).push(nodeA);
+    }
+
+    let seen = new Array(n).fill(false);
+    for (const node of restricted)
+    {
+        seen[node] = true;
+    }
+
+    let ans = 0;
+    seen[0] = true;
+    let stack = [0];
+
+    while (stack.length)
+    {
+        const currNode = stack.pop();
+
+        ans++;
+
+        for (const nextNode of neighbors.get(currNode))
+        {
+            if (!seen[nextNode])
+            {
+                seen[nextNode] = true;
+                stack.push(nextNode);
+            }
+        }
+    }
+
     return ans;
 };
