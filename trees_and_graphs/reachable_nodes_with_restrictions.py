@@ -32,3 +32,31 @@ def reachableNodesBFS(
                 queue.append(next_node)
     
     return ans
+
+def reachableNodeDFSRecursive(
+    n: int,
+    edges: list[list[int]],
+    restricted: list[int]
+) -> int:
+    neighbors = defaultdict(list)
+    for node_a, node_b in edges:
+        neighbors[node_a].append(node_b)
+        neighbors[node_b].append(node_a)
+    
+    seen = [False] * n
+    for node in restricted:
+        seen[node] = True
+
+    def dfsRecursive(curr_node):
+        nonlocal ans
+        ans += 1
+
+        seen[curr_node] = True
+
+        for next_node in neighbors[curr_node]:
+            if not seen[next_node]:
+                dfsRecursive(next_node)
+    
+    ans = 0
+    dfsRecursive(0)
+    return ans
