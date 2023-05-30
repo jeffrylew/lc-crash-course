@@ -4,7 +4,8 @@
  * @param {number[]} restricted
  * @return {number}
  */
-var reachableNodesBFS = function(n, edges, restricted) {
+var reachableNodesBFS = function(n, edges, restricted)
+{
     let neighbors = new Map();
     for (let node = 0; node < n; node++)
     {
@@ -42,5 +43,50 @@ var reachableNodesBFS = function(n, edges, restricted) {
         }
     }
 
+    return ans;
+};
+
+/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @param {number[]} restricted
+ * @return {number}
+ */
+var reachableNodesDFSRecursive = function(n, edges, restricted)
+{
+    let neighbors = new Map();
+    for (let node = 0; node < n; node++)
+    {
+        neighbors.set(node, []);
+    }
+
+    for (const [nodeA, nodeB] of edges)
+    {
+        neighbors.get(nodeA).push(nodeB);
+        neighbors.get(nodeB).push(nodeA);
+    }
+
+    let seen = new Array(n).fill(false);
+    for (const node of restricted)
+    {
+        seen[node] = true;
+    }
+
+    let ans = 0;
+
+    const dfsRecursive = (start) => {
+        ans++;
+        seen[start] = true;
+        
+        for (const nextNode of neighbors.get(start))
+        {
+            if (!seen[nextNode])
+            {
+                dfsRecursive(nextNode);
+            }
+        }
+    }
+
+    dfsRecursive(0);
     return ans;
 };
