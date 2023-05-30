@@ -139,3 +139,77 @@ var reachableNodesDFSIterative = function(n, edges, restricted)
 
     return ans;
 };
+
+class UnionFind
+{
+    constructor(n)
+    {
+        this.rank = new Array(n).fill(1);
+        this.root = new Array(n);
+
+        for (let node = 0; node < n; node++)
+        {
+            this.root[node] = node;
+        }
+    }
+
+    find(x)
+    {
+        if (this.root[x] != x)
+        {
+            this.root[x] = this.find(this.root[x]);
+        }
+        return this.root[x];
+    }
+
+    union(x, y)
+    {
+        let rootX = this.find(x);
+        let rootY = this.find(y);
+
+        if (rootX != rootY)
+        {
+            if (this.rank[rootX] > this.rank[rootY])
+            {
+                const tmp = rootX;
+                rootX = rootY;
+                rootY = tmp;
+            }
+
+            this.root[rootX] = rootY;
+            this.rank[rootY] += this.rank[rootX];
+        }
+    }
+
+    getSize(x)
+    {
+        return this.rank[this.find(x)];
+    }
+};
+
+/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @param {number[]} restricted
+ * @return {number}
+ */
+var reachableNodesDSU = function(n, edges, restricted)
+{
+    const uf = new UnionFind(n);
+    let restSet = new Set();
+
+    for (const node of restricted)
+    {
+        restSet.add(node);
+    }
+
+    for (const [nodeA, nodeB] of edges)
+    {
+        if (!restSet.has(nodeA) && !restSet.has(nodeB))
+        {
+            uf.union(nodeA, nodeB);
+        }
+    }
+
+    return uf.getSize(0);
+};
