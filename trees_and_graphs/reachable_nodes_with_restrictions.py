@@ -60,3 +60,32 @@ def reachableNodeDFSRecursive(
     ans = 0
     dfsRecursive(0)
     return ans
+
+def reachableNodeDFSIterative(
+    n: int,
+    edges: list[list[int]],
+    restricted: list[int]
+) -> int:
+    neighbors = defaultdict(set)
+    for node_a, node_b in edges:
+        neighbors[node_a].add(node_b)
+        neighbors[node_b].add(node_a)
+    
+    seen = [False] * n
+    for node in restricted:
+        seen[node] = True
+    
+    stack = [0]
+    ans = 0
+    seen[0] = True
+
+    while stack:
+        curr_node = stack.pop()
+        ans += 1
+
+        for next_node in neighbors[curr_node]:
+            if not seen[next_node]:
+                seen[next_node] = True
+                stack.append(next_node)
+    
+    return ans
