@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
@@ -82,3 +83,36 @@ static std::vector<int> distanceK(TreeNode* root, TreeNode* target, int k)
     return ans;
 
 } // static std::vector<int> distanceK( ...
+
+TEST(DistanceKTest, SampleTest)
+{
+    TreeNode one {1};
+    TreeNode two {2};
+    TreeNode three {3};
+    TreeNode five {5};
+
+    const TreeNode zero {0};
+    const TreeNode four {4};
+    const TreeNode six {6};
+    const TreeNode seven {7};
+    const TreeNode eight {8};
+
+    three.left  = &five;
+    three.right = &one;
+
+    five.left  = &six;
+    five.right = &two;
+
+    two.left  = &seven;
+    two.right = &four;
+
+    one.left  = &zero;
+    one.right = &eight;
+
+    const std::vector<int> expected_output {1, 4, 7};
+
+    auto result = distanceK(&three, &five, 2);
+    std::sort(result.begin(), result.end());
+
+    EXPECT_EQ(result, expected_output);
+}
