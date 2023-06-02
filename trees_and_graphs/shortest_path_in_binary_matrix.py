@@ -9,7 +9,7 @@ def shortestPathBinaryMatrix(grid: list[list[int]]) -> int:
     
     n = len(grid)
     seen = {(0, 0)}
-    queue = deque([0, 0, 1]) # row, col, steps
+    queue = deque([(0, 0, 1)]) # row, col, steps
 
     directions = [
         (0, 1), (1, 0), (1, 1), (-1, -1), (-1, 1), (1, -1), (0, -1), (-1, 0)]
