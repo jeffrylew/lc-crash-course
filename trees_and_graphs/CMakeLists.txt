@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "all_nodes_distance_k_in_binary_tree"
   "binary_tree_right_side_view"
   "binary_tree_zigzag_level_order_traversal"
   "build_graph"
