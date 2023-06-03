@@ -32,6 +32,7 @@ set(
   "range_sum_of_bst"
   "reachable_nodes_with_restrictions"
   "reorder_routes_to_make_all_paths_lead_to_the_city_zero"
+  "shortest_path_in_a_grid_with_obstacles_elimination"
   "shortest_path_in_binary_matrix"
   "validate_binary_search_tree"
 )
