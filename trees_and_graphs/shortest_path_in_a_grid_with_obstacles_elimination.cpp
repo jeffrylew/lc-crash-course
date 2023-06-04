@@ -34,6 +34,21 @@ struct State
 //! @return Minimum number of steps to walk from (0, 0) to (m - 1, n - 1)
 static int shortestPath(const std::vector<std::vector<int>>& grid, int k)
 {
+    //! @details https://leetcode.com/explore/interview/card/
+    //!          leetcodes-interview-crash-course-data-structures-and-algorithms
+    //!          /707/traversals-trees-graphs/4631/
+    //!
+    //!          Time complexity O(m * n * k). In general, the time complexity
+    //!          for graph algorithms in O(Nodes + Edges) when a node isn't
+    //!          visited more than once. In this problem, s = number of states
+    //!          is used instead of nodes. There are two variables representing
+    //!          the state - (node, remain). There are m * n values for node and
+    //!          k values for remain so there are m * n * k states. The work
+    //!          done at each state is O(1).
+    //!          Space complexity O(m * n) instead of O(m * n * k) since seen
+    //!          stores the removals at each node (instead of having another
+    //!          dimension for k removal states).
+
     const auto m = static_cast<int>(grid.size());
     const auto n = static_cast<int>(grid.front().size());
 
