@@ -34,6 +34,7 @@ set(
   "reorder_routes_to_make_all_paths_lead_to_the_city_zero"
   "shortest_path_in_a_grid_with_obstacles_elimination"
   "shortest_path_in_binary_matrix"
+  "shortest_path_with_alternating_colors"
   "validate_binary_search_tree"
 )
 
