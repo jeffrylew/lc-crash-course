@@ -25,6 +25,7 @@ set(
   "number_of_connected_components_in_an_undirected_graph.cpp"
   "number_of_islands"
   "number_of_provinces"
+  "open_the_lock"
   "path_sum"
   "postorder_dfs"
   "preorder_dfs"
