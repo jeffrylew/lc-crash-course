@@ -7,6 +7,10 @@
 #include <utility>
 #include <vector>
 
+//! @brief Helper function generates all strings that differ in one position by
+//!        a value of one from node
+//! @param[in] node std::string representation of a number in [0, 9999] 
+//! @return Vector of strings for numbers that differ by one in one position
 static std::vector<std::string> neighbors(std::string node)
 {
     std::vector<std::string> ans {};
@@ -45,11 +49,13 @@ static int openLock(
     //!          Time complexity O(d) where d = deadends.length for converting
     //!          deadends into a set. Everything else in the problem is constant
     //!          (4 slots, 10 digits). However, if the lock had N slots then the
-    //!          time complexity would be O(10^N * N^2 + d). There are 10^N
-    //!          different states because each slot has 10 options. At each
-    //!          state, we perform O(N^2) work because we loop over the N slots
-    //!          while performing string concatenation, which is O(N) for
-    //!          immutable strings
+    //!          time complexity would be generally be O(10^N * N^2 + d). There
+    //!          are 10^N different states because each slot has 10 options.
+    //!          At each state, we generally perform O(N^2) work because we loop
+    //!          over the N slots while performing string concatenation, which
+    //!          is O(N) for immutable strings. However, for the C++ solution
+    //!          below, the time complexity is O(10^N * N + d) since the string
+    //!          concatenation is avoided.
     //!          Space complexity O(d) for deadends set
 
     if (std::find(deadends.cbegin(), deadends.cend(), "0000")
