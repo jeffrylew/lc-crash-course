@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <array>
 #include <queue>
 #include <set>
 #include <utility>
@@ -109,6 +110,80 @@ static int nearestExitFA(const std::vector<std::vector<char>>& maze,
 
 } // static int nearestExitFA( ...
 
+//! @brief Discussion solution to get shortest path from entrance to exit
+//! @param[in] maze     m x n maze passed by val, empty cells = '.', walls = '+'
+//! @param[in] entrance Vector containing initial [row, col] location
+//! @return Number of steps in the shortest path from entrance to nearest exit
+static int nearestExitDS(std::vector<std::vector<char>> maze,
+                         const std::vector<int>&        entrance)
+{
+    //! @details https://leetcode.com/problems/
+    //!          nearest-exit-from-entrance-in-maze/editorial/
+    //!
+    //!          Time complexity O(m * n) where m x n is the size of maze.
+    //!          For each visited cell, we push and pop it from queue once which
+    //!          takes O(1) time. For each cell in queue, we mark it as visited
+    //!          in maze and check if it has any unvisited neighbors in all four
+    //!          directions - this takes constant time. In the worst case, we
+    //!          may have to visit O(m * n) cells before the iteration stops.
+    //!          Space complexity O(max(m, n)). We modify the input matrix maze
+    //!          in-place to mark each visited cell, requiring constant space.
+    //!          In the worst case scenario, there may be O(m + n) cells stored
+    //!          in queue which simplifies to O(max(m, n)). This would be the
+    //!          case when there are no walls and the start location is in the
+    //!          center of the m x n matrix.
+
+    const auto rows = static_cast<int>(maze.size());
+    const auto cols = static_cast<int>(maze.front().size());
+
+    static const std::vector<std::pair<int, int>> dirs {
+        {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    //! Mark the entrance as visited since it's not an exit
+    const int startRow {entrance.front()};
+    const int startCol {entrance.back()};
+    maze[startRow][startCol] = '+';
+
+    //! Start BFS from the entrance and use a queue to store all cells to visit
+    std::queue<std::array<int, 3>> queue {};
+    queue.push({startRow, startCol, 0});
+
+    while (not queue.empty())
+    {
+        const auto [currRow, currCol, currDistance] = queue.front();
+        queue.pop();
+
+        //! For the current cell, check its four neighbor cells
+        for (const auto [dcol, drow] : dirs)
+        {
+            const int nextRow {currRow + drow};
+            const int nextCol {currCol + dcol};
+
+            //! If there exists an unvisited empty neighbor
+            if (0 <= nextRow && nextRow < rows && 0 <= nextCol && nextCol < cols
+                && maze[nextRow][nextCol] == '.')
+            {
+                //! If this empty cell is an exit, return distance + 1
+                if (nextRow == 0
+                    || nextRow == rows - 1
+                    || nextCol == 0
+                    || nextCol == cols - 1)
+                {
+                    return currDistance + 1;
+                }
+
+                //! Else, add cell to queue and mark it as visited
+                maze[nextRow][nextCol] = '+';
+                queue.push({nextRow, nextCol, currDistance + 1});
+            }
+        }
+    }
+
+    //! If we finish iterating without finding an exit, return -1
+    return -1;
+
+} // static int nearestExitDS( ...
+
 TEST(NearestExitTest, SampleTest1)
 {
     const std::vector<std::vector<char>> maze {
@@ -119,6 +194,7 @@ TEST(NearestExitTest, SampleTest1)
     const std::vector<int> entrance {1, 2};
 
     EXPECT_EQ(1, nearestExitFA(maze, entrance));
+    EXPECT_EQ(1, nearestExitDS(maze, entrance));
 }
 
 TEST(NearestExitTest, SampleTest2)
@@ -131,6 +207,7 @@ TEST(NearestExitTest, SampleTest2)
     const std::vector<int> entrance {1, 0};
 
     EXPECT_EQ(2, nearestExitFA(maze, entrance));
+    EXPECT_EQ(2, nearestExitDS(maze, entrance));
 }
 
 TEST(NearestExitTest, SampleTest3)
@@ -140,6 +217,7 @@ TEST(NearestExitTest, SampleTest3)
     const std::vector<int> entrance {0, 0};
 
     EXPECT_EQ(-1, nearestExitFA(maze, entrance));
+    EXPECT_EQ(-1, nearestExitDS(maze, entrance));
 }
 
 TEST(NearestExitTest, TimeLimitExceededTest)
@@ -249,4 +327,5 @@ TEST(NearestExitTest, TimeLimitExceededTest)
     const std::vector<int> entrance {42, 4};
 
     EXPECT_GT(nearestExitFA(maze, entrance), -2);
+    EXPECT_GT(nearestExitDS(maze, entrance), -2);
 }
