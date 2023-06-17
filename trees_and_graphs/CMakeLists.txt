@@ -37,6 +37,7 @@ set(
   "shortest_path_in_a_grid_with_obstacles_elimination"
   "shortest_path_in_binary_matrix"
   "shortest_path_with_alternating_colors"
+  "snakes_and_ladders"
   "validate_binary_search_tree"
 )
 
