@@ -125,10 +125,80 @@ static int snakesAndLaddersFA(const std::vector<std::vector<int>>& board)
         }
     }
 
-    // Not possible to reach square n ^ 2
+    // Not possible to reach square n^2
     return -1;
 
 } // static int snakesAndLaddersFA( ...
+
+//! @brief BFS discussion solution to get least moves to reach square n^2
+//! @param[in] board Reference to n x n integer matrix board
+//! @return Least number of moves to reach square n^2, else -1 if not possible
+static int snakesAndLaddersBFS(const std::vector<std::vector<int>>& board)
+{
+    //! @details https://leetcode.com/problems/snakes-and-ladders/editorial/
+    //!
+    //!          Time complexity O(N^2) where N = number of rows and columns.
+    //!          BFS takes O(|V| + |E|) where |V| is number of vertices and |E|
+    //!          is the number of edges. The vertices are board cells O(N^2) and
+    //!          the edges are moves between them, no more than 6N^2 = O(N^2).
+    //!          The total time complexity is O(7N^2) = O(N^2). Associating each
+    //!          (row, col) with a label also costs O(N^2).
+    //!          Space complexity O(N^2). We maintain cells for each label from
+    //!          1 to N^2, dist for all cells, and a queue for BFS. The columns
+    //!          array only takes O(N) space.
+
+    const auto n = static_cast<int>(board.size());
+
+    std::vector<std::pair<int, int>> cells(n * n + 1);
+
+    //! Maintain order of columns and reverse it after each row
+    int              label {1};
+    std::vector<int> columns(n);
+    std::iota(columns.begin(), columns.end(), 0);
+
+    for (int row = n - 1; row >= 0; --row)
+    {
+        for (const int column : columns)
+        {
+            cells[label++] = {row, column};
+        }
+
+        std::reverse(columns.begin(), columns.end());
+    }
+
+    //! Vector of distances (least moves) to all cells from the first one
+    //! Distance from first cell to itself is 0
+    //! Unreachable cells are denoted with -1 (initially)
+    std::vector<int> dist(n * n + 1, -1);
+    dist[1] = 0;
+
+    //! Queue of cells (labels)
+    std::queue<int> queue {};
+    queue.push(1);
+
+    while (not queue.empty())
+    {
+        const int curr = queue.front();
+        queue.pop();
+
+        for (int next = curr + 1; next <= std::min(curr + 6, n * n); ++next)
+        {
+            const auto [row, col] = cells[next];
+
+            const int destination {
+                board.at(row).at(col) != -1 ? board.at(row).at(col) : next};
+            
+            if (dist[destination] == -1)
+            {
+                dist[destination] = dist[curr] + 1;
+                queue.push(destination);
+            }
+        }
+    }
+
+    return dist[n * n];
+
+} // static int snakesAndLaddersBFS( ...
 
 TEST(SnakesAndLaddersTest, SampleTest)
 {
@@ -142,4 +212,6 @@ TEST(SnakesAndLaddersTest, SampleTest)
 
     EXPECT_NE(4, snakesAndLaddersFA(board));
     EXPECT_EQ(5, snakesAndLaddersFA(board));
+
+    EXPECT_EQ(4, snakesAndLaddersBFS(board));
 }
