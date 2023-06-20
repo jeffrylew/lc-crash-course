@@ -137,6 +137,8 @@ static int snakesAndLaddersBFS(const std::vector<std::vector<int>>& board)
 {
     //! @details https://leetcode.com/problems/snakes-and-ladders/editorial/
     //!
+    //!          BFS finds shortest path in unweighted graphs.
+    //!
     //!          Time complexity O(N^2) where N = number of rows and columns.
     //!          BFS takes O(|V| + |E|) where |V| is number of vertices and |E|
     //!          is the number of edges. The vertices are board cells O(N^2) and
@@ -200,6 +202,89 @@ static int snakesAndLaddersBFS(const std::vector<std::vector<int>>& board)
 
 } // static int snakesAndLaddersBFS( ...
 
+//! @brief Dijkstra's algorithm solution to get least moves to reach square n^2
+//! @param[in] board Reference to n x n integer matrix board
+//! @return Least number of moves to reach square n^2, else -1 if not possible
+static int snakesAndLaddersDijkstra(const std::vector<std::vector<int>>& board)
+{
+    //! @details https://leetcode.com/problems/snakes-and-ladders/editorial/
+    //!
+    //!          Dijkstra's algorithm solves shortest path problem for weighted
+    //!          graphs. Can treat an unweighted graph where all weights are
+    //!          equal to 1.
+    //!
+    //!          Time complexity O(N^2 * log N) where N = number of columns and
+    //!          rows of the board. Dijkstra's algorithm with a binary heap
+    //!          works in O(|V| + |E|*log|V|) where |V| is number of vertices
+    //!          and |E| is the number of edges. We have |V| = N^2, |E| < 6N^2
+    //!          Space complexity O(N^2). Space complexity of Dijkstra's
+    //!          algorithm is O(|V|) = O(N^2) to store |V| vertices in our
+    //!          data structure (priority queue and vector of distances). Also
+    //!          have cells of size O(N^2) and columns of size O(N).
+
+    const auto n = static_cast<int>(board.size());
+
+    std::vector<std::pair<int, int>> cells(n * n + 1);
+
+    //! Maintain order of columns and reverse it after each row
+    int              label {1};
+    std::vector<int> columns(n);
+    std::iota(columns.begin(), columns.end(), 0);
+
+    for (int row = n - 1; row >= 0; --row)
+    {
+        for (const int column : columns)
+        {
+            cells[label++] = {row, column};
+        }
+
+        std::reverse(columns.begin(), columns.end());
+    }
+
+    //! Vector of distances (least moves) to all cells from the first one
+    //! Distance from first cell to itself is 0
+    //! Unreachable cells are denoted with -1 (initially)
+    std::vector<int> dist(n * n + 1, -1);
+    dist[1] = 0;
+
+    //! Priority queue of cells as pairs <distance, label>
+    std::priority_queue<std::pair<int, int>,
+                        std::vector<std::pair<int, int>>,
+                        std::greater<std::pair<int, int>>> queue;
+    queue.emplace(0, 1);
+
+    while (not queue.empty())
+    {
+        const auto [distance, curr] = queue.top();
+        queue.pop();
+
+        //! If not equal, the value distance is outdated so move on
+        if (distance != dist[curr])
+        {
+            continue;
+        }
+
+        for (int next = curr + 1; next <= std::min(curr + 6, n * n); ++next)
+        {
+            const auto [row, col] = cells[next];
+
+            const int destination {
+                board.at(row).at(col) != -1 ? board.at(row).at(col) : next};
+            
+            //! If haven't found a path to destination yet (-1) or we've just
+            //! found a shorter path then push pair to priority queue
+            if (dist[destination] == -1 || dist[curr] + 1 < dist[destination])
+            {
+                dist[destination] = dist[curr] + 1;
+                queue.emplace(dist[destination], destination);
+            }
+        }
+    }
+
+    return dist[n * n];
+
+} // static int snakesAndLaddersDijkstra( ...
+
 TEST(SnakesAndLaddersTest, SampleTest)
 {
     const std::vector<std::vector<int>> board {
@@ -214,4 +299,5 @@ TEST(SnakesAndLaddersTest, SampleTest)
     EXPECT_EQ(5, snakesAndLaddersFA(board));
 
     EXPECT_EQ(4, snakesAndLaddersBFS(board));
+    EXPECT_EQ(4, snakesAndLaddersDijkstra(board));
 }
