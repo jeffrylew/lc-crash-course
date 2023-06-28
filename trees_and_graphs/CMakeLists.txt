@@ -22,6 +22,7 @@ set(
   "maximum_difference_between_node_and_ancestor"
   "minimum_absolute_difference_in_bst"
   "minimum_depth_of_binary_tree"
+  "minimum_genetic_mutation"
   "minimum_number_of_vertices_to_reach_all_nodes"
   "nearest_exit_from_entrance_in_maze"
   "number_of_connected_components_in_an_undirected_graph.cpp"
