@@ -15,6 +15,7 @@ set(
   "find_largest_value_in_each_tree_row"
   "inorder_dfs"
   "insert_into_a_binary_search_tree"
+  "jump_game_iii"
   "keys_and_rooms"
   "lowest_common_ancestor"
   "max_area_of_island"
