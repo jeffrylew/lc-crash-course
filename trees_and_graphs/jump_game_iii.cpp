@@ -94,11 +94,42 @@ static bool canReachBFS(std::vector<int> arr, int start)
     return false;
 }
 
+//! @brief DFS solution to check if can reach any index with value 0
+//! @param[in] arr   Vector of non-negative integers
+//! @param[in] start Initial index in arr
+//! @return True if can reach any index with value 0, else false
+static bool canReachDFS(std::vector<int> arr, int start)
+{
+    if (start >= 0
+        && start < static_cast<int>(arr.size())
+        && arr.at(start) >= 0)
+    {
+        if (arr[start] == 0)
+        {
+            return true;
+        }
+
+        arr[start] = -arr[start];
+
+        return canReachDFS(arr, start + arr[start])
+            || canReachDFS(arr, start - arr[start]);
+    }
+
+    return false;
+
+} // static bool canReachDFS( ...
+
 TEST(CanReachTest, SampleTest)
 {
     EXPECT_TRUE(canReachFA({4, 2, 3, 0, 3, 1, 2}, 5));
+    EXPECT_TRUE(canReachBFS({4, 2, 3, 0, 3, 1, 2}, 5));
+    EXPECT_TRUE(canReachDFS({4, 2, 3, 0, 3, 1, 2}, 5));
 
     EXPECT_TRUE(canReachFA({4, 2, 3, 0, 3, 1, 2}, 0));
+    EXPECT_TRUE(canReachBFS({4, 2, 3, 0, 3, 1, 2}, 0));
+    EXPECT_TRUE(canReachDFS({4, 2, 3, 0, 3, 1, 2}, 0));
 
     EXPECT_FALSE(canReachFA({3, 0, 2, 1, 2}, 2));
+    EXPECT_FALSE(canReachBFS({3, 0, 2, 1, 2}, 2));
+    EXPECT_FALSE(canReachDFS({3, 0, 2, 1, 2}, 2));
 }
