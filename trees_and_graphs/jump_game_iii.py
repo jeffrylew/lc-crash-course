@@ -23,3 +23,15 @@ def canReachBFS(arr: list[int], start: int) -> bool:
         arr[node] = -arr[node]
     
     return False
+
+def canReachDFS(arr: list[int], start: int) -> bool:
+    if 0 <= start < len(arr) and arr[start] >= 0:
+        if arr[start] == 0:
+            return True
+        
+        arr[start] = -arr[start]
+
+        return (canReachDFS(arr, start + arr[start]) or
+                canReachDFS(arr, start - arr[start]))
+    
+    return False
