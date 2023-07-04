@@ -49,3 +49,26 @@ var canReachBFS = function(arr, start)
 
     return false;
 };
+
+/**
+ * @param {number[]} arr
+ * @param {number} start
+ * @return {boolean}
+ */
+var canReachDFS = function(arr, start)
+{
+    if (start >= 0 && start < arr.length && arr[start] >= 0)
+    {
+        if (arr[start] == 0)
+        {
+            return true;
+        }
+
+        arr[start] = -arr[start];
+
+        return canReachDFS(arr, start + arr[start])
+            || canReachDFS(arr, start - arr[start]);
+    }
+
+    return false;
+};
