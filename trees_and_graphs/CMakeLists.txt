@@ -8,6 +8,7 @@ set(
   "closest_binary_search_tree_value"
   "count_good_nodes_in_binary_tree"
   "deepest_leaves_sum"
+  "detonate_the_maximum_bombs"
   "dfs"
   "diameter_of_binary_tree"
   "evaluate_division"
