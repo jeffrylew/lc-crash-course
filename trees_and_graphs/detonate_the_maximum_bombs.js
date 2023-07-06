@@ -25,6 +25,32 @@ var maximumDetonation = function(bombs)
         return count;
     }
 
+    const dfsIterative = (curr_node, graph) => {
+        let stack = [curr_node];
+        let visited = new Set([curr_node]);
+
+        while (stack.length)
+        {
+            const node = stack.pop();
+
+            if (!graph.has(node))
+            {
+                graph.set(node, []);
+            }
+
+            for (const neighbor of graph.get(node))
+            {
+                if (!visited.has(neighbor))
+                {
+                    visited.add(neighbor);
+                    stack.push(neighbor);
+                }
+            }
+        }
+
+        return visited.size;
+    }
+
     let graph = new Map();
     const n = bombs.length;
 
@@ -72,9 +98,15 @@ var maximumDetonation = function(bombs)
 
     for (let i = 0; i < n; i++)
     {
+        /**
+         * Recursive DFS
+         * 
         let visited = new Set();
         const count = dfsRecursive(i, visited, graph);
         answer = Math.max(answer, count);
+         */
+        
+        answer = Math.max(answer, dfsIterative(i, graph));
     }
 
     return answer;
