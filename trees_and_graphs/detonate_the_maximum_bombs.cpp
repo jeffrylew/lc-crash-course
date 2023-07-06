@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <queue>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -81,9 +82,9 @@ static int maximumDetonationFA(const std::vector<std::vector<int>>& bombs)
 //! @param[in, out] visited   Reference to set of visited nodes
 //! @param[in, out] graph     Reference to map of neighboring nodes
 //! @return Number of reachable nodes from curr_node
-static int dfs(int                                        curr_node,
-               std::unordered_set<int>&                   visited,
-               std::unordered_map<int, std::vector<int>>& graph)
+static int dfsRecursive(int                                        curr_node,
+                        std::unordered_set<int>&                   visited,
+                        std::unordered_map<int, std::vector<int>>& graph)
 {
     visited.insert(curr_node);
 
@@ -93,18 +94,45 @@ static int dfs(int                                        curr_node,
     {
         if (visited.count(neighbor) == 0)
         {
-            count += dfs(neighbor, visited, graph);
+            count += dfsRecursive(neighbor, visited, graph);
         }
     }
 
     return count;
 }
 
+//! @brief Helper function to find number of reachable nodes from curr_node
+//! @param[in]      curr_node Current node/bomb index
+//! @param[in, out] graph     Reference to map of neighboring nodes
+//! @return Number of reachable nodes from curr_node
+static int dfsIterative(int                                        curr_node,
+                        std::unordered_map<int, std::vector<int>>& graph)
+{
+    std::stack<int>         stack({curr_node});
+    std::unordered_set<int> visited {curr_node};
+
+    while (not stack.empty())
+    {
+        const int node = stack.top();
+        stack.pop();
+
+        for (const int neighbor : graph[node])
+        {
+            if (visited.count(neighbor) == 0)
+            {
+                visited.insert(neighbor);
+                stack.push(neighbor);
+            }
+        }
+    }
+
+    return static_cast<int>(visited.size());
+}
+
 //! @brief Get max number of bombs that can be detonated from only one bomb
 //! @param[in] bombs Reference to vector of [x_i, y_i, r_i] for bombs[i]
 //! @return Max number of bombs that can be detonated from only one bomb
-static int maximumDetonationDFSRecursive(
-    const std::vector<std::vector<int>>& bombs)
+static int maximumDetonationDFS(const std::vector<std::vector<int>>& bombs)
 {
     //! @details leetcode.com/problems/detonate-the-maximum-bombs/editorial
     //!
@@ -157,9 +185,15 @@ static int maximumDetonationDFSRecursive(
 
     for (int i = 0; i < n; ++i)
     {
+        /**
+         * Recursive DFS
+         * 
         std::unordered_set<int> visited {};
 
-        answer = std::max(answer, dfs(i, visited, graph));
+        answer = std::max(answer, dfsRecursive(i, visited, graph));
+         */
+
+        answer = std::max(answer, dfsIterative(i, graph));
     }
 
     return answer;
@@ -171,7 +205,7 @@ TEST(MaximumDetonationTest, SampleTest1)
     const std::vector<std::vector<int>> bombs {{2, 1, 3}, {6, 1, 4}};
 
     EXPECT_EQ(2, maximumDetonationFA(bombs));
-    EXPECT_EQ(2, maximumDetonationDFSRecursive(bombs));
+    EXPECT_EQ(2, maximumDetonationDFS(bombs));
 }
 
 TEST(MaximumDetonationTest, SampleTest2)
@@ -179,7 +213,7 @@ TEST(MaximumDetonationTest, SampleTest2)
     const std::vector<std::vector<int>> bombs {{1, 1, 5}, {10, 10, 5}};
 
     EXPECT_EQ(1, maximumDetonationFA(bombs));
-    EXPECT_EQ(1, maximumDetonationDFSRecursive(bombs));
+    EXPECT_EQ(1, maximumDetonationDFS(bombs));
 }
 
 TEST(MaximumDetonationTest, SampleTest3)
@@ -188,5 +222,5 @@ TEST(MaximumDetonationTest, SampleTest3)
         {1, 2, 3}, {2, 3, 1}, {3, 4, 2}, {4, 5, 3}, {5, 6, 4}};
 
     EXPECT_EQ(5, maximumDetonationFA(bombs));
-    EXPECT_EQ(5, maximumDetonationDFSRecursive(bombs));
+    EXPECT_EQ(5, maximumDetonationDFS(bombs));
 }
