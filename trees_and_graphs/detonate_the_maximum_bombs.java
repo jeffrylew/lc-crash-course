@@ -43,6 +43,32 @@ public int dfsIterative(int                         curr_node,
     return visited.size();
 }
 
+public int bfs(int                         curr_node,
+               Map<Integer, List<Integer>> graph)
+{
+    Deque<Integer> queue = new ArrayDeque<>();
+    queue.offer(curr_node);
+
+    Set<Integer> visited = new HashSet<>();
+    visited.add(curr_node);
+
+    while (!queue.isEmpty())
+    {
+        int node = queue.poll();
+
+        for (int neighbor : graph.getOrDefault(node, new ArrayList<>()))
+        {
+            if (!visited.contains(neighbor))
+            {
+                visited.add(neighbor);
+                queue.offer(neighbor);
+            }
+        }
+    }
+
+    return visited.size();
+}
+
 public int maximumDetonation(int[][] bombs)
 {
     Map<Integer, List<Integer>> graph = new HashMap<>();
@@ -90,7 +116,13 @@ public int maximumDetonation(int[][] bombs)
         answer = Math.max(answer, count);
          */
         
+        /**
+         * Iterative DFS
+         * 
         answer = Math.max(answer, dfsIterative(i, graph));
+         */
+        
+        answer = Math.max(answer, bfs(i, graph));
     }
 
     return answer;
