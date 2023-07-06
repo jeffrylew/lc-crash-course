@@ -17,6 +17,32 @@ public int dfsRecursive(int                         curr_node,
     return count;
 }
 
+public int dfsIterative(int                         curr_node,
+                        Map<Integer, List<Integer>> graph)
+{
+    Stack<Integer> stack = new Stack<>();
+    stack.push(curr_node);
+
+    Set<Integer> visited = new HashSet<>();
+    visited.add(curr_node);
+
+    while (!stack.isEmpty())
+    {
+        int node = stack.pop();
+
+        for (int neighbor : graph.getOrDefault(node, new ArrayList<>()))
+        {
+            if (!visited.contains(neighbor))
+            {
+                visited.add(neighbor);
+                stack.push(neighbor);
+            }
+        }
+    }
+
+    return visited.size();
+}
+
 public int maximumDetonation(int[][] bombs)
 {
     Map<Integer, List<Integer>> graph = new HashMap<>();
@@ -56,9 +82,15 @@ public int maximumDetonation(int[][] bombs)
 
     for (int i = 0; i < n; i++)
     {
+        /**
+         * Recursive DFS
+         * 
         int count = dfsRecursive(i, new HashSet<>(), graph);
 
         answer = Math.max(answer, count);
+         */
+        
+        answer = Math.max(answer, dfsIterative(i, graph));
     }
 
     return answer;
