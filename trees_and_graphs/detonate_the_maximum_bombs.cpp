@@ -113,7 +113,7 @@ static int dfsIterative(int                                        curr_node,
 
     while (not stack.empty())
     {
-        const int node = stack.top();
+        const int node {stack.top()};
         stack.pop();
 
         for (const int neighbor : graph[node])
@@ -122,6 +122,34 @@ static int dfsIterative(int                                        curr_node,
             {
                 visited.insert(neighbor);
                 stack.push(neighbor);
+            }
+        }
+    }
+
+    return static_cast<int>(visited.size());
+}
+
+//! @brief Helper function to find number of reachable nodes from curr_node
+//! @param[in]      curr_node Current node/bomb index
+//! @param[in, out] graph     Reference to map of neighboring nodes
+//! @return Number of reachable nodes from curr_node
+static int bfs(int                                        curr_node,
+               std::unordered_map<int, std::vector<int>>& graph)
+{
+    std::queue<int>         queue({curr_node});
+    std::unordered_set<int> visited {curr_node};
+
+    while (not queue.empty())
+    {
+        const int node {queue.front()};
+        queue.pop();
+
+        for (const int neighbor : graph[node])
+        {
+            if (visited.count(neighbor) == 0)
+            {
+                visited.insert(neighbor);
+                queue.push(neighbor);
             }
         }
     }
@@ -193,7 +221,13 @@ static int maximumDetonationDFS(const std::vector<std::vector<int>>& bombs)
         answer = std::max(answer, dfsRecursive(i, visited, graph));
          */
 
+        /**
+         * Iterative DFS
+         *
         answer = std::max(answer, dfsIterative(i, graph));
+         */
+        
+        answer = std::max(answer, bfs(i, graph));
     }
 
     return answer;
