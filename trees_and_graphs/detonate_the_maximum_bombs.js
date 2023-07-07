@@ -51,6 +51,40 @@ var maximumDetonation = function(bombs)
         return visited.size;
     }
 
+    const bfs = (curr_node, graph) => {
+        let queue = [curr_node];
+        let visited = new Set([curr_node]);
+
+        while (queue.length)
+        {
+            const currNodesInQueue = queue.length;
+            let nextQueue = [];
+
+            for (let i = 0; i < currNodesInQueue; i++)
+            {
+                const node = queue[i];
+
+                if (!graph.has(node))
+                {
+                    graph.set(node, []);
+                }
+
+                for (const neighbor of graph.get(node))
+                {
+                    if (!visited.has(neighbor))
+                    {
+                        visited.add(neighbor);
+                        nextQueue.push(neighbor);
+                    }
+                }
+            }
+
+            queue = nextQueue;
+        }
+
+        return visited.size;
+    }
+
     let graph = new Map();
     const n = bombs.length;
 
@@ -106,7 +140,13 @@ var maximumDetonation = function(bombs)
         answer = Math.max(answer, count);
          */
         
+        /**
+         * Iterative DFS
+         * 
         answer = Math.max(answer, dfsIterative(i, graph));
+         */
+        
+        answer = Math.max(answer, bfs(i, graph));
     }
 
     return answer;
