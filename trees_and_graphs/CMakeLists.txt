@@ -43,6 +43,7 @@ set(
   "shortest_path_with_alternating_colors"
   "snakes_and_ladders"
   "validate_binary_search_tree"
+  "word_ladder"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
