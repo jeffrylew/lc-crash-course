@@ -32,9 +32,25 @@ def maximumDetonationDFS(bombs: list[list[int]]) -> int:
         
         return len(visited)
     
+    def dfsIterative(curr_node):
+        stack = [curr_node]
+        visited2 = set([curr_node])
+
+        while stack:
+            node = stack.pop()
+
+            for neighbor in graph[node]:
+                if neighbor not in visited2:
+                    visited2.add(neighbor)
+                    stack.append(neighbor)
+        
+        return len(visited2)
+    
     ans = 0
     for i in range(n):
-        visited = set()
-        ans = max(ans, dfsRecursive(i, visited))
+        # visited = set()
+        # ans = max(ans, dfsRecursive(i, visited))
+
+        ans = max(ans, dfsIterative(i))
     
     return ans
