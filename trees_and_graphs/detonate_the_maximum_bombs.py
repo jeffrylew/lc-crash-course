@@ -1,4 +1,5 @@
 from collections import defaultdict
+from collections import deque
 
 def maximumDetonationDFS(bombs: list[list[int]]) -> int:
     graph = defaultdict(list)
@@ -46,11 +47,28 @@ def maximumDetonationDFS(bombs: list[list[int]]) -> int:
         
         return len(visited2)
     
+    # BFS to get the number of nodes reachable from a given node
+    def bfs(curr_node):
+        queue = deque([curr_node])
+        visited3 = set([curr_node])
+
+        while queue:
+            node = queue.popleft()
+
+            for neighbor in graph[node]:
+                if neighbor not in visited3:
+                    visited3.add(neighbor)
+                    queue.append(neighbor)
+        
+        return len(visited3)
+    
     ans = 0
     for i in range(n):
         # visited = set()
         # ans = max(ans, dfsRecursive(i, visited))
 
-        ans = max(ans, dfsIterative(i))
+        # ans = max(ans, dfsIterative(i))
+
+        ans = max(ans, bfs(i))
     
     return ans
