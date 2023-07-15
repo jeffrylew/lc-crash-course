@@ -9,6 +9,11 @@
 static int lastStoneWeight(std::vector<int> stones)
 {
     //! @details https://leetcode.com/problems/last-stone-weight/
+    //!
+    //!          Time complexity O(N * log N) for heap of initial length N. On
+    //!          each smash at least one rock is destroyed so there are at most
+    //!          N iterations.
+    //!          Space complexity O(N) for the heap.
     
     std::priority_queue<int> heap(stones.begin(), stones.end());
 
