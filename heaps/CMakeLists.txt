@@ -1,6 +1,7 @@
 set(
   cpp_files
   "heap_ops"
+  "last_stone_weight"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
