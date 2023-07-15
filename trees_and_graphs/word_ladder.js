@@ -135,6 +135,7 @@ var ladderLengthBidirBFS = function(beginWord, endWord, wordList)
                 {
                     if (othersVisited.has(adjacentWord))
                     {
+                        queue = nextQueue;
                         return level + othersVisited.get(adjacentWord);
                     }
 
