@@ -115,11 +115,10 @@ var ladderLengthBidirBFS = function(beginWord, endWord, wordList)
 
     const visitWordNode = (queue, visited, othersVisited) => {
         const currQueueLength = queue.length;
-        let nextQueue = [];
 
         for (let j = 0; j < currQueueLength; j++)
         {
-            const [word, level] = queue[j];
+            const [word, level] = queue.shift();
 
             for (let i = 0; i < L; i++)
             {
@@ -135,20 +134,17 @@ var ladderLengthBidirBFS = function(beginWord, endWord, wordList)
                 {
                     if (othersVisited.has(adjacentWord))
                     {
-                        queue = nextQueue;
                         return level + othersVisited.get(adjacentWord);
                     }
 
                     if (!visited.has(adjacentWord))
                     {
                         visited.set(adjacentWord, level + 1);
-                        nextQueue.push([adjacentWord, level + 1]);
+                        queue.push([adjacentWord, level + 1]);
                     }
                 }
             }
         }
-
-        queue = nextQueue;
 
         return -1;
     }
