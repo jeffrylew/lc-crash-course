@@ -2,6 +2,7 @@ set(
   cpp_files
   "heap_ops"
   "last_stone_weight"
+  "minimum_operations_to_halve_array_sum"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
