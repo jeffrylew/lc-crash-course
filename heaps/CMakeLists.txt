@@ -2,6 +2,7 @@ set(
   cpp_files
   "find_median_from_data_stream"
   "heap_ops"
+  "kth_largest_element_in_a_stream"
   "last_stone_weight"
   "minimum_operations_to_halve_array_sum"
 )
