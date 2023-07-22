@@ -5,6 +5,7 @@ set(
   "kth_largest_element_in_a_stream"
   "last_stone_weight"
   "minimum_operations_to_halve_array_sum"
+  "remove_stones_to_minimize_total"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
