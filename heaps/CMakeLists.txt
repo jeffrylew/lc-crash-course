@@ -4,6 +4,7 @@ set(
   "heap_ops"
   "kth_largest_element_in_a_stream"
   "last_stone_weight"
+  "minimum_cost_to_connect_sticks"
   "minimum_operations_to_halve_array_sum"
   "remove_stones_to_minimize_total"
 )
