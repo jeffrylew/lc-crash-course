@@ -7,6 +7,7 @@ set(
   "minimum_cost_to_connect_sticks"
   "minimum_operations_to_halve_array_sum"
   "remove_stones_to_minimize_total"
+  "top_k_frequent_elements"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
