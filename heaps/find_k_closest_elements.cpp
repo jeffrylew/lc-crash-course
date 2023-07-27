@@ -57,6 +57,47 @@ static std::vector<int> findClosestElementsDS1(std::vector<int> arr,
 
 } // static std::vector<int> findClosestElementsDS1( ...
 
+//! @brief Discussion solution: Sort with custom comparator
+//! @param[in] arr Vector of sorted integers
+//! @param[in] k   Number of closest integers to retrieve
+//! @param[in] x   Number to find k closest neighbors
+//! @return Sorted vector of k closest integers to x. If ties, keep smaller.
+static std::vector<int> findClosestElementsDS2(std::vector<int> arr,
+                                               int              k,
+                                               int              x)
+{
+    //! @details https://leetcode.com/problems/find-k-closest-elements/editorial
+    //!
+    //!          Time complexity O(N * log N + k * log k) where N = arr.size().
+    //!          Initially sorting every element in arr with a custom comparator
+    //!          costs O(N * log N). The final sorting costs O(k * log k) since
+    //!          result.size() is k.
+    //!          Space complexity O(N). If arr had to be copied into sortedArr
+    //!          then it would contain every element. However, we sort the input
+    //!          in-place so we are using less space (O(k)).
+
+    //! Sort using custom comparator
+    //! If input arr is passed by reference then copy it first, e.g.
+    //!     auto sortedArr = arr;
+    std::sort(arr.begin(), arr.end(), [=](int lhs, int rhs) -> bool {
+        if (std::abs(lhs - x) == std::abs(rhs - x))
+        {
+            return lhs < rhs;
+        }
+
+        return std::abs(lhs - x) < std::abs(rhs - x);
+    });
+
+    //! Only take k elements
+    std::vector<int> result(k);
+    std::copy_n(arr.cbegin(), k, result.begin());
+
+    //! Sort again to have output in ascending order
+    std::sort(result.begin(), result.end());
+    return result;
+
+} // static std::vector<int> findClosestElementsDS2( ...
+
 TEST(FindClosestElementsTest, SampleTest1)
 {
     const std::vector<int> input {1, 2, 3, 4, 5};
@@ -64,4 +105,7 @@ TEST(FindClosestElementsTest, SampleTest1)
 
     EXPECT_EQ(expected_output, findClosestElementsDS1(input, 4, 3));
     EXPECT_EQ(expected_output, findClosestElementsDS1(input, 4, -1));
+
+    EXPECT_EQ(expected_output, findClosestElementsDS2(input, 4, 3));
+    EXPECT_EQ(expected_output, findClosestElementsDS2(input, 4, -1));
 }
