@@ -177,6 +177,51 @@ static std::vector<int> findClosestElementsDS3(std::vector<int> arr,
 
 } // static std::vector<int> findClosestElementsDS3( ...
 
+//! @brief Discussion solution: Binary search to find the left bound
+//! @param[in] arr Vector of sorted integers
+//! @param[in] k   Number of closest integers to retrieve
+//! @param[in] x   Number to find k closest neighbors
+//! @return Sorted vector of k closest integers to x. If ties, keep smaller.
+static std::vector<int> findClosestElementsDS4(std::vector<int> arr,
+                                               int              k,
+                                               int              x)
+{
+    //! @details https://leetcode.com/problems/find-k-closest-elements/editorial
+    //!
+    //!          Time complexity O(log(N - k) + k). Finding bounds only takes
+    //!          O(log(N - k)) from binary search but it still costs O(k) to
+    //!          build the final output.
+    //!          Space complexity O(1) for pointers. Space used for output does
+    //!          not count towards space complexity.
+
+    //! Initialize binary search bounds
+    int left {};
+    int right {static_cast<int>(arr.size()) - k};
+
+    //! Binary search against the criteria described
+    while (left < right)
+    {
+        const int mid {(left + right) / 2};
+
+        if (x - arr[mid] > arr[mid + k] - x)
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            right = mid;
+        }
+    }
+
+    //! Create output in correct format
+    std::vector<int> result(k);
+
+    std::copy_n(arr.begin() + left, k, result.begin());
+
+    return result;
+
+} // static std::vector<int> findClosestElementsDS4( ...
+
 TEST(FindClosestElementsTest, SampleTest1)
 {
     const std::vector<int> input {1, 2, 3, 4, 5};
@@ -190,4 +235,7 @@ TEST(FindClosestElementsTest, SampleTest1)
 
     EXPECT_EQ(expected_output, findClosestElementsDS3(input, 4, 3));
     EXPECT_EQ(expected_output, findClosestElementsDS3(input, 4, -1));
+
+    EXPECT_EQ(expected_output, findClosestElementsDS4(input, 4, 3));
+    EXPECT_EQ(expected_output, findClosestElementsDS4(input, 4, -1));
 }
