@@ -98,6 +98,85 @@ static std::vector<int> findClosestElementsDS2(std::vector<int> arr,
 
 } // static std::vector<int> findClosestElementsDS2( ...
 
+//! @brief Discussion solution: Binary search + sliding window
+//! @param[in] arr Vector of sorted integers
+//! @param[in] k   Number of closest integers to retrieve
+//! @param[in] x   Number to find k closest neighbors
+//! @return Sorted vector of k closest integers to x. If ties, keep smaller.
+static std::vector<int> findClosestElementsDS3(std::vector<int> arr,
+                                               int              k,
+                                               int              x)
+{
+    //! @details https://leetcode.com/problems/find-k-closest-elements/editorial
+    //!
+    //!          Time complexity O(log N + k) where N = arr.size(). The initial
+    //!          binary search to find where to start the window costs O(log N).
+    //!          The sliding window initially starts with size 0 and expands one
+    //!          by one until it is of size k so it costs O(k) to expand it.
+    //!          Space complexity O(1). Only use integers left and right. Space
+    //!          used for the output is not counted towards the space complexity
+
+    //! Base case
+    if (static_cast<int>(arr.size()) == k)
+    {
+        return arr;
+    }
+
+    //! Binary search to find the closest element
+    int  left {};
+    int  mid {};
+    auto right = static_cast<int>(arr.size());
+
+    while (left < right)
+    {
+        mid = (left + right) / 2;
+
+        if (arr[mid] >= x)
+        {
+            right = mid;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+
+    //! Initialize sliding window bounds
+    --left;
+    right = left + 1;
+
+    //! While the window size is less than k
+    while (right - left - 1 < k)
+    {
+        //! Be careful to not go out of bounds
+        if (left == -1)
+        {
+            ++right;
+            continue;
+        }
+
+        //! Expand the windows towards the side with the closer number
+        //! Be careful to not go out of bounds with the pointers
+        if (right == static_cast<int>(arr.size())
+            || std::abs(arr[left] - x) <= std::abs(arr[right] - x))
+        {
+            --left;
+        }
+        else
+        {
+            ++right;
+        }
+    }
+
+    //! Build and return the window
+    std::vector<int> result(k);
+
+    std::copy_n(arr.begin() + left + 1, k, result.begin());
+
+    return result;
+
+} // static std::vector<int> findClosestElementsDS3( ...
+
 TEST(FindClosestElementsTest, SampleTest1)
 {
     const std::vector<int> input {1, 2, 3, 4, 5};
@@ -108,4 +187,7 @@ TEST(FindClosestElementsTest, SampleTest1)
 
     EXPECT_EQ(expected_output, findClosestElementsDS2(input, 4, 3));
     EXPECT_EQ(expected_output, findClosestElementsDS2(input, 4, -1));
+
+    EXPECT_EQ(expected_output, findClosestElementsDS3(input, 4, 3));
+    EXPECT_EQ(expected_output, findClosestElementsDS3(input, 4, -1));
 }
