@@ -142,10 +142,11 @@ static std::vector<int> findClosestElementsDS3(std::vector<int> arr,
     }
 
     //! Initialize sliding window bounds
+    //! right is the index of element x and left is the adjacent left index
     --left;
     right = left + 1;
 
-    //! While the window size is less than k
+    //! While the window size is less than k, same as right - left <= k
     while (right - left - 1 < k)
     {
         //! Be careful to not go out of bounds
@@ -203,12 +204,21 @@ static std::vector<int> findClosestElementsDS4(std::vector<int> arr,
     {
         const int mid {(left + right) / 2};
 
+        //! In an edge case like a sequence of identical numbers, the condition
+        //! below will move the left bound in the correct direction unlike
+        //! abs(x - arr[mid]) > abs(arr[mid + k] - x)
         if (x - arr[mid] > arr[mid + k] - x)
         {
+            //! arr[mid + k] is closer to x than arr[mid] so move left pointer
+            //! arr[mid] and all elements to the left cannot be in the answer
             left = mid + 1;
         }
         else
         {
+            //! arr[mid] is closer to x than arr[mid + k] so move right pointer
+            //! arr[mid + k] and all elements to the right cannot be in answer
+            //! Setting right = mid + k - 1 can result in an infinite loop.
+            //! I don't fully understand this solution
             right = mid;
         }
     }
