@@ -4,6 +4,7 @@ set(
   "find_median_from_data_stream"
   "heap_ops"
   "kth_largest_element_in_a_stream"
+  "kth_largest_element_in_an_array"
   "last_stone_weight"
   "minimum_cost_to_connect_sticks"
   "minimum_operations_to_halve_array_sum"
