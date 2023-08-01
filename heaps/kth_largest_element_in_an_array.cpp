@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <functional>
 #include <queue>
 #include <vector>
 
@@ -23,9 +25,38 @@ static int findKthLargestFA(std::vector<int> nums, int k)
     return maxHeap.top();
 }
 
-TEST(FindKthLargestTest, SampleTest)
+//! @brief Discussion solution: Sort
+//! @param[in] nums Vector of integers
+//! @param[in] k    Defines which largest element to retrieve
+//! @return The kth largest element in nums
+static int findKthLargestDS1(std::vector<int> nums, int k)
 {
-    EXPECT_EQ(5, findKthLargestFA({3, 2, 1, 5, 6, 4}, 2));
+    //! @details leetcode.com/problems/kth-largest-element-in-an-array/editorial
+    //!
+    //!          Time complexity O(N * log N) where N = nums.size(). Sorting
+    //!          nums requires O(N * log N) time.
+    //!          Space complexity O(log N) for C++. std::sort uses a hybrid of
+    //!          Quick Sort, Heap Sort, and Insertion Sort with a worst case
+    //!          space complexity of O(log N). In Java, Arrays.sort() for
+    //!          primitives is O(log N) while sort() in Python is implemented
+    //!          using Timsort which has a worst-case of O(N).
 
-    EXPECT_EQ(4, findKthLargestFA({3, 2, 3, 1, 2, 4, 5, 5, 6}, 4));
+    std::sort(nums.begin(), nums.end(), std::greater<int>());
+    return nums[k - 1];
+}
+
+TEST(FindKthLargestTest, SampleTest1)
+{
+    const std::vector<int> nums {3, 2, 1, 5, 6, 4};
+
+    EXPECT_EQ(5, findKthLargestFA(nums, 2));
+    EXPECT_EQ(5, findKthLargestDS1(nums, 2));
+}
+
+TEST(FindKthLargestTest, SampleTest2)
+{
+    const std::vector<int> nums {3, 2, 3, 1, 2, 4, 5, 5, 6};
+
+    EXPECT_EQ(4, findKthLargestFA(nums, 4));
+    EXPECT_EQ(4, findKthLargestDS1(nums, 4));
 }
