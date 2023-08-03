@@ -45,12 +45,45 @@ static int findKthLargestDS1(std::vector<int> nums, int k)
     return nums[k - 1];
 }
 
+//! @brief Discussion solution: Min-Heap
+//! @param[in] nums Vector of integers
+//! @param[in] k    Defines which largest element to retrieve
+//! @return The kth largest element in nums
+static int findKthLargestDS2(std::vector<int> nums, int k)
+{
+    //! @details leetcode.com/problems/kth-largest-element-in-an-array/editorial
+    //!
+    //!          Time complexity O(N * log k) where N = nums.size(). The heap
+    //!          size is limited to a size of k so operations cost O(log k). We
+    //!          iterate N times, performing one or two operations per element.
+    //!          Because k <= N, this is an improvement over DS1.
+    //!          Space complexity O(log k) for the min heap.
+
+    //! std::priority_queue is a max heap so multiply values by -1 before
+    //! pushing onto the heap. Or use
+    //! std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+    std::priority_queue<int> minHeap {};
+
+    for (const int num : nums)
+    {
+        minHeap.push(-num);
+
+        if (minHeap.size() > k)
+        {
+            minHeap.pop();
+        }
+    }
+
+    return -minHeap.top();
+}
+
 TEST(FindKthLargestTest, SampleTest1)
 {
     const std::vector<int> nums {3, 2, 1, 5, 6, 4};
 
     EXPECT_EQ(5, findKthLargestFA(nums, 2));
     EXPECT_EQ(5, findKthLargestDS1(nums, 2));
+    EXPECT_EQ(5, findKthLargestDS2(nums, 2));
 }
 
 TEST(FindKthLargestTest, SampleTest2)
@@ -59,4 +92,5 @@ TEST(FindKthLargestTest, SampleTest2)
 
     EXPECT_EQ(4, findKthLargestFA(nums, 4));
     EXPECT_EQ(4, findKthLargestDS1(nums, 4));
+    EXPECT_EQ(4, findKthLargestDS2(nums, 4));
 }
