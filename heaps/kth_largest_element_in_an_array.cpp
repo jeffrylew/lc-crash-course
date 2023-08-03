@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <functional>
 #include <queue>
+#include <random>
 #include <vector>
 
 //! @brief First attempt solution to get the kth largest element in the vector
@@ -77,6 +78,73 @@ static int findKthLargestDS2(std::vector<int> nums, int k)
     return -minHeap.top();
 }
 
+//! @brief Get kth largest element in nums
+//! @param[in, out] nums Reference to vector of ints
+//! @param[in]      k    Defines which largest element to retrieve
+//! @return kth largest element in nums
+static int quickSelect(std::vector<int>& nums, int k)
+{
+    const int pivot {nums[std::minstd_rand() % nums.size()]};
+
+    std::vector<int> left {};  //! Store elements greater than pivot
+    std::vector<int> mid {};   //! Store elements equal to pivot
+    std::vector<int> right {}; //! Store elements less than pivot
+
+    for (const int num : nums)
+    {
+        if (num > pivot)
+        {
+            left.push_back(num);
+        }
+        else if (num < pivot)
+        {
+            right.push_back(num);
+        }
+        else
+        {
+            mid.push_back(num);
+        }
+    }
+
+    //! kth largest element must be in left. Restart process in left.
+    if (k <= static_cast<int>(left.size()))
+    {
+        return quickSelect(left, k);
+    }
+
+    //! kth largest element must be in right. Restart process in right but
+    //! adjust k by left_mid_size since elements in left and mid are "deleted"
+    const auto left_mid_size = static_cast<int>(left.size() + mid.size());
+    if (left_mid_size < k)
+    {
+        return quickSelect(right, k - left_mid_size);
+    }
+
+    //! mid only has elements equal to the pivot
+    return pivot;
+
+} // static int quickSelect( ...
+
+//! @brief Discussion solution: Quickselect
+//! @param[in] nums Vector of integers
+//! @param[in] k    Defines which largest element to retrieve
+//! @return The kth largest element in nums
+static int findKthLargestDS3(std::vector<int> nums, int k)
+{
+    //! @details leetcode.com/problems/kth-largest-element-in-an-array/editorial
+    //!
+    //!          Time complexity O(N) on average and O(N^2) in worst case where
+    //!          N = nums.size(). Each call to quickSelect costs O(N) to iterate
+    //!          over nums to create left, mid, and right. The number of times
+    //!          it is called depends on how the pivot is chosen. On average,
+    //!          size of nums decreases by a factor of ~2 on each call. Using
+    //!          the master theorem with a = 1, b = 2, k = 1, we get
+    //!          T(N) = T(N / 2) + O(N) = O(N)
+    //!          Space complexity O(N) to create left, mid, and right.
+
+    return quickSelect(nums, k);
+}
+
 TEST(FindKthLargestTest, SampleTest1)
 {
     const std::vector<int> nums {3, 2, 1, 5, 6, 4};
@@ -84,6 +152,7 @@ TEST(FindKthLargestTest, SampleTest1)
     EXPECT_EQ(5, findKthLargestFA(nums, 2));
     EXPECT_EQ(5, findKthLargestDS1(nums, 2));
     EXPECT_EQ(5, findKthLargestDS2(nums, 2));
+    EXPECT_EQ(5, findKthLargestDS3(nums, 2));
 }
 
 TEST(FindKthLargestTest, SampleTest2)
@@ -93,4 +162,5 @@ TEST(FindKthLargestTest, SampleTest2)
     EXPECT_EQ(4, findKthLargestFA(nums, 4));
     EXPECT_EQ(4, findKthLargestDS1(nums, 4));
     EXPECT_EQ(4, findKthLargestDS2(nums, 4));
+    EXPECT_EQ(4, findKthLargestDS3(nums, 4));
 }
