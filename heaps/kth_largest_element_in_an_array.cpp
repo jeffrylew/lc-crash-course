@@ -145,6 +145,42 @@ static int findKthLargestDS3(std::vector<int> nums, int k)
     return quickSelect(nums, k);
 }
 
+//! @brief Discussion solution: Counting Sort
+//! @param[in] nums Vector of integers
+//! @param[in] k    Defines which largest element to retrieve
+//! @return The kth largest element in nums
+static int findKthLargestDS4(std::vector<int> nums, int k)
+{
+    //! @details leetcode.com/problems/kth-largest-element-in-an-array/editorial
+    //!
+    //!          Time complexity O(N + M) where N = nums.size() and M = maxValue
+    //!          - minValue. Finding maxValue and minValue costs O(N).
+    //!          Initializing count costs O(M). Populating count costs O(N).
+    //!          Iterating over the indices of count costs up to O(M).
+    //!          Space complexity O(M) for count vector of size O(M).
+
+    const std::int32_t minValue {*std::min_element(nums.cbegin(), nums.cend())};
+    const std::int32_t maxValue {*std::max_element(nums.cbegin(), nums.cend())};
+
+    std::vector<int> count(maxValue - minValue + 1);
+    for (const int num : nums)
+    {
+        ++count[num - minValue];
+    }
+
+    int remain {k};
+    for (int num = static_cast<int>(count.size()) - 1; num >= 0; --num)
+    {
+        remain -= count[num];
+        if (remain <= 0)
+        {
+            return num + minValue;
+        }
+    }
+
+    return -1;
+}
+
 TEST(FindKthLargestTest, SampleTest1)
 {
     const std::vector<int> nums {3, 2, 1, 5, 6, 4};
@@ -153,6 +189,7 @@ TEST(FindKthLargestTest, SampleTest1)
     EXPECT_EQ(5, findKthLargestDS1(nums, 2));
     EXPECT_EQ(5, findKthLargestDS2(nums, 2));
     EXPECT_EQ(5, findKthLargestDS3(nums, 2));
+    EXPECT_EQ(5, findKthLargestDS4(nums, 2));
 }
 
 TEST(FindKthLargestTest, SampleTest2)
@@ -163,4 +200,5 @@ TEST(FindKthLargestTest, SampleTest2)
     EXPECT_EQ(4, findKthLargestDS1(nums, 4));
     EXPECT_EQ(4, findKthLargestDS2(nums, 4));
     EXPECT_EQ(4, findKthLargestDS3(nums, 4));
+    EXPECT_EQ(4, findKthLargestDS4(nums, 4));
 }
