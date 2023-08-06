@@ -41,3 +41,21 @@ def findKthLargestDS3(nums: list[int], k: int) -> int:
         return pivot
 
     return quick_select(nums, k)
+
+
+def findKthLargestDS4(nums: list[int], k: int) -> int:
+    min_value = min(nums)
+    max_value = max(nums)
+    count = [0] * (max_value - min_value + 1)
+
+    for num in nums:
+        count[num - min_value] += 1
+    
+    remain = k
+    for num in range(len(count) - 1, -1, -1):
+        remain -= count[num]
+
+        if remain <= 0:
+            return num + min_value
+    
+    return -1
