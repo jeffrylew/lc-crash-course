@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 #include <queue>
 #include <random>
 #include <vector>
@@ -161,6 +162,18 @@ static int findKthLargestDS4(std::vector<int> nums, int k)
 
     const std::int32_t minValue {*std::min_element(nums.cbegin(), nums.cend())};
     const std::int32_t maxValue {*std::max_element(nums.cbegin(), nums.cend())};
+
+    /*
+    //! Alternatively, perform one O(N) pass through nums
+    std::int32_t minValue {std::numeric_limits<std::int32_t>::max()};
+    std::int32_t maxValue {std::numeric_limits<std::int32_t>::min()};
+
+    for (const int num : nums)
+    {
+        minValue = std::min(minValue, num);
+        maxValue = std::max(maxValue, num);
+    }
+    */
 
     std::vector<int> count(maxValue - minValue + 1);
     for (const int num : nums)
