@@ -11,6 +11,11 @@
 std::vector<std::vector<int>> kClosestFA(
     const std::vector<std::vector<int>>& points, int k)
 {
+    //! @details Time complexity O(N * log k) where N = points.size(). For each
+    //!          point in input, need to push/pop to a heap of size k. Each
+    //!          operation takes O(log k).
+    //!          Space complexity O(k) for heap. O(N) for output (excluded).
+    
     std::priority_queue<std::pair<int, std::vector<int>>> maxHeap {};
 
     for (const auto& point : points)
