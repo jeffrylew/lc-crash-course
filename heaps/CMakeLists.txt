@@ -3,6 +3,7 @@ set(
   "find_k_closest_elements"
   "find_median_from_data_stream"
   "heap_ops"
+  "k_closest_points_to_origin"
   "kth_largest_element_in_a_stream"
   "kth_largest_element_in_an_array"
   "last_stone_weight"
