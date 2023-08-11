@@ -79,6 +79,7 @@ class Solution
                 i++;
             }
 
+            // Note: dist(j) >= pivot in python solution
             while (i <= j && dist(j) > pivot)
             {
                 j--;
