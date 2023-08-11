@@ -90,6 +90,7 @@ static int partition(std::vector<std::vector<int>>& points, int i, int j)
             ++i;
         }
 
+        //! @note dist(points, j) >= pivot in python solution
         while (i <= j && dist(points, j) > pivot)
         {
             --j;
