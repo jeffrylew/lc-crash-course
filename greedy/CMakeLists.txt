@@ -1,6 +1,7 @@
 set(
   cpp_files
   "destroying_asteroids"
+  "partition_array_such_that_max_diff_is_k"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
