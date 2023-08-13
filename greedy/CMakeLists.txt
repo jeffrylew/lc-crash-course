@@ -1,6 +1,7 @@
 set(
   cpp_files
   "destroying_asteroids"
+  "ipo"
   "partition_array_such_that_max_diff_is_k"
 )
 
