@@ -28,6 +28,8 @@ static int findLeastNumOfUniqueInts(std::vector<int> arr, int k)
     }
 
     std::vector<int> ordered {};
+    ordered.reserve(counts.size());
+    
     for (const auto& kv : counts)
     {
         ordered.push_back(kv.second);
@@ -49,4 +51,11 @@ static int findLeastNumOfUniqueInts(std::vector<int> arr, int k)
     }
 
     return static_cast<int>(ordered.size());
+}
+
+TEST(FindLeastNumOfUniqueIntsTest, SampleTest)
+{
+    EXPECT_EQ(1, findLeastNumOfUniqueInts({5, 5, 4}, 1));
+
+    EXPECT_EQ(2, findLeastNumOfUniqueInts({4, 3, 1, 1, 3, 3, 2}, 3));
 }
