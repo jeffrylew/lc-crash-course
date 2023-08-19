@@ -4,6 +4,7 @@ set(
   "destroying_asteroids"
   "ipo"
   "least_number_of_unique_integers_after_k_removals"
+  "maximum_69_number"
   "partition_array_such_that_max_diff_is_k"
 )
 
