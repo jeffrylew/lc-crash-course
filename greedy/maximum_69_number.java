@@ -19,3 +19,12 @@ public int maximum69NumberDS1(int num)
     return Integer.parseInt(numSB.toString());
 }
 
+public int maximum69NumberDS2(int num)
+{
+    // Convert the input num to the string numString
+    String numString = "" + num;
+
+    // Use the built-in function to replace the first 6 with 9
+    // Return the integer converted from the modified numString
+    return Integer.parseInt(numString.replaceFirst("6", "9")); 
+}
