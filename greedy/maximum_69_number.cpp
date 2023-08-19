@@ -64,14 +64,52 @@ static int maximum69NumberDS1(int num)
     return std::stoi(numString);
 }
 
+//! @brief Discussion solution: Check the remainder
+//! @param[in] num Positive int consisting only of digits 6 and 9
+//! @return Max number by changing at most one digit (6 -> 9 or 9-> 6)
+static int maximum69NumberDS2(int num)
+{
+    //! @details https://leetcode.com/problems/maximum-69-number/editorial/
+    //!
+    //!          Time complexity O(L) where L = max number of digits nums has.
+    //!          Need to perform L integer divisions at most, taking O(L) time.
+    //!          Space complexity O(1)
+
+    //! Since we start with the lowest digit, initialize currDigit = 0
+    int numCopy {num};
+    int idxFirstSix {-1};
+    int currDigit {};
+
+    //! Check every digit of numCopy from low to high
+    while (numCopy > 0)
+    {
+        //! if current digit is 6, record it as the highest digit for 6
+        if (numCopy % 10 == 6)
+        {
+            idxFirstSix = currDigit;
+        }
+        
+        //! Move on to next digit
+        numCopy /= 10;
+        ++currDigit;
+    }
+    
+    //! If don't find any digit of 6, return the original number
+    //! Else, increment num by the difference made by the first 6
+    return idxFirstSix == -1 ? num : num + 3 * std::pow(10, idxFirstSix);
+}
+
 TEST(Maximum69NumberTest, SampleTest)
 {
     EXPECT_EQ(9969, maximum69NumberFA(9669));
     EXPECT_EQ(9969, maximum69NumberDS1(9669));
+    EXPECT_EQ(9969, maximum69NumberDS2(9669));
 
     EXPECT_EQ(9999, maximum69NumberFA(9996));
     EXPECT_EQ(9999, maximum69NumberDS1(9996));
+    EXPECT_EQ(9999, maximum69NumberDS2(9996));
 
     EXPECT_EQ(9999, maximum69NumberFA(9999));
     EXPECT_EQ(9999, maximum69NumberDS1(9999));
+    EXPECT_EQ(9999, maximum69NumberDS2(9999));
 }
