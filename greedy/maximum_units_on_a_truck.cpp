@@ -106,12 +106,73 @@ static int maximumUnitsDS1(
 
 } // static int maximumUnitsDS1( ...
 
+struct Comparator
+{
+    bool operator()(const std::vector<int>& lhs, const std::vector<int>& rhs)
+    {
+        return lhs[1] < rhs[1];
+    }
+};
+
+//! @brief Priority Queue discussion solution (skip brute force solution)
+//! @param[in] boxTypes  Reference to vector of <num boxes, num units per box>
+//! @param[in] truckSize Maximum number of boxes that can be put on truck
+//! @return Maximum total number of units that can be put on the truck
+static int maximumUnitsDS2(
+    const std::vector<std::vector<int>>& boxTypes, int truckSize)
+{
+    //! @details leetcode.com/problems/maximum-units-on-a-truck/editorial
+    //!
+    //!          Time complexity O(N * log N) where N = boxTypes.size().
+    //!          Discussion solution states adding all elements of boxTypes to
+    //!          the priority queue takes O(N) but I believe that is the case
+    //!          only when the relevant priority queue constructor is used. Each
+    //!          push operation takes O(log N) so the total cost is O(N * log N)
+    //!          https://stackoverflow.com/questions/44650882/
+    //!          time-complexity-of-a-priority-queue-in-c
+    //!          We continue iteration until the max heap is not empty or the
+    //!          remaining truck size is greater than 0. In the worst case, we
+    //!          may iterate N times and removing elements from the max heap
+    //!          costs O(log N) for a total time complexity of O(N * log N).
+    //!          Space complexity O(N) for the priority queue.
+
+    std::priority_queue<std::vector<int>,
+                        std::vector<std::vector<int>>,
+                        Comparator> maxHeap {};
+    
+    for (const auto& boxType : boxTypes)
+    {
+        //! Initializes maxHeap in O(N * log N) which is slower than my solution
+        maxHeap.push(boxType);
+    }
+
+    int unitCount {};
+    while (not maxHeap.empty())
+    {
+        const auto top = maxHeap.top();
+        maxHeap.pop();
+
+        const int boxCount {std::min(truckSize, top[0])};
+        unitCount += boxCount * top[1];
+        truckSize -= boxCount;
+
+        if (truckSize == 0)
+        {
+            break;
+        }
+    }
+
+    return unitCount;
+
+} // static int maximumUnitsDS2( ...
+
 TEST(MaximumUnitsTest, SampleTest1)
 {
     const std::vector<std::vector<int>> boxTypes {{1, 3}, {2, 2}, {3, 1}};
 
     EXPECT_EQ(8, maximumUnitsFA(boxTypes, 4));
     EXPECT_EQ(8, maximumUnitsDS1(boxTypes, 4));
+    EXPECT_EQ(8, maximumUnitsDS2(boxTypes, 4));
 }
 
 TEST(MaximumUnitsTest, SampleTest2)
@@ -121,4 +182,5 @@ TEST(MaximumUnitsTest, SampleTest2)
 
     EXPECT_EQ(91, maximumUnitsFA(boxTypes, 10));
     EXPECT_EQ(91, maximumUnitsDS1(boxTypes, 10));
+    EXPECT_EQ(91, maximumUnitsDS2(boxTypes, 10));
 }
