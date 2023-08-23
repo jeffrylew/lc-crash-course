@@ -69,11 +69,49 @@ static int maximumUnitsFA(
 
 } // static int maximumUnitsFA( ...
 
+//! @brief Array sort discussion solution (skip brute force solution)
+//! @param[in] boxTypes  Reference to vector of <num boxes, num units per box>
+//! @param[in] truckSize Maximum number of boxes that can be put on truck
+//! @return Maximum total number of units that can be put on the truck
+static int maximumUnitsDS1(
+    const std::vector<std::vector<int>>& boxTypes, int truckSize)
+{
+    //! @details leetcode.com/problems/maximum-units-on-a-truck/editorial
+    //!
+    //!          Time complexity O(N * log N) where N = boxTypes.size(). Sorting
+    //!          boxTypes takes O(N * log N).
+    //!          Space complexity O(log N) for quicksort algorithm
+
+    auto sortedBoxes = boxTypes;
+    std::sort(sortedBoxes.begin(),
+              sortedBoxes.end(),
+              [](const std::vector<int>& lhs, const std::vector<int>& rhs) {
+                  return lhs[1] > rhs[1];
+              });
+    
+    int unitCount {};
+
+    for (const auto& boxType : sortedBoxes)
+    {
+        const int boxCount = std::min(truckSize, boxType[0]);
+        unitCount += boxCount * boxType[1];
+        truckSize -= boxCount;
+
+        if (truckSize == 0)
+        {
+            break;
+        }
+    }
+    return unitCount;
+
+} // static int maximumUnitsDS1( ...
+
 TEST(MaximumUnitsTest, SampleTest1)
 {
     const std::vector<std::vector<int>> boxTypes {{1, 3}, {2, 2}, {3, 1}};
 
     EXPECT_EQ(8, maximumUnitsFA(boxTypes, 4));
+    EXPECT_EQ(8, maximumUnitsDS1(boxTypes, 4));
 }
 
 TEST(MaximumUnitsTest, SampleTest2)
@@ -82,4 +120,5 @@ TEST(MaximumUnitsTest, SampleTest2)
         {5, 10}, {2, 5}, {4, 7}, {3, 9}};
 
     EXPECT_EQ(91, maximumUnitsFA(boxTypes, 10));
+    EXPECT_EQ(91, maximumUnitsDS1(boxTypes, 10));
 }
