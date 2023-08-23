@@ -23,3 +23,6 @@ var maximumUnitsDS1 = function(boxTypes, truckSize)
 
     return unitCount;
 };
+
+// JavaScript does not have any built-in support for a heap
+// so the second discussion solution will not be written here
