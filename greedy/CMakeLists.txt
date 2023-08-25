@@ -2,6 +2,7 @@ set(
   cpp_files
   "boats_to_save_people"
   "destroying_asteroids"
+  "how_many_apples_can_you_put_into_the_basket"
   "ipo"
   "least_number_of_unique_integers_after_k_removals"
   "maximum_69_number"
