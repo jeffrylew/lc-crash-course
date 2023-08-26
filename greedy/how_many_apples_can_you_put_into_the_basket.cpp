@@ -65,11 +65,44 @@ static int maxNumberOfApplesDS1(std::vector<int> weight)
     return apples;
 }
 
+//! @brief Discussion solution: min-heap
+//! @param[in] weight Vector of apple weights
+//! @return Max number of apples that can be put in the basket of 5000 units
+static int maxNumberOfApplesDS2(std::vector<int> weight)
+{
+    //! @details https://leetcode.com/problems/
+    //!          how-many-apples-can-you-put-into-the-basket/editorial/
+    //!
+    //!          Time complexity O(N + k*log N) where N = weight.size() and k is
+    //!          the number of apples that will be put into the basket. O(N) to
+    //!          transform the vector into a heap. Each pop operation is called
+    //!          k times and costs O(log N).
+    //!          Space complexity O(N) for min heap.
+
+    std::priority_queue minHeap(
+        weight.cbegin(), weight.cend(), std::greater<int>());
+    
+    int apples {};
+    int units {};
+
+    while (not minHeap.empty() && units + minHeap.top() <= 5000)
+    {
+        units += minHeap.top();
+        minHeap.pop();
+
+        ++apples;
+    }
+
+    return apples;
+}
+
 TEST(MaxNumberOfApplesTest, SampleTest)
 {
     EXPECT_EQ(4, maxNumberOfApplesFA({100, 200, 150, 1000}));
     EXPECT_EQ(4, maxNumberOfApplesDS1({100, 200, 150, 1000}));
+    EXPECT_EQ(4, maxNumberOfApplesDS2({100, 200, 150, 1000}));
 
     EXPECT_EQ(5, maxNumberOfApplesFA({900, 950, 800, 1000, 700, 800}));
     EXPECT_EQ(5, maxNumberOfApplesDS1({900, 950, 800, 1000, 700, 800}));
+    EXPECT_EQ(5, maxNumberOfApplesDS2({900, 950, 800, 1000, 700, 800}));
 }
