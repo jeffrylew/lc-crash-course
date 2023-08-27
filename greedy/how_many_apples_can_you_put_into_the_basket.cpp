@@ -96,13 +96,64 @@ static int maxNumberOfApplesDS2(std::vector<int> weight)
     return apples;
 }
 
+//! @brief Discussion solution: bucket sort
+//! @param[in] weight Vector of apple weights
+//! @return Max number of apples that can be put in the basket of 5000 units
+static int maxNumberOfApplesDS3(std::vector<int> weight)
+{
+    //! @details https://leetcode.com/problems/
+    //!          how-many-apples-can-you-put-into-the-basket/editorial/
+    //!
+    //!          Time complexity O(N + W) where N = weight.size() and W is the
+    //!          largest element in weight. We iterate through weight and bucket
+    //!          once and the lengths are N and W respectively.
+    //!          Space complexity O(W) to initialize vector bucket with size of
+    //!          max(weight).
+
+    //! Initialize the bucket to store all elements
+    const int size {*std::max_element(weight.cbegin(), weight.cend())};
+
+    std::vector<int> bucket(size + 1);
+    for (const int ele : weight)
+    {
+        ++bucket[ele];
+    }
+
+    int apples {};
+    int units {};
+
+    for (int i = 0; i < size + 1; ++i)
+    {
+        //! If we have apples of i units of weight
+        if (bucket[i] != 0)
+        {
+            //! We need to make sure that
+            //! 1. We do not take more apples than those provided
+            //! 2. We do not exceed 5000 units of weight
+            const int take {std::min(bucket[i], (5000 - units) / i)};
+
+            if (take == 0)
+            {
+                break;
+            }
+
+            units += take * i;
+            apples += take;
+        }
+    }
+
+    return apples;
+}
+
 TEST(MaxNumberOfApplesTest, SampleTest)
 {
     EXPECT_EQ(4, maxNumberOfApplesFA({100, 200, 150, 1000}));
     EXPECT_EQ(4, maxNumberOfApplesDS1({100, 200, 150, 1000}));
     EXPECT_EQ(4, maxNumberOfApplesDS2({100, 200, 150, 1000}));
+    EXPECT_EQ(4, maxNumberOfApplesDS3({100, 200, 150, 1000}));
 
     EXPECT_EQ(5, maxNumberOfApplesFA({900, 950, 800, 1000, 700, 800}));
     EXPECT_EQ(5, maxNumberOfApplesDS1({900, 950, 800, 1000, 700, 800}));
     EXPECT_EQ(5, maxNumberOfApplesDS2({900, 950, 800, 1000, 700, 800}));
+    EXPECT_EQ(5, maxNumberOfApplesDS3({900, 950, 800, 1000, 700, 800}));
 }
