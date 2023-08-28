@@ -8,6 +8,7 @@ set(
   "maximum_69_number"
   "maximum_units_on_a_truck"
   "partition_array_such_that_max_diff_is_k"
+  "reduce_array_size_to_the_half"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
