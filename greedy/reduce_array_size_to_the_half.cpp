@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <functional>
 #include <queue>
 #include <unordered_map>
 #include <vector>
@@ -49,9 +51,71 @@ static int minSetSizeFA(std::vector<int> arr)
 
 } // static int minSetSizeFA( ...
 
+//! @brief Discussion solution: Sorting
+//! @param[in] arr Vector of ints
+//! @return Min set size so at least half of ints in arr are removed
+static int minSetSizeDS1(std::vector<int> arr)
+{
+    //! @details leetcode.com/problems/reduce-array-size-to-the-half/editorial/
+    //!
+    //!          Time complexity O(N * log N) where N = arr.size() for sorting.
+    //!          Generating counts takes O(N) due to linear scan of arr.
+    //!          Computing min set size takes O(N) due to linear scan of counts.
+    //!          Space complexity O(N). In worst case, all numbers in arr are
+    //!          unique leading to counts of size N. C++ std::sort likely uses
+    //!          O(log N) space due to a quicksort variation.
+    //!
+    //!          See DS2 for space optimization to O(1).
+
+    const auto arr_size = static_cast<int>(arr.size());
+
+    //! Sort the input numbers
+    std::sort(arr.begin(), arr.end());
+
+    //! Make vector of counts
+    std::vector<int> counts {};
+
+    int currentRun {1};
+    for (int i = 1; i < arr_size; ++i)
+    {
+        if (arr[i] == arr[i - 1])
+        {
+            ++currentRun;
+            continue;
+        }
+
+        counts.push_back(currentRun);
+        currentRun = 1;
+    }
+    counts.push_back(currentRun);
+
+    //! Sort counts in decreasing/reverse order
+    std::sort(counts.begin(), counts.end(), std::greater<int>());
+
+    //! Remove numbers until at least half are removed
+    int numbersRemovedFromArr {};
+    int setSize {};
+
+    for (const int count : counts)
+    {
+        numbersRemovedFromArr += count;
+        ++setSize;
+
+        if (numbersRemovedFromArr >= arr_size / 2)
+        {
+            break;
+        }
+    }
+
+    return setSize;
+
+} // static int minSetSizeDS1( ...
+
 TEST(MinSetSizeTest, SampleTest1)
 {
     EXPECT_EQ(2, minSetSizeFA({3, 3, 3, 3, 5, 5, 5, 2, 2, 7}));
+    EXPECT_EQ(2, minSetSizeDS1({3, 3, 3, 3, 5, 5, 5, 2, 2, 7}));
 
     EXPECT_EQ(1, minSetSizeFA({7, 7, 7, 7, 7, 7}));
+    EXPECT_EQ(1, minSetSizeDS1({7, 7, 7, 7, 7, 7}));
 }
