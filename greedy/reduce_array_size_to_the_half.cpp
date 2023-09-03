@@ -267,15 +267,71 @@ static int minSetSizeDS3(std::vector<int> arr)
 
 } // static int minSetSizeDS3( ...
 
+//! @brief Discussion solution: Hashing and Bucket Sort
+//! @param[in] arr Vector of ints
+//! @return Min set size so at least half of ints in arr are removed
+static int minSetSizeDS4(std::vector<int> arr)
+{
+    //! @details leetcode.com/problems/reduce-array-size-to-the-half/editorial/
+    //!
+    //!          Time complexity O(N), Step 1 same as DS3, Bucket sorting O(N)
+    //!          Space complexity O(N) for hash map and O(N) extra space to do
+    //!          the Bucket Sort.
+    //!
+    //!          134ms runtime (beats 91.03%)
+    //!          75.36 MB memory (beats 90.89%)
+
+    std::unordered_map<int, int> counts {};
+
+    int maxCount {};
+    for (const int ele : arr)
+    {
+        maxCount = std::max(++counts[ele], maxCount);
+    }
+
+    //! Put the counts into buckets
+    std::vector<int> buckets(maxCount + 1);
+    for (const auto& kv : counts)
+    {
+        ++buckets[kv.second];
+    }
+
+    //! Determine setSize
+    int setSize {};
+    int numbersToRemoveFromArr {static_cast<int>(arr.size()) / 2};
+    int bucket {maxCount};
+
+    while (numbersToRemoveFromArr > 0)
+    {
+        int maxNeededFromBucket = numbersToRemoveFromArr / bucket;
+
+        if (numbersToRemoveFromArr % bucket != 0)
+        {
+            ++maxNeededFromBucket;
+        }
+
+        const int setSizeIncrease {std::min(buckets[bucket], maxNeededFromBucket)};
+
+        setSize += setSizeIncrease;
+        numbersToRemoveFromArr -= setSizeIncrease * bucket;
+        --bucket;
+    }
+
+    return setSize;
+
+} // static int minSetSizeDS4( ...
+
 TEST(MinSetSizeTest, SampleTest1)
 {
     EXPECT_EQ(2, minSetSizeFA({3, 3, 3, 3, 5, 5, 5, 2, 2, 7}));
     EXPECT_EQ(2, minSetSizeDS1({3, 3, 3, 3, 5, 5, 5, 2, 2, 7}));
     EXPECT_EQ(2, minSetSizeDS2({3, 3, 3, 3, 5, 5, 5, 2, 2, 7}));
     EXPECT_EQ(2, minSetSizeDS3({3, 3, 3, 3, 5, 5, 5, 2, 2, 7}));
+    EXPECT_EQ(2, minSetSizeDS4({3, 3, 3, 3, 5, 5, 5, 2, 2, 7}));
 
     EXPECT_EQ(1, minSetSizeFA({7, 7, 7, 7, 7, 7}));
     EXPECT_EQ(1, minSetSizeDS1({7, 7, 7, 7, 7, 7}));
     EXPECT_EQ(1, minSetSizeDS2({7, 7, 7, 7, 7, 7}));
     EXPECT_EQ(1, minSetSizeDS3({7, 7, 7, 7, 7, 7}));
+    EXPECT_EQ(1, minSetSizeDS4({7, 7, 7, 7, 7, 7}));
 }
