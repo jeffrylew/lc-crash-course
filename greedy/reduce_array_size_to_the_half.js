@@ -90,3 +90,60 @@ var minSetSizeDS2 = function(arr)
 
     return setSize;
 };
+
+class Counter
+{
+    static from(array)
+    {
+        const counter = new Counter();
+        for (const item of array)
+        {
+            counter.add(item);
+        }
+        return counter;
+    }
+
+    _counts = new Map();
+
+    add(item)
+    {
+        if (!this._counts.has(item))
+        {
+            this._counts.set(item, 0);
+        }
+        this._counts.set(item, this._counts.get(item) + 1);
+    }
+
+    values()
+    {
+        return this._counts.values();
+    }
+}
+
+/**
+ * @param {number[]} arr
+ * @returns {number}
+ */
+var minSetSizeDS3 = function(arr)
+{
+    const counter = Counter.from(arr);
+
+    // Sort element frequencies from largest to smallest
+    const counts = Array.from(counter.values()).sort((a, b) => b - a);
+
+    let numberOfItemsRemovedFromArr = 0;
+    let setSize = 0;
+
+    for (const count of counts)
+    {
+        numberOfItemsRemovedFromArr += count;
+        setSize++;
+
+        if (numberOfItemsRemovedFromArr >= arr.length / 2)
+        {
+            break;
+        }
+    }
+
+    return setSize;
+};
