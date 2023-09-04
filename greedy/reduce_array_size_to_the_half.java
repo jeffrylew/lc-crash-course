@@ -133,3 +133,48 @@ public int minSetSizeDS3(int[] arr)
 
     return setSize;
 }
+
+public int minSetSizeDS4(int[] arr)
+{
+    Map<Integer, Integer> countsMap = new HashMap<>();
+    int maxCount = 1; // Different from discussion solution
+    for (int num : arr)
+    {
+        if (!countsMap.containsKey(num))
+        {
+            countsMap.put(num, 1);
+            continue;
+        }
+
+        countsMap.put(num, countsMap.get(num) + 1);
+        maxCount = Math.max(maxCount, countsMap.get(num));
+    }
+
+    // Put the counts into buckets
+    int[] buckets = new int[maxCount + 1];
+    for (int count : countsMap.values())
+    {
+        buckets[count]++;
+    }
+
+    // Determine setSize
+    int setSize = 0;
+    int numbersToRemoveFromArr = arr.length / 2;
+    int bucket = maxCount;
+
+    while (numbersToRemoveFromArr > 0)
+    {
+        int maxNeededFromBucket = numbersToRemoveFromArr / bucket;
+        if (numbersToRemoveFromArr % bucket != 0)
+        {
+            maxNeededFromBucket++;
+        }
+
+        int setSizeIncrease = Math.min(buckets[bucket], maxNeededFromBucket);
+        setSize += setSizeIncrease;
+        numbersToRemoveFromArr -= setSizeIncrease * bucket;
+        bucket--;
+    }
+
+    return setSize;
+}
