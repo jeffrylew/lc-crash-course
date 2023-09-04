@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public int minSetSizeDS1(int[] arr)
 {
     // Sort the input numbers
@@ -26,6 +28,62 @@ public int minSetSizeDS1(int[] arr)
     int numbersRemovedFromArr = 0;
     int setSize = 0;
     for (int count : counts)
+    {
+        numbersRemovedFromArr += count;
+        setSize++;
+
+        if (numbersRemovedFromArr >= arr.length / 2)
+        {
+            break;
+        }
+    }
+
+    return setSize;
+}
+
+public int minSetSizeDS2(int[] arr)
+{
+    // Sort the input numbers
+    Arrays.sort(arr);
+
+    // Write element counts directly into input arr
+    int currentRun = 1;
+    int currentRunIdx = 0;
+    for (int i = 1; i < arr.length; i++)
+    {
+        if (arr[i] == arr[i - 1])
+        {
+            currentRun++;
+            continue;
+        }
+
+        arr[currentRunIdx++] = currentRun;
+        currentRun = 1;
+    }
+    arr[currentRunIdx++] = currentRun;
+
+    for (int i = currentRunIdx; i < arr.length; i++)
+    {
+        arr[i] = 0;
+    }
+
+    // Collections.reverseOrder() does not work for primitive Types and would
+    // require creation of an Integer[], which defeats the optimization
+    Arrays.sort(arr);
+
+    // In-place reversal of array
+    for (int i = 0; i < arr.length / 2; i++)
+    {
+        // Swapping the elements
+        int temp = arr[i];
+        arr[i] = arr[arr.length - i - 1];
+        arr[arr.length - i - 1] = temp;
+    }
+
+    // Remove numbers until at least half are removed
+    int numbersRemovedFromArr = 0;
+    int setSize = 0;
+    for (int count : arr)
     {
         numbersRemovedFromArr += count;
         setSize++;
