@@ -41,3 +41,52 @@ var minSetSizeDS1 = function(arr)
 
     return setSize;
 };
+
+/**
+ * @param {number[]} arr
+ * @returns {number}
+ */
+var minSetSizeDS2 = function(arr)
+{
+    arr.sort((a, b) => a - b);
+
+    let currentRun = 1;
+    let currentRunIdx = 0;
+
+    for (let i = 1; i < arr.length; i++)
+    {
+        if (arr[i] === arr[i - 1])
+        {
+            currentRun++;
+            continue;
+        }
+
+        arr[currentRunIdx++] = currentRun;
+        currentRun = 1;
+    }
+    arr[currentRunIdx++] = currentRun;
+
+    for (let i = currentRunIdx; i < arr.length; i++)
+    {
+        arr[i] = 0;
+    }
+
+    // Reverse sort arr
+    arr.sort((a, b) => b - a);
+
+    let numberOfItemsRemovedFromArr = 0;
+    let setSize = 0;
+
+    for (const count of arr)
+    {
+        numberOfItemsRemovedFromArr += count;
+        setSize++;
+
+        if (numberOfItemsRemovedFromArr >= arr.length / 2)
+        {
+            break;
+        }
+    }
+
+    return setSize;
+};
