@@ -72,6 +72,36 @@ static int binarySearchFirstIndex(std::vector<int> arr, int target)
 
 } // static int binarySearchFirstIndex( ...
 
+//! @brief Get right-most insertion index of target (right most element idx + 1)
+//! @param[in] arr Sorted vector of integers containing duplicates
+//! @return Right-most insertion point index of target
+static int binarySearchLastIndex(std::vector<int> arr, int target)
+{
+    //! @details https://leetcode.com/explore/interview/card/
+    //!          leetcodes-interview-crash-course-data-structures-and-algorithms
+    //!          /710/binary-search/4696/
+
+    int  left {};
+    auto right = static_cast<int>(arr.size());
+
+    while (left < right)
+    {
+        const int mid {left + (right - left) / 2};
+
+        if (arr[mid] > target)
+        {
+            right = mid;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+
+    return left;
+
+} // static int binarySearchLastIndex( ...
+
 TEST(BinarySearchTest, SampleTest)
 {
     EXPECT_EQ(2, binarySearch({1, 2, 3, 4, 5}, 3));
@@ -82,4 +112,9 @@ TEST(BinarySearchTest, SampleTest)
 TEST(BinarySearchFirstIndexTest, SampleTest)
 {
     EXPECT_EQ(3, binarySearchFirstIndex({1, 2, 3, 4, 4}, 4));
+}
+
+TEST(BinarySearchLastIndexTest, SampleTest)
+{
+    EXPECT_EQ(5, binarySearchLastIndex({1, 2, 3, 4, 4}, 4));
 }
