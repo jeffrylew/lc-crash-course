@@ -46,3 +46,24 @@ const binarySearchFirstIndex = (arr, target) => {
 
     return left;
 };
+
+const binarySearchLastIndex = (arr, target) => {
+    let left = 0;
+    let right = arr.length;
+
+    while (left < right)
+    {
+        const mid = Math.floor((left + right) / 2);
+
+        if (arr[mid] > target)
+        {
+            right = mid;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+
+    return left;
+};
