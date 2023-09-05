@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "binary_search"
   "binary_search_templates"
 )
 
