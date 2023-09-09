@@ -2,6 +2,7 @@ set(
   cpp_files
   "binary_search"
   "binary_search_templates"
+  "search_a_2d_matrix"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
