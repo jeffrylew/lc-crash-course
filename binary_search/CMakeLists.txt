@@ -3,6 +3,7 @@ set(
   "binary_search"
   "binary_search_templates"
   "search_a_2d_matrix"
+  "successful_pairs_of_spells_and_potions"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
