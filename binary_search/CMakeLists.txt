@@ -3,6 +3,7 @@ set(
   "binary_search"
   "binary_search_templates"
   "search_a_2d_matrix"
+  "search_input_position"
   "successful_pairs_of_spells_and_potions"
 )
 
