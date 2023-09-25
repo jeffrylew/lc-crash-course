@@ -2,6 +2,7 @@ set(
   cpp_files
   "binary_search"
   "binary_search_templates"
+  "koko_eating_bananas"
   "longest_subsequence_with_limited_sum"
   "search_a_2d_matrix"
   "search_input_position"
