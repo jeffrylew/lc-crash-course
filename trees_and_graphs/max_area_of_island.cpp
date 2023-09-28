@@ -174,7 +174,7 @@ static int maxAreaOfIslandDFSIterative(
                 //! Track total number of squares seen for current island
                 int shape {};
 
-                std::stack<std::pair<int, int>> stack({row, col});
+                std::stack<std::pair<int, int>> stack({{row, col}});
                 seen[row][col] = true;
 
                 while (not stack.empty())
