@@ -4,6 +4,7 @@ set(
   "binary_search_templates"
   "koko_eating_bananas"
   "longest_subsequence_with_limited_sum"
+  "minimum_speed_to_arrive_on_time"
   "path_with_minimum_effort"
   "search_a_2d_matrix"
   "search_input_position"
