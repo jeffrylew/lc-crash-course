@@ -62,9 +62,60 @@ static int smallestDivisorFA(std::vector<int> nums, int threshold)
 
 } // static int smallestDivisorFA( ...
 
+//! @brief Discussion Solution: Linear Search (naive approach)
+//! @param[in] nums      Vector of integers
+//! @param[in] threshold Sum of vector elements divided by divisor must be less
+//! @return Smallest divisor so sum of ele after dividing by it is <= threshold
+static int smallestDivisorDS1(std::vector<int> nums, int threshold)
+{
+    //! @details https://leetcode.com/problems/
+    //!          find-the-smallest-divisor-given-a-threshold/editorial/
+    //!
+    //!          Time complexity O(N * M) where N = nums.size(), M = max(nums)
+    //!          We iterate on all possible divisors and for each divisor, we
+    //!          iterate on the whole nums vector to find sum which takes O(N).
+    //!          For M divisors, it takes O(N * M).
+    //!          Space complexity O(1)
+
+    const int maxElement {*std::max_element(nums.begin(), nums.end())};
+
+    //! Iterate on all divisors
+    for (int divisor = 1; divisor <= maxElement; ++divisor)
+    {
+        int  sumOfDivisionResults {};
+        bool thresholdExceeded {};
+
+        //! Divide all numbers of array and sum the result
+        for (int num : nums)
+        {
+            sumOfDivisionResults += std::ceil((1.0 * num) / divisor);
+
+            // Another way to round division result to nearest ceil int
+            // sumOfDivisionResults = (num + divisor - 1) / divisor;
+
+            if (sumOfDivisionResults > threshold)
+            {
+                thresholdExceeded = true;
+                break;
+            }
+        }
+
+        //! If threshold was not exceeded then return current divisor
+        if (not thresholdExceeded)
+        {
+            return divisor;
+        }
+    }
+
+    return -1;
+
+} // static int smallestDivisorDS1( ...
+
 TEST(SmallestDivisorTest, SampleTest1)
 {
     EXPECT_EQ(5, smallestDivisorFA({1, 2, 5, 9}, 6));
+    EXPECT_EQ(5, smallestDivisorDS1({1, 2, 5, 9}, 6));
 
     EXPECT_EQ(44, smallestDivisorFA({44, 22, 33, 11, 1}, 5));
+    EXPECT_EQ(44, smallestDivisorDS1({44, 22, 33, 11, 1}, 5));
 }
