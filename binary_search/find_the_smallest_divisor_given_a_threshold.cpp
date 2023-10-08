@@ -111,11 +111,75 @@ static int smallestDivisorDS1(std::vector<int> nums, int threshold)
 
 } // static int smallestDivisorDS1( ...
 
+//! @brief Helper function to return the sum of division results with divisor
+//! @param[in] nums    Reference to vector of integers
+//! @param[in] divisor Positive double
+//! @return Sum of division results with divisor
+static int findDivisionSum(const std::vector<int>& nums, int divisor)
+{
+    int result {};
+
+    for (int num : nums)
+    {
+        result += std::ceil((1.0 * num) / divisor);
+    }
+
+    return result;
+}
+
+//! @brief Discussion Solution: Binary Search
+//! @param[in] nums      Vector of integers
+//! @param[in] threshold Sum of vector elements divided by divisor must be less
+//! @return Smallest divisor so sum of ele after dividing by it is <= threshold
+static int smallestDivisorDS2(std::vector<int> nums, int threshold)
+{
+    //! @details https://leetcode.com/problems
+    //!          /find-the-smallest-divisor-given-a-threshold/editorial/
+    //!
+    //!          Time complexity O(N * log M) where N = nums.size() and
+    //!          M = max(nums). We reduce the search space of possible divisors
+    //!          by half. There are log M levels so iterate on log M divisors.
+    //!          For each divisor, iterate on entire nums array to find division
+    //!          result sum, which takes O(N).
+    //!          Space complexity O(1)
+
+    int ans {-1};
+
+    int low {1};
+    int high {*std::max_element(nums.cbegin(), nums.cend())};
+
+    //! Iterate using binary search on all divisors
+    while (low <= high)
+    {
+        const int mid {(low + high) / 2};
+        const int result {findDivisionSum(nums, mid)};
+
+        //! If curent divisor does not exceed threshold then it can be answer.
+        //! Also try smaller divisors, changing search space to left half.
+        if (result <= threshold)
+        {
+            ans  = mid;
+            high = mid - 1;
+        }
+        else
+        {
+            //! Otherwise need a bigger divisor to reduce the result sum.
+            //! Change search space to right half.
+            low = mid + 1;
+        }
+    }
+
+    return ans;
+
+} // static int smallestDivisorDS2( ...
+
 TEST(SmallestDivisorTest, SampleTest1)
 {
     EXPECT_EQ(5, smallestDivisorFA({1, 2, 5, 9}, 6));
     EXPECT_EQ(5, smallestDivisorDS1({1, 2, 5, 9}, 6));
+    EXPECT_EQ(5, smallestDivisorDS2({1, 2, 5, 9}, 6));
 
     EXPECT_EQ(44, smallestDivisorFA({44, 22, 33, 11, 1}, 5));
     EXPECT_EQ(44, smallestDivisorDS1({44, 22, 33, 11, 1}, 5));
+    EXPECT_EQ(44, smallestDivisorDS2({44, 22, 33, 11, 1}, 5));
 }
