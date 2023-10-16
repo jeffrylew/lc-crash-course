@@ -2,6 +2,7 @@ set(
   cpp_files
   "binary_search"
   "binary_search_templates"
+  "divide_chocolate"
   "find_the_smallest_divisor_given_a_threshold"
   "koko_eating_bananas"
   "longest_subsequence_with_limited_sum"
