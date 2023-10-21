@@ -10,6 +10,7 @@ set(
   "path_with_minimum_effort"
   "search_a_2d_matrix"
   "search_input_position"
+  "split_array_largest_sum"
   "successful_pairs_of_spells_and_potions"
 )
 
