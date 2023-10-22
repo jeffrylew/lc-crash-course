@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <vector>
+
 //! @brief Split nums into k non-empty subarrays so largest sum is minimized
 //! @param[in] nums Vector of ints
 //! @param[in] k    Number of non-empty subarrays to split
