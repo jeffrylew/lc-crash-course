@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <numeric>
 #include <vector>
 
@@ -30,10 +31,16 @@ static int maximizeSweetnessFA(std::vector<int> sweetness, int k)
         int left {};
         for (int right = largest_chunk - 1; right < sweet_size; ++right)
         {
-            //! @todo Think more
+            min_total_sweetness =
+                std::min(min_total_sweetness,
+                         std::accumulate(prefix_sum.begin() + left,
+                                         prefix_sum.begin() + right,
+                                         0));
+            ++left;
         }
 
         --largest_chunk;
+        left = 0;
     }
 
     return min_total_sweetness;
