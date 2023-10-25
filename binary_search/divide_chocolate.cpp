@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <limits>
 #include <numeric>
 #include <vector>
 
@@ -24,7 +25,7 @@ static int maximizeSweetnessFA(std::vector<int> sweetness, int k)
     int largest_chunk {sweet_size - k};
 
     //! Keep track of maximum of minimum total sweetness
-    int min_total_sweetness {};
+    int min_total_sweetness {std::numeric_limits<int>::max()};
 
     while (largest_chunk > 0)
     {
