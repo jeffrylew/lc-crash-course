@@ -18,7 +18,7 @@ static int maximizeSweetnessFA(std::vector<int> sweetness, int k)
 
     for (int i = 1; i < sweet_size; ++i)
     {
-        prefix_sum [i] += prefix_sum[i - 1];
+        prefix_sum[i] += prefix_sum[i - 1];
     }
 
     //! Largest chunk size
