@@ -80,12 +80,12 @@ static int maximizeSweetnessDS(std::vector<int> sweetness, int k)
     while (left < right)
     {
         //! Get the middle index between left and right boundary indices
-        //! curSweetness = total sweetness for the current person
+        //! curSweetness        = total sweetness for the current person
         //! peopleWithChocolate = number of people that have a piece of
         //! chocolate with sweetness greater than or equal to mid
         const int mid {(left + right + 1) / 2};
-        int curSweetness {};
-        int peopleWithChocolate {};
+        int       curSweetness {};
+        int       peopleWithChocolate {};
 
         //! Start assigning chunks to the current people
         for (const int chunk_sweetness : sweetness)
@@ -119,14 +119,90 @@ static int maximizeSweetnessDS(std::vector<int> sweetness, int k)
 
 } // static int maximizeSweetnessDS( ...
 
+//! @brief Second attempt to get max total sweetness of piece by optimal cutting
+//! @param[in] sweetness Vector of sweetness in chocolate
+//! @param[in] k         Number of cuts to chocolate bar
+//! @return Max total sweetness of piece with minimum total sweetness
+static int maximizeSweetnessSA(std::vector<int> sweetness, int k)
+{
+    //! @details This second attempt based off the discussion solution more
+    //!          closely matches binarySearch() in binary_search_templates.cpp
+
+    //! Initialize the left and right boundaries
+    //! left  = 1
+    //! right = total sweetness / number of people
+    const int numPeople {k + 1};
+    int       left {*std::min_element(sweetness.cbegin(), sweetness.cend())};
+    int       right {
+        std::accumulate(sweetness.cbegin(), sweetness.cend(), 0) / numPeople};
+
+    int max_min_total_sweetness {};
+
+    //! If left < right is used then SampleTest3 fails (outputs 4 instead of 5)
+    while (left <= right)
+    {
+        //! Get the middle index between left and right boundary indices
+        //! curSweetness        = total sweetness for the current person
+        //! peopleWithChocolate = number of people that have a piece of
+        //! chocolate with sweetness greater than or equal to mid
+        const int mid {left + (right - left) / 2};
+        int       curSweetness {};
+        int       peopleWithChocolate {};
+
+        //! Start assigning chunks to the current people
+        for (const int chunk_sweetness : sweetness)
+        {
+            curSweetness += chunk_sweetness;
+
+            //! When the total sweetness is no less than mid,
+            //! move onto assigning chunks to the next person
+            if (curSweetness >= mid)
+            {
+                ++peopleWithChocolate;
+                curSweetness = 0;
+            }
+        }
+
+        //! Check if we successfully gave everyone a piece of chocolate with
+        //! sweetness no less than mid and eliminate the search space by half
+        if (peopleWithChocolate >= numPeople)
+        {
+            max_min_total_sweetness = mid;
+            left                    = mid + 1;
+        }
+        else
+        {
+            right = mid - 1;
+        }
+    }
+
+    return max_min_total_sweetness;
+
+} // static int maximizeSweetnessSA( ...
+
 TEST(MaximizeSweetnessTest, SampleTest1)
 {
-    EXPECT_NE(6, maximizeSweetnessFA({1, 2, 3, 4, 5, 6, 7, 8, 9}, 5));
-    EXPECT_EQ(6, maximizeSweetnessDS({1, 2, 3, 4, 5, 6, 7, 8, 9}, 5));
+    const std::vector<int> sweetness {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    EXPECT_EQ(1, maximizeSweetnessFA({5, 6, 7, 8, 9, 1, 2, 3, 4}, 8));
-    EXPECT_EQ(1, maximizeSweetnessDS({5, 6, 7, 8, 9, 1, 2, 3, 4}, 8));
+    EXPECT_NE(6, maximizeSweetnessFA(sweetness, 5));
+    EXPECT_EQ(6, maximizeSweetnessDS(sweetness, 5));
+    EXPECT_EQ(6, maximizeSweetnessSA(sweetness, 5));
+}
 
-    EXPECT_NE(5, maximizeSweetnessFA({1, 2, 2, 1, 2, 2, 1, 2, 2}, 2));
-    EXPECT_EQ(5, maximizeSweetnessDS({1, 2, 2, 1, 2, 2, 1, 2, 2}, 2));
+TEST(MaximizeSweetnessTest, SampleTest2)
+{
+    const std::vector<int> sweetness {5, 6, 7, 8, 9, 1, 2, 3, 4};
+
+    EXPECT_EQ(1, maximizeSweetnessFA(sweetness, 8));
+    EXPECT_EQ(1, maximizeSweetnessDS(sweetness, 8));
+    EXPECT_EQ(1, maximizeSweetnessSA(sweetness, 8));
+}
+
+TEST(MaximizeSweetnessTest, SampleTest3)
+{
+    const std::vector<int> sweetness {1, 2, 2, 1, 2, 2, 1, 2, 2};
+
+    EXPECT_NE(5, maximizeSweetnessFA(sweetness, 2));
+    EXPECT_EQ(5, maximizeSweetnessDS(sweetness, 2));
+    EXPECT_EQ(5, maximizeSweetnessSA(sweetness, 2));
 }
