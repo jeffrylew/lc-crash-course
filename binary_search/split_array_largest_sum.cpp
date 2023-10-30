@@ -11,7 +11,7 @@
 //! @return Minimized largest sum of the split
 static int splitArrayFA(std::vector<int> nums, int k)
 {
-    //! @details
+    //! @details First attempt solution does not pass SampleTest2
 
     const int total_sum {std::accumulate(nums.cbegin(), nums.cend(), 0)};
     int       left {*std::min_element(nums.cbegin(), nums.cend())};
@@ -28,20 +28,32 @@ static int splitArrayFA(std::vector<int> nums, int k)
         int       current_subarray_sum {};
         int       largest_subarray_sum {};
     
-        for (const int num : nums)
+        int idx {};
+        while (idx < static_cast<int>(nums.size()))
         {
-            current_subarray_sum += num;
+            current_subarray_sum += nums[idx];
 
             if (current_subarray_sum >= min_subarray_sum)
             {
-                ++num_subarrays;
+                if (++num_subarrays == k)
+                {
+                    //! k subarrays reached, add remaining elements in nums
+                    current_subarray_sum +=
+                        std::accumulate(nums.begin() + idx + 1, nums.end(), 0);
+                    largest_subarray_sum =
+                        std::max(largest_subarray_sum, current_subarray_sum);
+                    break;
+                }
+
                 largest_subarray_sum =
                   std::max(largest_subarray_sum, current_subarray_sum);
                 current_subarray_sum = 0;
             }
+
+            ++idx;
         }
 
-        if (num_subarrays >= k)
+        if (num_subarrays == k)
         {
             min_largest_sum = std::min(min_largest_sum, largest_subarray_sum);
             left            = min_subarray_sum + 1;
@@ -55,9 +67,19 @@ static int splitArrayFA(std::vector<int> nums, int k)
     return min_largest_sum;
 }
 
-TEST(SplitArrayTest, SampleTest)
+TEST(SplitArrayTest, SampleTest1)
 {
     EXPECT_EQ(18, splitArrayFA({7, 2, 5, 10, 8}, 2));
 
     EXPECT_EQ(9, splitArrayFA({1, 2, 3, 4, 5}, 2));
+}
+
+TEST(SplitArrayTest, SampleTest2)
+{
+    const std::vector<int> nums {
+        10, 5, 13, 4, 8, 4, 5, 11, 14, 9, 16, 10, 20, 8
+    };
+
+    EXPECT_NE(25, splitArrayFA(nums));
+    EXPECT_EQ(28, splitArrayFA(nums));
 }
