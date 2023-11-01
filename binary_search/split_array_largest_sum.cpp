@@ -11,7 +11,8 @@
 //! @return Minimized largest sum of the split
 static int splitArrayFA(std::vector<int> nums, int k)
 {
-    //! @details First attempt solution does not pass SampleTest2
+    //! @details First attempt solution does not pass SampleTest3
+    //!          24 / 31 test cases passed
 
     const int total_sum {std::accumulate(nums.cbegin(), nums.cend(), 0)};
     int       left {*std::min_element(nums.cbegin(), nums.cend())};
@@ -69,12 +70,19 @@ static int splitArrayFA(std::vector<int> nums, int k)
 
 TEST(SplitArrayTest, SampleTest1)
 {
-    EXPECT_EQ(18, splitArrayFA({7, 2, 5, 10, 8}, 2));
+    const std::vector<int> nums {7, 2, 5, 10, 8};
 
-    EXPECT_EQ(9, splitArrayFA({1, 2, 3, 4, 5}, 2));
+    EXPECT_EQ(18, splitArrayFA(nums, 2));
 }
 
 TEST(SplitArrayTest, SampleTest2)
+{
+    const std::vector<int> nums {1, 2, 3, 4, 5};
+
+    EXPECT_EQ(9, splitArrayFA(nums, 2));
+}
+
+TEST(SplitArrayTest, SampleTest3)
 {
     const std::vector<int> nums {
         10, 5, 13, 4, 8, 4, 5, 11, 14, 9, 16, 10, 20, 8
