@@ -165,12 +165,92 @@ static int splitArrayDS1(std::vector<int> nums, int k)
     return getMinimumLargestSplitSum(memo, prefixSum, 0, k);
 }
 
+//! @brief Split nums into k non-empty subarrays so largest sum is minimized
+//! @param[in] nums Vector of ints
+//! @param[in] k    Number of non-empty subarrays to split
+//! @return Minimized largest sum of the split
+static int splitArrayDS2(std::vector<int> nums, int k)
+{
+    //! @details https://leetcode.com/problems/split-array-largest-sum/editorial
+    //!
+    //!          Time complexity O(N^2 * k) where N = nums.size() and k = number
+    //!          of subarrays allowed. Each state is defined by the values of
+    //!          currIdx and subarrCount. There are N * k possible states and we
+    //!          must visit almost every state to solve the original problem.
+    //!          Each state (subproblem) requires O(N) time because we have a
+    //!          for loop from currIdx to N - subarrCount. Since the result is
+    //!          stored in the table memo, any repeated calls will only require
+    //!          constant time.
+    //!          Space complexity O(N * k). The results are stored in the table
+    //!          memo with size N * k.
+
+    //! 2D vector for memoization defined with NROWS = maximum nums.size() and
+    //! NCOLS = maximum split/subarray count k = min(50, nums.size())
+    constexpr int NROWS {1001};
+    constexpr int NCOLS {51};
+
+    //! memo[index in nums][subarray count]
+    std::vector<std::vector<int>> memo(NROWS, std::vector<int>(NCOLS));
+
+    //! Store prefix sum of nums array
+    const auto       nums_size = static_cast<int>(nums.size());
+    std::vector<int> prefixSum(nums_size + 1);
+    for (int i = 0; i < nums_size; ++i)
+    {
+        prefixSum[i + 1] = prefixSum[i] + nums[i];
+    }
+
+    for (int subarrCount = 1; subarrCount <= k; ++subarrCount)
+    {
+        for (int currIdx = 0; currIdx < nums_size; ++currIdx)
+        {
+            //! Base Case: If there is only one subarray left then all remaining
+            //! numbers must go into the current subarray. Return sum of the
+            //! remaining numbers
+            if (subarrCount == 1)
+            {
+                memo[currIdx][subarrCount] =
+                    prefixSum[nums_size] - prefixSum[currIdx];
+                continue;
+            }
+
+            //! Otherwise, use recurrence relation to determine the min largest
+            //! subarray sum between currIdx and end of nums with subarrCount
+            //! subarrays remaining
+            int minimumLargestSplitSum = std::numeric_limits<int>::max();
+            for (int i = currIdx; i <= nums_size - subarrCount; ++i)
+            {
+                //! Store the sum of the first subarray
+                const int firstSplitSum {prefixSum[i + 1] - prefixSum[currIdx]};
+
+                //! Find the maximum subarray sum for the current first split
+                const int largestSplitSum {
+                    std::max(firstSplitSum, memo[i + 1][subarrCount - 1])};
+
+                //! Find the minimum among all possible combinations
+                minimumLargestSplitSum =
+                    std::min(minimumLargestSplitSum, largestSplitSum);
+
+                if (firstSplitSum >= minimumLargestSplitSum)
+                {
+                    break;
+                }
+            }
+
+            memo[currIdx][subarrCount] = minimumLargestSplitSum;
+        }
+    }
+
+    return memo[0][k];
+}
+
 TEST(SplitArrayTest, SampleTest1)
 {
     const std::vector<int> nums {7, 2, 5, 10, 8};
 
     EXPECT_EQ(18, splitArrayFA(nums, 2));
     EXPECT_EQ(18, splitArrayDS1(nums, 2));
+    EXPECT_EQ(18, splitArrayDS2(nums, 2));
 }
 
 TEST(SplitArrayTest, SampleTest2)
@@ -179,6 +259,7 @@ TEST(SplitArrayTest, SampleTest2)
 
     EXPECT_EQ(9, splitArrayFA(nums, 2));
     EXPECT_EQ(9, splitArrayDS1(nums, 2));
+    EXPECT_EQ(9, splitArrayDS2(nums, 2));
 }
 
 TEST(SplitArrayTest, SampleTest3)
@@ -190,4 +271,5 @@ TEST(SplitArrayTest, SampleTest3)
     EXPECT_NE(25, splitArrayFA(nums));
     EXPECT_EQ(28, splitArrayFA(nums));
     EXPECT_EQ(25, splitArrayDS1(nums));
+    EXPECT_EQ(25, splitArrayDS2(nums));
 }
