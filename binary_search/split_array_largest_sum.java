@@ -4,6 +4,8 @@ class Solution
     // and maximum split/subarray count k = min(50, nums.length)
     Integer[][] memo = new Integer[1001][51];
 
+    int[][] memoDS2 = new int[1001][51];
+
     private int getMinimumLargestSplitSum(
         int[] prefixSum, int currIdx, int subarrCount)
     {
@@ -64,5 +66,60 @@ class Solution
         }
 
         return getMinimumLargestSplitSum(prefixSum, 0, k);
+    }
+
+    public int splitArrayDS2(int[] nums, int k)
+    {
+        // Store the prefix sum of nums
+        int nums_len = nums.length;
+        int[] prefixSum = new int[nums_len + 1];
+
+        for (int i = 0; i < nums_len; i++)
+        {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        for (int subarrCount = 1; subarrCount <= k; subarrCount++)
+        {
+            for (int currIdx = 0; currIdx < nums_len; currIdx++)
+            {
+                // Base Case: If there is only one subarray left then all of the
+                // remaining numbers must go in the current subarray. Return the
+                // sum of the remaining numbers
+                if (subarrCount == 1)
+                {
+                    memoDS2[currIdx][subarrCount] =
+                        prefixSum[nums_len] - prefixSum[currIdx];
+                    continue;
+                }
+
+                // Otherwise, use the recurrence relation to determine the min
+                // largest subarray sum between currIdx and the end of the array
+                // with subarrCount subarray remaining
+                int minimumLargestSplitSum = Integer.MAX_VALUE;
+                for (int i = currIdx; i <= nums_len - subarrCount; i++)
+                {
+                    // Store the sum of the first subarray
+                    int firstSplitSum = prefixSum[i + 1] - prefixSum[currIdx];
+
+                    // Find the max subarray sum for the current first split
+                    int largestSplitSum =
+                        Math.max(firstSplitSum, memoDS2[i + 1][subarrCount - 1]);
+                    
+                    // Find the minimum among all possible combinations
+                    minimumLargestSplitSum =
+                        Math.min(minimumLargestSplitSum, largestSplitSum);
+                    
+                    if (firstSplitSum >= minimumLargestSplitSum)
+                    {
+                        break;
+                    }
+                }
+
+                memoDS2[currIdx][subarrCount] = minimumLargestSplitSum;
+            }
+        }
+
+        return memoDS2[0][k];
     }
 }
