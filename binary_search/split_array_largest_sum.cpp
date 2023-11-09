@@ -244,6 +244,91 @@ static int splitArrayDS2(std::vector<int> nums, int k)
     return memo[0][k];
 }
 
+//! @brief Get num subarrays where no subarray sum is greater than maxSumAllowed
+//! @param[in] nums          Reference to vector of ints
+//! @param[in] maxSumAllowed Potential minimum largest subarray sum to check
+//! @return Number of subarrays in nums where all sums are <= maxSumAllowed
+static int minimumSubarraysRequired(const std::vector<int>& nums,
+                                    int                     maxSumAllowed)
+{
+    int currentSum {};
+    int splitsRequired {};
+
+    for (const int element : nums)
+    {
+        //! Add element only if the sum doesn't exceed maxSumAllowed
+        if (currentSum + element <= maxSumAllowed)
+        {
+            currentSum += element;
+        }
+        else
+        {
+            //! If the element addition makes currentSum greater than
+            //! maxSumAllowed then increment the splits required and reset sum
+            currentSum = element;
+            ++splitsRequired;
+        }
+    }
+
+    //! Return the number of subarrays, which is the number of splits + 1
+    return splitsRequired + 1;
+}
+
+//! @brief Split nums into k non-empty subarrays so largest sum is minimized
+//! @param[in] nums Vector of ints
+//! @param[in] k    Number of non-empty subarrays to split
+//! @return Minimized largest sum of the split
+static int splitArrayDS3(std::vector<int> nums, int k)
+{
+    //! @details https://leetcode.com/problems/split-array-largest-sum/editorial
+    //!
+    //!          Time complexity O(N * log(S)) where N = nums.size() and S = sum
+    //!          of integers in the array. The total number of iterations in the
+    //!          binary search is log(S). For each iteration, we call
+    //!          minimumSubarraysRequired which takes O(N) time.
+    //!          Space complexity O(1), do not use any data structures that
+    //!          require more than constant extra space.
+
+    //! Find the sum of all elements and the maximum element
+    int sum {};
+    int maxElement {std::numeric_limits<int>::min()};
+    for (const int element : nums)
+    {
+        //! Can also use std::accumulate and std::max_element but these would
+        //! take O(2 * nums.size()) total since need to iterate through twice
+        sum += element;
+        maxElement = std::max(maxElement, element);
+    }
+
+    //! Define the left and right boundaries of binary search
+    int left {maxElement};
+    int right {sum};
+    int minimumLargestSplitSum {};
+
+    while (left <= right)
+    {
+        //! Find the mid value
+        const int maxSumAllowed {left + (right - left) / 2};
+
+        //! Find the minimum splits. If splitsRequired is less than
+        //! or equal to k then move towards smaller values (left)
+        if (minimumSubarraysRequired(nums, maxSumAllowed) <= k)
+        {
+            right = maxSumAllowed - 1;
+
+            minimumLargestSplitSum = maxSumAllowed;
+        }
+        else
+        {
+            //! Move towards right if splitsRequired is more than k
+            left = maxSumAllowed + 1;
+        }
+    }
+
+    return minimumLargestSplitSum;
+
+} // static int splitArrayDS3( ...
+
 TEST(SplitArrayTest, SampleTest1)
 {
     const std::vector<int> nums {7, 2, 5, 10, 8};
@@ -251,6 +336,7 @@ TEST(SplitArrayTest, SampleTest1)
     EXPECT_EQ(18, splitArrayFA(nums, 2));
     EXPECT_EQ(18, splitArrayDS1(nums, 2));
     EXPECT_EQ(18, splitArrayDS2(nums, 2));
+    EXPECT_EQ(18, splitArrayDS3(nums, 2));
 }
 
 TEST(SplitArrayTest, SampleTest2)
@@ -260,6 +346,7 @@ TEST(SplitArrayTest, SampleTest2)
     EXPECT_EQ(9, splitArrayFA(nums, 2));
     EXPECT_EQ(9, splitArrayDS1(nums, 2));
     EXPECT_EQ(9, splitArrayDS2(nums, 2));
+    EXPECT_EQ(9, splitArrayDS3(nums, 2));
 }
 
 TEST(SplitArrayTest, SampleTest3)
@@ -272,4 +359,5 @@ TEST(SplitArrayTest, SampleTest3)
     EXPECT_EQ(28, splitArrayFA(nums));
     EXPECT_EQ(25, splitArrayDS1(nums));
     EXPECT_EQ(25, splitArrayDS2(nums));
+    EXPECT_EQ(25, splitArrayDS3(nums));
 }
