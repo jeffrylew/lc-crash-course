@@ -120,3 +120,70 @@ var splitArrayDS2 = function(nums, k)
 
     return memo[0][k];
 };
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var splitArrayDS3 = function(nums, k)
+{
+    const minimumSubarraysRequired = (maxSumAllowed) => {
+        let currentSum = 0;
+        let splitsRequired = 0;
+
+        for (const element of nums)
+        {
+            // Add element only if the sum doesn't exceed maxSumAllowed
+            if (currentSum + element <= maxSumAllowed)
+            {
+                currentSum += element;
+            }
+            else
+            {
+                // If the element addition makes sum greater than maxSumAllowed
+                // then increment the splits required and reset sum
+                currentSum = element;
+                splitsRequired++;
+            }
+        }
+
+        // Return the number of subarrays, which is the number of splits + 1
+        return splitsRequired + 1;
+    }
+
+    // Find the sum of all elements and the maximum element
+    let sum = 0;
+    let maxElement = Number.MIN_SAFE_INTEGER;
+    for (const element of nums)
+    {
+        sum += element;
+        maxElement = Math.max(maxElement, element);
+    }
+
+    // Define the left and right boundaries of binary search
+    let left = maxElement;
+    let right = sum;
+    let minimumLargestSplitSum = 0;
+
+    while (left <= right)
+    {
+        // Find the mid value
+        const maxSumAllowed = Math.floor((left + right) / 2);
+
+        // Find the minimum splits. If splitsRequired is less than
+        // or equal to k then move towards smaller values (left)
+        if (minimumSubarraysRequired(maxSumAllowed) <= k)
+        {
+            right = maxSumAllowed - 1;
+            minimumLargestSplitSum = maxSumAllowed;
+        }
+        else
+        {
+            // Move towards right if splitsRequired is more than k
+            left = maxSumAllowed + 1;
+        }
+    }
+
+    return minimumLargestSplitSum;
+};
