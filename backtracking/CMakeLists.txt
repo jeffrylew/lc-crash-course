@@ -1,6 +1,7 @@
 set(
   cpp_files
   "permutations"
+  "subsets"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
