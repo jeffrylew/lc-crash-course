@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "combinations"
   "permutations"
   "subsets"
 )
