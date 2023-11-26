@@ -13,6 +13,7 @@ static void backtrack(std::vector<int>&              curr,
                       const std::vector<int>&        nums)
 {
     const auto nums_size = static_cast<int>(nums.size());
+    /*
     if (i > nums_size)
     {
         //! Have run out of numbers to use
@@ -20,6 +21,7 @@ static void backtrack(std::vector<int>&              curr,
         //!       argument greater than nums.size() but is included for clarity
         return;
     }
+     */
 
     //! A subset can have any length so every node is an answer (even the root,
     //! which represents the empty subset). First thing to do at each node is
@@ -60,4 +62,11 @@ TEST(SubsetsTest, SampleTest1)
         {}, {1}, {1, 2}, {1, 2, 3}, {1, 3}, {2}, {2, 3}, {3}};
 
     EXPECT_EQ(expected_output, subsets({1, 2, 3}));
+}
+
+TEST(SubsetsTest, SampleTest2)
+{
+    const std::vector<std::vector<int>> expected_output {{}, {0}};
+
+    EXPECT_EQ(expected_output, subsets({0}));
 }
