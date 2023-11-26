@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "all_paths_from_source_to_target"
   "combinations"
   "permutations"
   "subsets"
