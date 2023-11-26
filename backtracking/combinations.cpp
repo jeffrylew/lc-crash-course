@@ -3,14 +3,14 @@
 #include <vector>
 
 //! @brief Recursive helper function to find all combinations of size k
+//! @param[out]     ans  Reference to vector of combination vectors of size k
 //! @param[in, out] curr Vector for current combination under consideration
 //! @param[in]      i    Starting number to consider in range [i, n]
-//! @param[out]     ans  Reference to vector of combination vectors of size k
 //! @param[in]      n    Ending number to consider in range [i, n]
 //! @param[in]      k    Size of combination
-static void backtrack(std::vector<int>&              curr,
+static void backtrack(std::vector<std::vector<int>>& ans,
+                      std::vector<int>&              curr,
                       int                            i,
-                      std::vector<std::vector<int>>& ans,
                       int                            n,
                       int                            k)
 {
@@ -25,7 +25,7 @@ static void backtrack(std::vector<int>&              curr,
     for (int num = i; num <= n; ++num)
     {
         curr.push_back(num);
-        backtrack(curr, num + 1, ans, n, k);
+        backtrack(ans, curr, num + 1, n, k);
         curr.pop_back();
     }
 }
@@ -52,7 +52,7 @@ static std::vector<std::vector<int>> combine(int n, int k)
     std::vector<int>              curr {};
 
     //! Initially, i = 1 indicates we are considering 1 and all numbers after it
-    backtrack(curr, 1, ans, n, k);
+    backtrack(ans, curr, 1, n, k);
     return ans;
 }
 
@@ -62,4 +62,11 @@ TEST(CombineTest, SampleTest1)
         {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
 
     EXPECT_EQ(expected_output, combine(4, 2));
+}
+
+TEST(CombineTest, SampleTest2)
+{
+    const std::vector<std::vector<int>> expected_output {{1}};
+
+    EXPECT_EQ(expected_output, combine(1, 1));
 }
