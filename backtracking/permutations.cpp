@@ -70,3 +70,17 @@ TEST(PermuteTest, SampleTest1)
 
     EXPECT_EQ(expected_output, permute({1, 2, 3}));
 }
+
+TEST(PermuteTest, SampleTest2)
+{
+    const std::vector<std::vector<int>> expected_output {{0, 1}, {1, 0}};
+
+    EXPECT_EQ(expected_output, permute({0, 1}));
+}
+
+TEST(PermuteTest, SampleTest3)
+{
+    const std::vector<std::vector<int>> expected_output {{1}};
+
+    EXPECT_EQ(expected_output, permute({1}));
+}
