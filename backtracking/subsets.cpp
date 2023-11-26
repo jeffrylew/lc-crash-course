@@ -57,7 +57,7 @@ std::vector<std::vector<int>> subsets(std::vector<int> nums)
 TEST(SubsetsTest, SampleTest1)
 {
     const std::vector<std::vector<int>> expected_output {
-        {}, {1}, {2}, {1, 2}, {3}, {1, 3}, {2, 3}, {1, 2, 3}};
+        {}, {1}, {1, 2}, {1, 2, 3}, {1, 3}, {2}, {2, 3}, {3}};
 
     EXPECT_EQ(expected_output, subsets({1, 2, 3}));
 }
