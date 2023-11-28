@@ -34,6 +34,13 @@ static void backtrackFA(const std::vector<std::vector<int>>& graph,
 static std::vector<std::vector<int>> allPathsSourceTargetFA(
     const std::vector<std::vector<int>>& graph)
 {
+    //! @details https://leetcode.com/explore/interview/card/
+    //!          leetcodes-interview-crash-course-data-structures-and-algorithms
+    //!          /711/backtracking/4575/
+    //!
+    //!          Time complexity O(2^n * n) where n = number of nodes in graph.
+    //!          Space complexity O(n) for curr and call stack
+
     std::vector<std::vector<int>> ans {};
     std::vector<int>              curr {};
     backtrackFA(graph, ans, curr, 0);
