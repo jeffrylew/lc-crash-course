@@ -47,12 +47,50 @@ static std::vector<std::vector<int>> allPathsSourceTargetFA(
     return ans;
 }
 
+//! @brief Backtracking solution to find all possible paths from node 0 to n - 1
+//! @param[in] graph Reference to directed acyclic graph of n nodes, 0 to n - 1
+//! @return Vector of all possible paths from node 0 to node n - 1
+static std::vector<std::vector<int>> allPathsSourceTargetDS1(
+    const std::vector<std::vector<int>>& graph)
+{
+    //! @details https://leetcode.com/explore/interview/card/
+    //!          leetcodes-interview-crash-course-data-structures-and-algorithms
+    //!          /711/backtracking/4575/
+    //!
+    //!          Time complexity O(2^n * n) where n = number of nodes in graph.
+    //!          Space complexity O(n) for curr and call stack
+
+    const int                     target {static_cast<int>(graph.size()) - 1};
+    std::vector<std::vector<int>> results {};
+    std::vector<int>              path {0};
+
+    auto backtrack = [&](int currNode, std::vector<int>& path)
+    {
+        if (currNode == target)
+        {
+            results.push_back(path);
+            return;
+        }
+
+        for (const int nextNode : graph[currNode])
+        {
+            path.push_back(nextNode);
+            backtrack(nextNode, path);
+            path.pop_back();
+        }
+    };
+
+    backtrack(0, path);
+    return results;
+}
+
 TEST(AllPathsSourceTargetTest, SampleTest1)
 {
     const std::vector<std::vector<int>> graph {{1, 2}, {3}, {3}, {}};
     const std::vector<std::vector<int>> expected_output {{0, 1, 3}, {0, 2, 3}};
 
     EXPECT_EQ(expected_output, allPathsSourceTargetFA(graph));
+    EXPECT_EQ(expected_output, allPathsSourceTargetDS1(graph));
 }
 
 TEST(AllPathsSourceTargetTest, SampleTest2)
@@ -63,4 +101,5 @@ TEST(AllPathsSourceTargetTest, SampleTest2)
         {0, 4}, {0, 3, 4}, {0, 1, 3, 4}, {0, 1, 2, 3, 4}, {0, 1, 4}};
 
     EXPECT_EQ(expected_output, allPathsSourceTargetFA(graph));
+    EXPECT_EQ(expected_output, allPathsSourceTargetDS1(graph));
 }
