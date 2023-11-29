@@ -58,6 +58,11 @@ static std::vector<std::vector<int>> allPathsSourceTargetDS1(
     //!          /711/backtracking/4575/
     //!
     //!          Time complexity O(2^n * n) where n = number of nodes in graph.
+    //!          Every time a new node is added to the graph, the number of
+    //!          paths double. For a graph with n nodes, at maximum, there could
+    //!          be sum_{i = 0}_{n - 2} 2^i = 2^(n - 1) - 1 paths between the
+    //!          start and end nodes. For each path, there could be at most
+    //!          n - 2 intermediate nodes - it takes O(n) to build each path.
     //!          Space complexity O(n) for curr and call stack
 
     const int                     target {static_cast<int>(graph.size()) - 1};
