@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <unordered_map>
 #include <vector>
 
 //! @brief Recursive helper to get all possible paths from node 0 to node n - 1
@@ -89,6 +90,70 @@ static std::vector<std::vector<int>> allPathsSourceTargetDS1(
     return results;
 }
 
+//! @brief Top-down DP solution to find all possible paths from node 0 to n - 1
+//! @param[in] graph Reference to directed acyclic graph of n nodes, 0 to n - 1
+//! @return Vector of all possible paths from node 0 to node n - 1
+static std::vector<std::vector<int>> allPathsSourceTargetDS2(
+    const std::vector<std::vector<int>>& graph)
+{
+    //! @details leetcode.com/problems/all-paths-from-source-to-target/editorial
+    //!
+    //!          Time complexity O(2^n * n) where n = number of nodes in graph.
+    //!          There can be at most 2^(n - 1) - 1 paths. To estimate the
+    //!          overall time complexity, start from last step when the starting
+    //!          node is prepended to each path returned from allPathsToTarget.
+    //!          Copying each path to create a new path can take up to n steps
+    //!          for each final path. Therefore the last step could take
+    //!          O(2^(n - 1) * n) time. Right before the last step, when the max
+    //!          path length is n - 1, we have 2^(n - 2) paths. A loose upper
+    //!          bound would be sum_{i=1}_{n} 2^(i - 1) * i = O(2^n * n).
+    //!          A lower bound of the time complexity is O(2^n * n) following
+    //!          similar logic from DS1 for an overall complexity of O(2^n * n).
+    //!          Space complexity O(2^n * n), can have 2^(n - 1) - 1 paths as
+    //!          the results and each path can contain up to n nodes.
+    //!          The recursive call stack can grow up to n consecutive calls.
+    //!          Memoizing the intermediate calls of allPathsToTarget requires
+    //!          sum_{i = 1}_{n} i * 2^i = O(2^n * n).
+
+    const auto target = static_cast<int>(graph.size()) - 1;
+
+    std::unordered_map<int, std::vector<std::vector<int>>> memo;
+
+    //! Get all paths from currNode to target node
+    //! Recursive formula: For all nextNodes that are neighbors of currNode,
+    //! allPathsToTarget(currNode) = {currNode + allPathsToTarget(nextNode)}
+    auto allPathsToTarget = [&](int currNode) -> std::vector<std::vector<int>> {
+        if (memo.count(currNode) > 0)
+        {
+            return memo[currNode];
+        }
+
+        std::vector<std::vector<int>> results;
+        if (currNode == target)
+        {
+            results.emplace_back({target});
+        }
+        else
+        {
+            //! Iterate through neighbor nodes of current node
+            for (const int nextNode : graph[currNode])
+            {
+                for (const auto& path : allPathsToTarget(nextNode))
+                {
+                    std::vector<int> newPath {currNode};
+                    newPath.insert(newPath.end(), path.cbegin(), path.cend());
+                    results.push_back(std::move(newPath));
+                }
+            }
+        }
+
+        memo[currNode] = results;
+        return results;
+    };
+
+    return allPathsToTarget(0);
+}
+
 TEST(AllPathsSourceTargetTest, SampleTest1)
 {
     const std::vector<std::vector<int>> graph {{1, 2}, {3}, {3}, {}};
@@ -96,6 +161,7 @@ TEST(AllPathsSourceTargetTest, SampleTest1)
 
     EXPECT_EQ(expected_output, allPathsSourceTargetFA(graph));
     EXPECT_EQ(expected_output, allPathsSourceTargetDS1(graph));
+    EXPECT_EQ(expected_output, allPathsSourceTargetDS2(graph));
 }
 
 TEST(AllPathsSourceTargetTest, SampleTest2)
@@ -107,4 +173,5 @@ TEST(AllPathsSourceTargetTest, SampleTest2)
 
     EXPECT_EQ(expected_output, allPathsSourceTargetFA(graph));
     EXPECT_EQ(expected_output, allPathsSourceTargetDS1(graph));
+    EXPECT_EQ(expected_output, allPathsSourceTargetDS2(graph));
 }
