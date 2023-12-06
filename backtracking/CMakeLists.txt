@@ -2,6 +2,7 @@ set(
   cpp_files
   "all_paths_from_source_to_target"
   "combinations"
+  "letter_combinations_of_a_phone_number"
   "permutations"
   "subsets"
 )
