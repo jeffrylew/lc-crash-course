@@ -4,7 +4,9 @@
 #include <unordered_map>
 #include <vector>
 
-//! @brief Get all possible letter combinations 
+//! @brief Get all possible letter combinations of a string containing 2 - 9
+//! @param[in] digits std::string mapping digits to letters like on a telephone
+//! @return Vector of all possible letter combinations
 static std::vector<std::string> letterCombinationsFA(std::string digits)
 {
     if (digits.empty())
@@ -47,4 +49,25 @@ static std::vector<std::string> letterCombinationsFA(std::string digits)
 
     backtrack(digits, 0);
     return combinations;
+}
+
+TEST(LetterCombinationsTest, SampleTest1)
+{
+    const std::vector<std::string> expected_output {
+        "ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"
+    };
+
+    EXPECT_EQ(expected_output, letterCombinationsFA("23"));
+}
+
+TEST(LetterCombinationsTest, SampleTest2)
+{
+    EXPECT_TRUE(letterCombinationsFA("").empty());
+}
+
+TEST(LetterCombinationsTest, SampleTest3)
+{
+    const std::vector<std::string> expected_output {"a", "b", "c"};
+
+    EXPECT_EQ(expected_output, letterCombinationsFA("2"));
 }
