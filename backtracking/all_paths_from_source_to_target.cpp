@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <functional>
 #include <unordered_map>
 #include <vector>
 
@@ -70,21 +71,22 @@ static std::vector<std::vector<int>> allPathsSourceTargetDS1(
     std::vector<std::vector<int>> results {};
     std::vector<int>              path {0};
 
-    auto backtrack = [&](int currNode, std::vector<int>& path)
-    {
-        if (currNode == target)
+    std::function<void(int, std::vector<int>&)> backtrack =
+        [&](int currNode, std::vector<int>& path)
         {
-            results.push_back(path);
-            return;
-        }
+            if (currNode == target)
+            {
+                results.push_back(path);
+                return;
+            }
 
-        for (const int nextNode : graph[currNode])
-        {
-            path.push_back(nextNode);
-            backtrack(nextNode, path);
-            path.pop_back();
-        }
-    };
+            for (const int nextNode : graph[currNode])
+            {
+                path.push_back(nextNode);
+                backtrack(nextNode, path);
+                path.pop_back();
+            }
+        };
 
     backtrack(0, path);
     return results;
@@ -122,34 +124,36 @@ static std::vector<std::vector<int>> allPathsSourceTargetDS2(
     //! Get all paths from currNode to target node
     //! Recursive formula: For all nextNodes that are neighbors of currNode,
     //! allPathsToTarget(currNode) = {currNode + allPathsToTarget(nextNode)}
-    auto allPathsToTarget = [&](int currNode) -> std::vector<std::vector<int>> {
-        if (memo.count(currNode) > 0)
+    std::function<std::vector<std::vector<int>>(int)> allPathsToTarget =
+        [&](int currNode)
         {
-            return memo[currNode];
-        }
-
-        std::vector<std::vector<int>> results;
-        if (currNode == target)
-        {
-            results.emplace_back({target});
-        }
-        else
-        {
-            //! Iterate through neighbor nodes of current node
-            for (const int nextNode : graph[currNode])
+            if (memo.count(currNode) > 0)
             {
-                for (const auto& path : allPathsToTarget(nextNode))
+                return memo[currNode];
+            }
+
+            std::vector<std::vector<int>> results;
+            if (currNode == target)
+            {
+                results.emplace_back({target});
+            }
+            else
+            {
+                //! Iterate through neighbor nodes of current node
+                for (const int nextNode : graph[currNode])
                 {
-                    std::vector<int> newPath {currNode};
-                    newPath.insert(newPath.end(), path.cbegin(), path.cend());
-                    results.push_back(std::move(newPath));
+                    for (const auto& path : allPathsToTarget(nextNode))
+                    {
+                        std::vector<int> newPath {currNode};
+                        newPath.insert(newPath.end(), path.begin(), path.end());
+                        results.push_back(std::move(newPath));
+                    }
                 }
             }
-        }
 
-        memo[currNode] = results;
-        return results;
-    };
+            memo[currNode] = results;
+            return results;
+        };
 
     return allPathsToTarget(0);
 }
