@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <functional>
 #include <vector>
 
 //! @brief Recursive helper to get subsets in [i, N)
@@ -41,7 +42,7 @@ static void backtrack(std::vector<int>&              curr,
 //! @brief Get all subsets of nums in any order without duplicates
 //! @param[in] nums Vector of unique ints
 //! @return Vector of all subsets
-std::vector<std::vector<int>> subsets(std::vector<int> nums)
+static std::vector<std::vector<int>> subsets(std::vector<int> nums)
 {
     //! @details https://leetcode.com/problems/subsets/description/
     //!
@@ -56,12 +57,35 @@ std::vector<std::vector<int>> subsets(std::vector<int> nums)
     return ans;
 }
 
+//! @brief Implementation using a lambda helper function
+//! @param[in] nums Vector of unique ints
+//! @return Vector of all subsets of nums in any order without duplicates
+static std::vector<std::vector<int>> subsets_lambda(std::vector<int> nums)
+{
+    std::vector<std::vector<int>> ans {};
+    std::vector<int>              curr {};
+
+    std::function<void(std::size_t)> backtrack = [&](std::size_t idx) {
+        ans.push_back(curr);
+        for (std::size_t j = idx; j < nums.size(); ++j)
+        {
+            curr.push_back(nums[j]);
+            backtrack(j + 1U);
+            curr.pop_back();
+        }
+    };
+
+    backtrack(0U);
+    return ans;
+}
+
 TEST(SubsetsTest, SampleTest1)
 {
     const std::vector<std::vector<int>> expected_output {
         {}, {1}, {1, 2}, {1, 2, 3}, {1, 3}, {2}, {2, 3}, {3}};
 
     EXPECT_EQ(expected_output, subsets({1, 2, 3}));
+    EXPECT_EQ(expected_output, subsets_lambda({1, 2, 3}));
 }
 
 TEST(SubsetsTest, SampleTest2)
@@ -69,4 +93,5 @@ TEST(SubsetsTest, SampleTest2)
     const std::vector<std::vector<int>> expected_output {{}, {0}};
 
     EXPECT_EQ(expected_output, subsets({0}));
+    EXPECT_EQ(expected_output, subsets_lambda({0}));
 }
