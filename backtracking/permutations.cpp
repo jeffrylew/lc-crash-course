@@ -63,12 +63,43 @@ static std::vector<std::vector<int>> permute(std::vector<int> nums)
     return ans;
 }
 
+//! @brief Implementation using a lambda helper function
+//! @param[in] nums Vector of distinct integers
+//! @return Vector of all possible permutations of nums
+static std::vector<std::vector<int>> permute_lambda(std::vector<int> nums)
+{
+    std::vector<std::vector<int>> ans {};
+    std::vector<int>              curr {};
+
+    std::function<void()> backtrack = [&]() {
+        if (curr.size() == nums.size())
+        {
+            ans.push_back(curr);
+            return;
+        }
+
+        for (const int num : nums)
+        {
+            if (std::find(curr.cbegin(), curr.cend(), num) == curr.cend())
+            {
+                curr.push_back(num);
+                backtrack();
+                curr.pop_back();
+            }
+        }
+    };
+
+    backtrack();
+    return ans;
+}
+
 TEST(PermuteTest, SampleTest1)
 {
     const std::vector<std:vector<int>> expected_output {
         {1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}};
 
     EXPECT_EQ(expected_output, permute({1, 2, 3}));
+    EXPECT_EQ(expected_output, permute_lambda({1, 2, 3}));
 }
 
 TEST(PermuteTest, SampleTest2)
@@ -76,6 +107,7 @@ TEST(PermuteTest, SampleTest2)
     const std::vector<std::vector<int>> expected_output {{0, 1}, {1, 0}};
 
     EXPECT_EQ(expected_output, permute({0, 1}));
+    EXPECT_EQ(expected_output, permute_lambda({0, 1}));
 }
 
 TEST(PermuteTest, SampleTest3)
@@ -83,4 +115,5 @@ TEST(PermuteTest, SampleTest3)
     const std::vector<std::vector<int>> expected_output {{1}};
 
     EXPECT_EQ(expected_output, permute({1}));
+    EXPECT_EQ(expected_output, permute_lambda({1}));
 }
