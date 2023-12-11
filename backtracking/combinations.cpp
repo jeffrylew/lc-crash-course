@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <functional>
 #include <vector>
 
 //! @brief Recursive helper function to find all combinations of size k
@@ -56,12 +57,41 @@ static std::vector<std::vector<int>> combine(int n, int k)
     return ans;
 }
 
+//! @brief Implementation using a lambda helper function
+//! @param[in] n Number of integers in range [1, n]
+//! @param[in] k Size of combinations to select from [1, n]
+//! @return All combinations of k numbers out of the range [1, n]
+static std::vector<std::vector<int>> combine_lambda(int n, int k)
+{
+    std::vector<std::vector<int>> ans {};
+    std::vector<int>              curr {};
+
+    std::function<void(int)> backtrack = [&](int i) {
+        if (static_cast<int>(curr.size()) == k)
+        {
+            ans.push_back(curr);
+            return;
+        }
+
+        for (int num = i; num <= n; ++num)
+        {
+            curr.push_back(num);
+            backtrack(num + 1);
+            curr.pop_back();
+        }
+    };
+
+    backtrack(1);
+    return ans;
+}
+
 TEST(CombineTest, SampleTest1)
 {
     const std::vector<std::vector<int>> expected_output {
         {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
 
     EXPECT_EQ(expected_output, combine(4, 2));
+    EXPECT_EQ(expected_output, combine_lambda(4, 2));
 }
 
 TEST(CombineTest, SampleTest2)
@@ -69,4 +99,5 @@ TEST(CombineTest, SampleTest2)
     const std::vector<std::vector<int>> expected_output {{1}};
 
     EXPECT_EQ(expected_output, combine(1, 1));
+    EXPECT_EQ(expected_output, combine_lambda(1, 1));
 }
