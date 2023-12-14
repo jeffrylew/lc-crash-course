@@ -7,6 +7,7 @@ set(
   "n_queens_ii"
   "permutations"
   "subsets"
+  "word_search"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
