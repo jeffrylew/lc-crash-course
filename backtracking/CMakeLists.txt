@@ -4,6 +4,7 @@ set(
   "combinations"
   "combination_sum"
   "letter_combinations_of_a_phone_number"
+  "n_queens_ii"
   "permutations"
   "subsets"
 )
