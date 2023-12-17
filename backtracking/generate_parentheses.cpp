@@ -16,24 +16,29 @@ static std::vector<std::string> generateParenthesesFA(int n)
     std::vector<std::string> combinations {};
     std::string              curr {};
 
-    std::function(void(int)) backtrack = [&](int left_brace_pos) {
-        if (num_right_braces == n)
+    std::function(void(int)) backtrack = [&](int num_left_braces,
+                                             int left_brace_pos) {
+        if (static_cast<int>(curr.size()) == 2 * n)
         {
             combinations.push_back(curr);
             return;
         }
 
-        for (int num_left_braces = 0; num_left_braces < n; ++num_left_braces)
+        for (int idx = left_brace_pos; idx < 2 * n - 1; ++idx)
         {
-            curr += "(";
+            if (num_left_braces < n)
+            {
+                curr += "(";
+                ++num_left_braces;
+            }
 
-            backtrack();
+            backtrack(num_left_braces, idx + 1);
 
             curr += ")";
         }
     };
 
-    backtrack(0);
+    backtrack(0, 0);
     return combinations;
 }
 
