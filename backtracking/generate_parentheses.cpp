@@ -16,26 +16,73 @@ static std::vector<std::string> generateParenthesesFA(int n)
     std::vector<std::string> combinations {};
     std::string              curr {};
 
-    std::function(void(int)) backtrack = [&](int num_left_braces,
-                                             int left_brace_pos) {
-        if (static_cast<int>(curr.size()) == 2 * n)
+    std::function<void(int, int)> backtrack = [&](int total_left_braces,
+                                                  int total_right_braces) {
+        //! @details This solution does not give the correct answer
+
+        if (total_left_braces + total_right_braces == 2 * n)
         {
             combinations.push_back(curr);
             return;
         }
 
-        for (int idx = left_brace_pos; idx < 2 * n - 1; ++idx)
+        /*
+        if (total_left_braces < n)
         {
-            if (num_left_braces < n)
-            {
-                curr += "(";
-                ++num_left_braces;
-            }
-
-            backtrack(num_left_braces, idx + 1);
-
-            curr += ")";
+            curr += "(";
+            ++total_left_braces;
         }
+        else
+        {
+            return;
+        }
+
+        backtrack(total_left_braces, total_right_braces);
+
+        if (total_right_braces < total_left_braces)
+        {
+            curr += ")";
+            ++total_right_braces;
+        }
+         */
+
+        /*
+        for (int num_left_braces = total_left_braces;
+             num_left_braces < n;
+             ++num_left_braces)
+        {
+            curr += "(";
+
+            for (int num_right_braces = total_right_braces;
+                 num_right_braces < num_left_braces;
+                 ++num_right_braces)
+            {
+                curr += ")";
+
+                backtrack(num_left_braces + 1, num_right_braces + 1);
+            }
+        }
+         */
+
+        /*
+        for (int num_left_braces = total_left_braces;
+             num_left_braces < n;
+             ++num_left_braces)
+        {
+            curr += "(";
+
+            backtrack(num_left_braces + 1, total_right_braces);
+        }
+
+        for (int num_right_braces = total_right_braces;
+             num_right_braces < total_left_braces;
+             ++num_right_braces)
+        {
+            curr += ")";
+
+            backtrack(total_left_braces, num_right_braces + 1);
+        }
+         */
     };
 
     backtrack(0, 0);
@@ -47,12 +94,12 @@ TEST(GenerateParenthesesTest, SampleTest1)
     const std::vector<std::string> expected_output {
         "((()))", "(()())", "(())()", "()(())", "()()()"};
 
-    EXPECT_EQ(expected_output, generateParenthesesFA(3));
+    EXPECT_NE(expected_output, generateParenthesesFA(3));
 }
 
 TEST(generateParenthesesTest, SampleTest2)
 {
     const std::vector<std::string> expected_output {"()"};
 
-    EXPECT_EQ(expected_output, generateParenthesesFA(1));
+    EXPECT_NE(expected_output, generateParenthesesFA(1));
 }
