@@ -81,3 +81,25 @@ public List<String> generateParenthesisDS2(int n)
     backtrack(answer, new StringBuilder(), 0, 0, n);
     return answer;
 }
+
+public List<String> generateParenthesisDS3(int n)
+{
+    if (n == 0)
+    {
+        return new ArrayList(Arrays.asList(""));
+    }
+
+    List<String> answer = new ArrayList();
+    for (int leftCount = 0; leftCount < n; ++leftCount)
+    {
+        for (String leftString : generateParenthesisDS3(leftCount))
+        {
+            for (String rightString : generateParenthesisDS3(n - 1 - leftCount))
+            {
+                answer.add("(" + leftString + ")" + rightString);
+            }
+        }
+    }
+
+    return answer;
+}
