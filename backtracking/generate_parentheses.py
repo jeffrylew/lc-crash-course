@@ -1,5 +1,6 @@
 from collections import deque
 
+
 def generateParenthesisDS1(n: int) -> list[str]:
     def isValid(p_string: str) -> bool:
         left_count = 0
@@ -30,4 +31,26 @@ def generateParenthesisDS1(n: int) -> list[str]:
         queue.append(cur_string + ")")
         queue.append(cur_string + "(")
 
+    return answer
+
+
+def generateParenthesisDS2(n: int) -> list[str]:
+    answer = []
+
+    def backtrack(cur_string: list[str], left_count: int, right_count: int):
+        if len(cur_string) == 2 * n:
+            answer.append("".join(cur_string))
+            return
+
+        if left_count < n:
+            cur_string.append("(")
+            backtrack(cur_string, left_count + 1, right_count)
+            cur_string.pop()
+
+        if right_count < left_count:
+            cur_string.append(")")
+            backtrack(cur_string, left_count, right_count + 1)
+            cur_string.pop()
+
+    backtrack([], 0, 0)
     return answer
