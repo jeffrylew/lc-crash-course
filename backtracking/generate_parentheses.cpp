@@ -107,7 +107,7 @@ static std::vector<std::string> generateParenthesesDS1(int n)
     //!          n - 1, which takes O(2 ^ (2n) * n).
 
     std::vector<std::string> answer {};
-    std::queue<std::string> queue {""};
+    std::queue<std::string>  queue {""};
 
     std::function<bool(const std::string&)> isValid =
         [&](const std::string& pString) {
@@ -154,7 +154,56 @@ static std::vector<std::string> generateParenthesesDS1(int n)
     }
 
     return answer;
-}
+
+} // static std::vector<std::string> generateParenthesesDS1( ...
+
+//! @brief Backtracking discussion solution
+//! @param[in] n Number of pairs of parentheses
+//! @return Vector of all combinations of well-formed parentheses
+static std::vector<std::string> generateParenthesesDS2(int n)
+{
+    //! @details https://leetcode.com/problems/generate-parentheses/editorial/
+    //!
+    //!          Time complexity O(4 ^ n / sqrt(n)). The total number of valid
+    //!          parentheses strings is O(4 ^ n / (n * sqrt(n))), see asymptotic
+    //!          limit of nth Catalan num, en.wikipedia.org/wiki/Catalan_number.
+    //!          Each string is copied into the answer vector, bringing
+    //!          an additional n factor into the time complexity.
+    //!          Space complexity O(n). Max depth of recursive call stack is 2n
+    //!          and the total number of parentheses is 2n. At most O(n) levels
+    //!          of recursion are created and each level consumes a constant
+    //!          amount of space.
+
+    std::vector<std::string> answer {};
+    std::string              curString {};
+
+    std::function<void(int, int)> backtrack =
+        [&](int leftCount, int rightCount) {
+            if (static_cast<int>(curString.size()) == 2 * n)
+            {
+                answer.push_back(curString);
+                return;
+            }
+
+            if (leftCount < n)
+            {
+                curString += "(";
+                backtrack(leftCount + 1, rightCount);
+                curString.pop_back();
+            }
+
+            if (rightCount < leftCount)
+            {
+                curString += ")";
+                backtrack(leftCount, rightCount + 1);
+                curString.pop_back();
+            }
+        };
+
+    backtrack(0, 0);
+    return answer;
+
+} // static std::vector<std::string> generateParenthesesDS2( ...
 
 TEST(GenerateParenthesesTest, SampleTest1)
 {
@@ -163,6 +212,7 @@ TEST(GenerateParenthesesTest, SampleTest1)
 
     EXPECT_NE(expected_output, generateParenthesesFA(3));
     EXPECT_EQ(expected_output, generateParenthesesDS1(3));
+    EXPECT_EQ(expected_output, generateParenthesesDS2(3));
 }
 
 TEST(generateParenthesesTest, SampleTest2)
@@ -171,4 +221,5 @@ TEST(generateParenthesesTest, SampleTest2)
 
     EXPECT_NE(expected_output, generateParenthesesFA(1));
     EXPECT_EQ(expected_output, generateParenthesesDS1(1));
+    EXPECT_EQ(expected_output, generateParenthesesDS2(1));
 }
