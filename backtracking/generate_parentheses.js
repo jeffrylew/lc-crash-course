@@ -58,3 +58,37 @@ var generateParenthesisDS1 = function(n) {
 
     return answer;
 };
+
+/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var generateParenthesisDS2 = function(n) {
+    let answer = [];
+    let curString = "";
+
+    const backtrack = (leftCount, rightCount) => {
+        if (curString.length == 2 * n)
+        {
+            answer.push(curString);
+            return;
+        }
+
+        if (leftCount < n)
+        {
+            curString += "(";
+            backtrack(leftCount + 1, rightCount);
+            curString = curString.substring(0, curString.length - 1);
+        }
+
+        if (rightCount < leftCount)
+        {
+            curString += ")";
+            backtrack(leftCount, rightCount + 1);
+            curString = curString.substring(0, curString.length - 1);
+        }
+    };
+
+    backtrack(0, 0);
+    return answer;
+};
