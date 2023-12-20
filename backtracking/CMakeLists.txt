@@ -6,6 +6,7 @@ set(
   "generate_parentheses"
   "letter_combinations_of_a_phone_number"
   "n_queens_ii"
+  "numbers_with_same_consecutive_differences"
   "permutations"
   "subsets"
   "word_search"
