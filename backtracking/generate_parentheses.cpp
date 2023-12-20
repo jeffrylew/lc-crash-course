@@ -8,7 +8,7 @@
 //! @brief Generate all combinations of well-formed parentheses given n pairs
 //! @param[in] n Number of pairs of parentheses
 //! @return Vector of all combinations of well-formed parentheses
-static std::vector<std::string> generateParenthesesFA(int n)
+static std::vector<std::string> generateParenthesisFA(int n)
 {
     //! @details https://leetcode.com/explore/interview/card/
     //!          leetcodes-interview-crash-course-data-structures-and-algorithms
@@ -88,12 +88,13 @@ static std::vector<std::string> generateParenthesesFA(int n)
 
     backtrack(0, 0);
     return combinations;
-}
+
+} // static std::vector<std::string> generateParenthesisFA( ...
 
 //! @brief Brute force discussion solution
 //! @param[in] n Number of pairs of parentheses
 //! @return Vector of all combinations of well-formed parentheses
-static std::vector<std::string> generateParenthesesDS1(int n)
+static std::vector<std::string> generateParenthesisDS1(int n)
 {
     //! @details https://leetcode.com/problems/generate-parentheses/editorial/
     //!
@@ -155,12 +156,12 @@ static std::vector<std::string> generateParenthesesDS1(int n)
 
     return answer;
 
-} // static std::vector<std::string> generateParenthesesDS1( ...
+} // static std::vector<std::string> generateParenthesisDS1( ...
 
 //! @brief Backtracking discussion solution
 //! @param[in] n Number of pairs of parentheses
 //! @return Vector of all combinations of well-formed parentheses
-static std::vector<std::string> generateParenthesesDS2(int n)
+static std::vector<std::string> generateParenthesisDS2(int n)
 {
     //! @details https://leetcode.com/problems/generate-parentheses/editorial/
     //!
@@ -203,23 +204,61 @@ static std::vector<std::string> generateParenthesesDS2(int n)
     backtrack(0, 0);
     return answer;
 
-} // static std::vector<std::string> generateParenthesesDS2( ...
+} // static std::vector<std::string> generateParenthesisDS2( ...
+
+//! @brief Divide and conquer discussion solution
+//! @param[in] n Number of pairs of parentheses
+//! @return Vector of all combinations of well-formed parentheses
+static std::vector<std::string> generateParenthesisDS3(int n)
+{
+    //! @details https://leetcode.com/problems/generate-parentheses/editorial/
+    //!
+    //!          Time complexity O(4 ^ n / sqrt(n)).
+    //!          Space complexity O(n), which is max depth of recursion stack
+
+    if (n == 0)
+    {
+        return {""};
+    }
+
+    std::vector<std::string> answer {};
+    for (int leftCount = 0; leftCount < n; ++leftCount)
+    {
+        for (const auto& leftString : generateParenthesesDS3(leftCount))
+        {
+            for (const auto& rightString :
+                 generateParenthesesDS3(n - 1 - leftCount))
+            {
+                answer.push_back("(" + leftString + ")" + rightString);
+            }
+        }
+    }
+
+    return answer;
+
+} // static std::vector<std::string> generateParenthesisDS3( ...
 
 TEST(GenerateParenthesesTest, SampleTest1)
 {
     const std::vector<std::string> expected_output {
         "((()))", "(()())", "(())()", "()(())", "()()()"};
 
-    EXPECT_NE(expected_output, generateParenthesesFA(3));
-    EXPECT_EQ(expected_output, generateParenthesesDS1(3));
-    EXPECT_EQ(expected_output, generateParenthesesDS2(3));
+    EXPECT_NE(expected_output, generateParenthesisFA(3));
+    EXPECT_EQ(expected_output, generateParenthesisDS1(3));
+    EXPECT_EQ(expected_output, generateParenthesisDS2(3));
+
+    const std::vector<std::string> expected_outputDS3 {
+        "()()()", "()(())", "(())()", "(()())", "((()))"};
+
+    EXPECT_EQ(expected_outputDS3, generateParenthesisDS3(3));
 }
 
 TEST(generateParenthesesTest, SampleTest2)
 {
     const std::vector<std::string> expected_output {"()"};
 
-    EXPECT_NE(expected_output, generateParenthesesFA(1));
-    EXPECT_EQ(expected_output, generateParenthesesDS1(1));
-    EXPECT_EQ(expected_output, generateParenthesesDS2(1));
+    EXPECT_NE(expected_output, generateParenthesisFA(1));
+    EXPECT_EQ(expected_output, generateParenthesisDS1(1));
+    EXPECT_EQ(expected_output, generateParenthesisDS2(1));
+    EXPECT_EQ(expected_output, generateParenthesisDS3(1));
 }
