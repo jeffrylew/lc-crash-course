@@ -47,3 +47,37 @@ public List<String> generateParenthesisDS1(int n)
 
     return answer;
 }
+
+public void backtrack(List<String> answer,
+                     StringBuilder curString,
+                     int           leftCount,
+                     int           rightCount,
+                     int           n)
+{
+    if (curString.length() == 2 * n)
+    {
+        answer.add(curString.toString());
+        return;
+    }
+
+    if (leftCount < n)
+    {
+        curString.append("(");
+        backtrack(answer, curString, leftCount + 1, rightCount, n);
+        curString.deleteCharAt(curString.length() - 1);
+    }
+
+    if (rightCount < leftCount)
+    {
+        curString.append(")");
+        backtrack(answer, curString, leftCount, rightCount + 1, n);
+        curString.deleteCharAt(curString.length() - 1);
+    }
+}
+
+public List<String> generateParenthesisDS2(int n)
+{
+    List<String> answer = new ArrayList<>();
+    backtrack(answer, new StringBuilder(), 0, 0, n);
+    return answer;
+}
