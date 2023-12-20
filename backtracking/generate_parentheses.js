@@ -92,3 +92,28 @@ var generateParenthesisDS2 = function(n) {
     backtrack(0, 0);
     return answer;
 };
+
+/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var generateParenthesisDS3 = function(n) {
+    if (n == 0)
+    {
+        return [""];
+    }
+
+    let answer = [];
+    for (let leftCount = 0; leftCount < n; ++leftCount)
+    {
+        for (const leftString of generateParenthesisDS3(leftCount))
+        {
+            for (const rightString of generateParenthesisDS3(n - 1 - leftCount))
+            {
+                answer.push("(" + leftString + ")" + rightString);
+            }
+        }
+    }
+
+    return answer;
+};
