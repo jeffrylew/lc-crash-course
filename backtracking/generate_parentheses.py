@@ -54,3 +54,16 @@ def generateParenthesisDS2(n: int) -> list[str]:
 
     backtrack([], 0, 0)
     return answer
+
+
+def generateParenthesisDS3(n: int) -> list[str]:
+    if n == 0:
+        return [""]
+
+    answer = []
+    for left_count in range(n):
+        for left_string in generateParenthesisDS3(left_count):
+            for right_string in generateParenthesisDS3(n - 1 - left_count):
+                answer.append("(" + left_string + ")" + right_string)
+
+    return answer
