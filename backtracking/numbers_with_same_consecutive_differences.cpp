@@ -76,7 +76,7 @@ static std::vector<int> numsSameConsecDiffDS1(int n, int k)
     //! @details https://leetcode.com/problems/
     //!          numbers-with-same-consecutive-differences/editorial/
     //!
-    //!          Time complexity O(2 ^ N) where N = numer of digits for a valid
+    //!          Time complexity O(2 ^ N) where N = number of digits for a valid
     //!          combination and K = difference between digits. For the highest
     //!          digit, there are 9 potential candidates and digits beyond have
     //!          at most 2 candidates for each position. Therefore, we have
@@ -136,12 +136,69 @@ static std::vector<int> numsSameConsecDiffDS1(int n, int k)
 
 } // static std::vector<int> numsSameConsecDiffDS1( ...
 
+//! @brief BFS discussion solution to get ints of length n where digit diff is k
+//! @param[in] n Length of each integer
+//! @param[in] k Difference between two consecutive digits in int of length n
+//! @return Vector of all integers of length n that satisfy digit differences k
+static std::vector<int> numsSameConsecDiffDS2(int n, int k)
+{
+    //! @details https://leetcode.com/problems/
+    //!          numbers-with-same-consecutive-differences/editorial/
+    //!
+    //!          Time complexity O(2 ^ N) where N = number of digits for a valid
+    //!          combination and K = difference between digits.
+    //!          Space complexity O(2 ^ N). Use two queue to maintain the
+    //!          intermediate solutions, which contain no more than two levels
+    //!          of elements. The number of elements at level i is up to
+    //!          9 * 2 ^ (i - 1) for O(9 * 2 ^ (N - 1) + 9 * 2 ^ (N - 2)) which
+    //!          is O(2 ^ N).
+
+    if (n == 1)
+    {
+        return {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    }
+
+    //! Initialize queue with candidates for the first level
+    std::vector<int> queue {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    for (int level = 0; level < n - 1; ++level)
+    {
+        std::vector<int> next_queue {};
+
+        for (const int num : queue)
+        {
+            const int tail_digit {num % 10};
+
+            std::vector<int> next_digits {tail_digit + k};
+            if (k != 0)
+            {
+                next_digits.push_back(tail_digit - k);
+            }
+
+            for (const int next_digit : next_digits)
+            {
+                if (0 <= next_digit && next_digit < 10)
+                {
+                    next_queue.push_back(num * 10 + next_digit);
+                }
+            }
+        }
+
+        //! Start the next level
+        queue.swap(next_queue);
+    }
+
+    return queue;
+
+} // static std::vector<int> numsSameConsecDiffDS2( ...
+
 TEST(NumsSameConsecDiffTest, SampleTest1)
 {
     const std::vector<int> expected_output {181, 292, 707, 818, 929};
 
     EXPECT_EQ(expected_output, numsSameConsecDiffFA(3, 7));
     EXPECT_EQ(expected_output, numsSameConsecDiffDS1(3, 7));
+    EXPECT_EQ(expected_output, numsSameConsecDiffDS2(3, 7));
 }
 
 TEST(NumsSameConsecDiffTest, SampleTest2)
@@ -151,4 +208,5 @@ TEST(NumsSameConsecDiffTest, SampleTest2)
 
     EXPECT_EQ(expected_output, numsSameConsecDiffFA(2, 1));
     EXPECT_EQ(expected_output, numsSameConsecDiffDS1(2, 1));
+    EXPECT_EQ(expected_output, numsSameConsecDiffDS2(2, 1));
 }
