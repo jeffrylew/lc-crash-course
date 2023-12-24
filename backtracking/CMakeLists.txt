@@ -3,6 +3,7 @@ set(
   "all_paths_from_source_to_target"
   "combinations"
   "combination_sum"
+  "combination_sum_iii"
   "generate_parentheses"
   "letter_combinations_of_a_phone_number"
   "n_queens_ii"
