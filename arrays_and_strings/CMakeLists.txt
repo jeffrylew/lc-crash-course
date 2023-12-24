@@ -11,6 +11,7 @@ set(
   "maximum_average_subarray"
   "max_consecutive_ones_3"
   "min_start_value"
+  "minimum_changes_to_make_alternating_binary_string"
   "num_subarray_product_less_than_k"
   "number_of_ways_to_split_array"
   "reverse_string"
