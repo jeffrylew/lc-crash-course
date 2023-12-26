@@ -1,6 +1,7 @@
 set(
   cpp_files
   "fibonacci_numbers"
+  "min_cost_climbing_stairs"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
