@@ -41,3 +41,21 @@ var fibonacci2 = function(n) {
     memo.set(n, fibonacci2(n - 1) + fibonacci2(n - 2));
     return memo.get(n);
 };
+
+/**
+ * @param {number} n
+ * @returns {number}
+ */
+var fibonacci3 = function(n) {
+    let arr = new Array(n + 1).fill(0);
+
+    // Base case - the second Fibonacci number is 1
+    arr[1] = 1;
+
+    for (let i = 2; i <= n; i++)
+    {
+        arr[i] = arr[i - 1] + arr[i - 2];
+    }
+
+    return arr[n];
+};
