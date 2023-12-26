@@ -24,6 +24,10 @@ var minCostClimbingStairsTopDown = function(cost) {
     return dp(cost.length);
 };
 
+/**
+ * @param {number[]} cost
+ * @returns {number}
+ */
 var minCostClimbingStairsBottomUp = function(cost) {
     const n = cost.length;
 
