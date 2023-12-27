@@ -1,6 +1,7 @@
 set(
   cpp_files
   "fibonacci_numbers"
+  "house_robber"
   "min_cost_climbing_stairs"
 )
 
