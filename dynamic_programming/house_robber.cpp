@@ -58,11 +58,45 @@ static int robTopDown(std::vector<int> nums)
 
 } // static int robTopDown( ...
 
+//! @brief Get max money can rob without triggering alarm from 2 adjacent homes
+//! @param[in] nums Vector of money in homes, ith house has nums[i] money
+//! @return Most money can rob without alerting police
+static int robBottomUp(std::vector<int> nums)
+{
+    //! @details https://leetcode.com/explore/interview/card/
+    //!          leetcodes-interview-crash-course-data-structures-and-algorithms
+    //!          /712/dynamic-programming/4541/
+
+    const auto nums_size = static_cast<int>(nums.size());
+
+    if (nums_size == 1)
+    {
+        //! Avoid out-of-bounds error when setting base case
+        return nums[0];
+    }
+
+    std::vector<int> dp(nums.size());
+
+    //! Base cases
+    dp[0] = nums[0];
+    dp[1] = std::max(nums[0], nums[1]);
+
+    for (int i = 2; i < nums_size; ++i)
+    {
+        //! Recurrence relation
+        dp[i] = std::max(dp[i - 1], dp[i - 2] + nums[i]);
+    }
+
+    return dp[nums_size - 1];
+
+} // static int robBottomUp( ...
+
 TEST(RobTest, SampleTest1)
 {
     const std::vector<int> nums {1, 2, 3, 1};
 
     EXPECT_EQ(4, robTopDown(nums));
+    EXPECT_EQ(4, robBottomUp(nums));
 }
 
 TEST(RobTest, SampleTest2)
@@ -70,4 +104,5 @@ TEST(RobTest, SampleTest2)
     const std::vector<int> nums {2, 7, 9, 3, 1};
 
     EXPECT_EQ(12, robTopDown(nums));
+    EXPECT_EQ(12, robBottomUp(nums));
 }
