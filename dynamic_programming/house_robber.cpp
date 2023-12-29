@@ -91,12 +91,51 @@ static int robBottomUp(std::vector<int> nums)
 
 } // static int robBottomUp( ...
 
+//! @brief Get max money can rob without triggering alarm from 2 adjacent homes
+//! @param[in] nums Vector of money in homes, ith house has nums[i] money
+//! @return Most money can rob without alerting police
+static int robBottomUpOptimized(std::vector<int> nums)
+{
+    //! @details https://leetcode.com/explore/interview/card/
+    //!          leetcodes-interview-crash-course-data-structures-and-algorithms
+    //!          /712/dynamic-programming/4541/
+    //!
+    //!          Time complexity O(n) where n = nums.size()
+    //!          Space complexity O(1). Optimization is possible whenever the
+    //!          recurrence relation is static - it doesn't change between
+    //!          inputs and only cares about a static number of states. It is
+    //!          also only possible for bottom up - the recursion call stack
+    //!          uses O(n) space.
+
+    const auto nums_size = static_cast<int>(nums.size());
+
+    if (nums_size == 1)
+    {
+        //! Avoid out-of-bounds error when setting base case
+        return nums[0];
+    }
+
+    int backTwo {nums[0]};
+    int backOne {std::max(nums[0], nums[1])};
+
+    for (int i = 2; i < nums_size; ++i)
+    {
+        const int temp {backOne};
+        backOne = std::max(backOne, backTwo + nums[i]);
+        backTwo = temp;
+    }
+
+    return backOne;
+
+} // static int robBottomUpOptimized( ...
+
 TEST(RobTest, SampleTest1)
 {
     const std::vector<int> nums {1, 2, 3, 1};
 
     EXPECT_EQ(4, robTopDown(nums));
     EXPECT_EQ(4, robBottomUp(nums));
+    EXPECT_EQ(4, robBottomUpOptimized(nums));
 }
 
 TEST(RobTest, SampleTest2)
@@ -105,4 +144,5 @@ TEST(RobTest, SampleTest2)
 
     EXPECT_EQ(12, robTopDown(nums));
     EXPECT_EQ(12, robBottomUp(nums));
+    EXPECT_EQ(12, robBottomUpOptimized(nums));
 }
