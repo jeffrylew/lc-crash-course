@@ -36,3 +36,27 @@ class SolutionTopDown
         return dp(nums.length - 1, nums);
     }
 }
+
+public int robBottomUp(int[] nums)
+{
+    if (nums.length == 1)
+    {
+        // Avoid out-of-bounds error from setting base case
+        return nums[0];
+    }
+
+    int nums_length = nums.length;
+    int[] dp = new int[nums_length];
+
+    // Base cases
+    dp[0] = nums[0];
+    dp[1] = Math.max(nums[0], nums[1]);
+
+    for (int i = 2; i < nums_length; i++)
+    {
+        // Recurrence relation
+        dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
+    }
+
+    return dp[nums_length - 1];
+}
