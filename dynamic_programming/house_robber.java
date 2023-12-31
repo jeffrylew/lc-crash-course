@@ -60,3 +60,28 @@ public int robBottomUp(int[] nums)
 
     return dp[nums_length - 1];
 }
+
+public int robBottomUpOptimized(int[] nums)
+{
+    if (nums.length == 1)
+    {
+        // Avoid out-of-bounds error from setting base case
+        return nums[0];
+    }
+
+    int nums_length = nums.length;
+
+    // Base cases
+    int backTwo = nums[0];
+    int backOne = Math.max(nums[0], nums[1]);
+
+    for (int i = 2; i < nums_length; i++)
+    {
+        // backTwo becomes backOne, and backOne is updated
+        int temp = backOne;
+        backOne = Math.max(backOne, backTwo + nums[i]);
+        backTwo = temp;
+    }
+
+    return backOne;
+}
