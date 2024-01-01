@@ -1,3 +1,6 @@
+from functools import cache
+
+
 def rob_top_down(nums: list[int]) -> int:
     if len(nums) == 1:
         # Prevent out-of-bounds error
@@ -19,4 +22,20 @@ def rob_top_down(nums: list[int]) -> int:
         return memo[i]
 
     memo = {}
+    return dp(len(nums) - 1)
+
+
+def rob_top_down_cached(nums: list[int]) -> int:
+    @cache
+    def dp(i: int) -> int:
+        # Base cases
+        if i == 0:
+            return nums[0]
+
+        if i == 1:
+            return max(nums[0], nums[1])
+
+        # Recurrence relation
+        return max(dp(i - 1), dp(i - 2) + nums[i])
+
     return dp(len(nums) - 1)
