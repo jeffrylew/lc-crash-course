@@ -39,3 +39,23 @@ def rob_top_down_cached(nums: list[int]) -> int:
         return max(dp(i - 1), dp(i - 2) + nums[i])
 
     return dp(len(nums) - 1)
+
+
+def rob_bottom_up(nums: list[int]) -> int:
+    nums_len = len(nums)
+
+    # Avoid out-of-bounds error from setting base case
+    if nums_len == 1:
+        return nums[0]
+
+    dp = [0] * nums_len
+
+    # Base cases
+    dp[0] = nums[0]
+    dp[1] = max(nums[0], nums[1])
+
+    for i in range(2, nums_len):
+        # Recurrence relation
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+
+    return dp[nums_len - 1]
