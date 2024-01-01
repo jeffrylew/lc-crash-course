@@ -59,3 +59,21 @@ def rob_bottom_up(nums: list[int]) -> int:
         dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
 
     return dp[nums_len - 1]
+
+
+def rob_bottom_up_optimized(nums: list[int]) -> int:
+    nums_len = len(nums)
+
+    # Avoid out-of-bounds error from setting base case
+    if nums_len == 1:
+        return nums[0]
+
+    # Base cases
+    back_two = nums[0]
+    back_one = max(nums[0], nums[1])
+
+    for i in range(2, nums_len):
+        # back_two becomes back_one, and back_one gets updated
+        back_one, back_two = max(back_one, back_two + nums[i]), back_one
+
+    return back_one
