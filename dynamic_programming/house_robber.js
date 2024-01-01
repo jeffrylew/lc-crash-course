@@ -61,3 +61,30 @@ var robBottomUp = function(nums) {
 
     return dp[nums_length - 1];
 };
+
+/**
+ * @param {number[]} nums
+ * @returns {number}
+ */
+var robBottomUpOptimized = function(nums) {
+    const nums_length = nums.length;
+
+    if (nums_length == 1)
+    {
+        // Prevent out-of-bounds error
+        return nums[0];
+    }
+
+    // Base cases
+    let backTwo = nums[0];
+    let backOne = Math.max(nums[0], nums[1]);
+
+    for (let i = 2; i < nums_length; i++)
+    {
+        let temp = backOne;
+        backOne = Math.max(backOne, backTwo + nums[i]);
+        backTwo = temp;
+    }
+
+    return backOne;
+};
