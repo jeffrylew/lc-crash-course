@@ -2,6 +2,7 @@ set(
   cpp_files
   "fibonacci_numbers"
   "house_robber"
+  "longest_increasing_subsequence"
   "min_cost_climbing_stairs"
 )
 
