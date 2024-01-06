@@ -1,3 +1,7 @@
+/**
+ * @param {number[]} nums
+ * @returns {number}
+ */
 var lengthOfLISTopDown = function(nums) {
     const dp = i => {
         if (memo[i] != -1)
@@ -27,4 +31,26 @@ var lengthOfLISTopDown = function(nums) {
     }
 
     return ans;
+};
+
+/**
+ * @param {number[]} nums
+ * @returns {number}
+ */
+var lengthOfLISBottomUp = function(nums)
+{
+    let dp = new Array(nums.length).fill(1);
+
+    for (let i = 0; i < nums.length; i++)
+    {
+        for (let j = 0; j < i; j++)
+        {
+            if (nums[i] > nums[j])
+            {
+                dp[i] = Math.max(dp[i], dp[j] + 1);
+            }
+        }
+    }
+
+    return Math.max(...dp);
 };
