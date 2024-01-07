@@ -4,6 +4,7 @@ set(
   "house_robber"
   "longest_increasing_subsequence"
   "min_cost_climbing_stairs"
+  "solving_questions_with_brainpower"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
