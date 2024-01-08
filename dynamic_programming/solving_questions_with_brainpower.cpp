@@ -47,12 +47,37 @@ static long long mostPointsTopDown(
 
 } // static long long mostPointsTopDown( ...
 
+//! @brief Solve i to earn points[i] but skip next brainpower[i] or skip i
+//! @param[in] questions Reference to 2D vector of {points[i], brainpower[i]}
+//! @return Max points can score
+static long long mostPointsBottomUp(
+    const std::vector<std::vector<int>>& questions)
+{
+    const auto questions_size = static_cast<int>(questions.size());
+
+    //! questions_size + 1 to avoid out of bounds
+    std::vector<long long> dp(questions.size() + 1U);
+
+    for (int i = questions_size - 1; i >= 0; --i)
+    {
+        const int next_idx {i + questions[i][1] + 1};
+
+        //! Make sure we don't go out of bounds
+        dp[i] = std::max(
+            questions[i][0] + dp[std::min(next_idx, questions_size)],
+            dp[i + 1]);
+    }
+
+    return dp[0];
+}
+
 TEST(MostPointsTest, SampleTest1)
 {
     const std::vector<std::vector<int>> questions {
         {3, 2}, {4, 3}, {4, 4}, {2, 5}};
 
     EXPECT_EQ(5, mostPointsTopDown(questions));
+    EXPECT_EQ(5, mostPointsBottomUp(questions));
 }
 
 TEST(MostPointsTest, SampleTest2)
@@ -61,4 +86,5 @@ TEST(MostPointsTest, SampleTest2)
         {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
 
     EXPECT_EQ(7, mostPointsTopDown(questions));
+    EXPECT_EQ(7, mostPointsBottomUp(questions));
 }
