@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "climbing_stairs"
   "fibonacci_numbers"
   "house_robber"
   "longest_increasing_subsequence"
