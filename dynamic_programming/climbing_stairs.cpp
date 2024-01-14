@@ -30,8 +30,13 @@ static int climbStairsFA(int n)
             return memo[nsteps];
         }
 
+        /*
         //! Divide dp(nstep - 2) by two to avoid double counting
         return dp(nsteps - 2) / 2 + dp(nsteps - 1) + 1;
+         */
+
+        //! Divide dp(nsteps - 1) by two to avoid double counting
+        return 2 * dp(nsteps - 2) + dp(nsteps - 1) / 2;
     };
 
     return dp(n);
@@ -49,6 +54,12 @@ TEST(climbStairsTest, SampleTest2)
 
 TEST(ClimbStairsTest, SampleTest3)
 {
-    EXPECT_NE(8, climbStairsFA(5));
-    EXPECT_EQ(7, climbStairsFA(5));
+    EXPECT_EQ(8, climbStairsFA(5));
+    // EXPECT_EQ(7, climbStairsFA(5));
+}
+
+TEST(ClimbStairsTest, SampleTest4)
+{
+    EXPECT_NE(13, climbStairsFA(6));
+    EXPECT_EQ(14, climbStairsFA(6));
 }
