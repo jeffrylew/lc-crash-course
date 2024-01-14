@@ -42,24 +42,56 @@ static int climbStairsFA(int n)
     return dp(n);
 }
 
+//! @brief Brute force solution to get number of distinct ways to reach n steps
+//! @param[in] n Number of steps to reach the top, can climb 1 or 2 steps
+//! @return Number of distinct ways can climb to the top
+static int climbStairsDS1(int n)
+{
+    //! @details https://leetcode.com/problems/climbing-stairs/editorial/
+    //!
+    //!          Time complexity O(2 ^ n), size of recursion tree is 2 ^ n.
+    //!          Space complexity O(n), the depth of the recursion tree can go
+    //!          up to n.
+
+    std::function<int(int)> dp = [](int step) -> int {
+        if (step > n)
+        {
+            return 0;
+        }
+
+        if (step == n)
+        {
+            return 1;
+        }
+
+        return dp(step + 1) + dp(step + 2);
+    };
+
+    return dp(0);
+}
+
 TEST(ClimbStairsTest, SampleTest1)
 {
     EXPECT_EQ(2, climbStairsFA(2));
+    EXPECT_EQ(2, climbStairsDS1(2));
 }
 
 TEST(climbStairsTest, SampleTest2)
 {
     EXPECT_EQ(3, climbStairsFA(3));
+    EXPECT_EQ(3, climbStairsDS1(3));
 }
 
 TEST(ClimbStairsTest, SampleTest3)
 {
     EXPECT_EQ(8, climbStairsFA(5));
     // EXPECT_EQ(7, climbStairsFA(5));
+    EXPECT_EQ(8, climbStairsDS1(5));
 }
 
 TEST(ClimbStairsTest, SampleTest4)
 {
     EXPECT_NE(13, climbStairsFA(6));
     EXPECT_EQ(14, climbStairsFA(6));
+    EXPECT_EQ(13, climbStairsDS1(6));
 }
