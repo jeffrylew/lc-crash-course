@@ -70,16 +70,53 @@ static int climbStairsDS1(int n)
     return dp(0);
 }
 
+//! @brief Recursion with memoization solution
+//! @param[in] n Number of steps to reach the top, can climb 1 or 2 steps
+//! @return Number of distinct ways can climb to the top
+static int climbStairsDS2(int n)
+{
+    //! @details https://leetcode.com/problems/climbing-stairs/editorial/
+    //!
+    //!          Time complexity O(n), size of recursion tree can go up to n.
+    //!          Space complexity O(n), the depth of the recursion tree can go
+    //!          up to n.
+
+    std:vector<int> memo(n + 1);
+
+    std::function<int(int)> dp = [&](int step) -> int {
+        if (step > n)
+        {
+            return 0;
+        }
+
+        if (step == n)
+        {
+            return 1;
+        }
+
+        if (memo[i] > 0)
+        {
+            return memo[i];
+        }
+
+        return memo[i] = dp(step + 1) + dp(step + 2);
+    };
+
+    return dp(0);
+}
+
 TEST(ClimbStairsTest, SampleTest1)
 {
     EXPECT_EQ(2, climbStairsFA(2));
     EXPECT_EQ(2, climbStairsDS1(2));
+    EXPECT_EQ(2, climbStairsDS2(2));
 }
 
 TEST(climbStairsTest, SampleTest2)
 {
     EXPECT_EQ(3, climbStairsFA(3));
     EXPECT_EQ(3, climbStairsDS1(3));
+    EXPECT_EQ(3, climbStairsDS2(3));
 }
 
 TEST(ClimbStairsTest, SampleTest3)
@@ -87,6 +124,7 @@ TEST(ClimbStairsTest, SampleTest3)
     EXPECT_EQ(8, climbStairsFA(5));
     // EXPECT_EQ(7, climbStairsFA(5));
     EXPECT_EQ(8, climbStairsDS1(5));
+    EXPECT_EQ(8, climbStairsDS2(5));
 }
 
 TEST(ClimbStairsTest, SampleTest4)
@@ -94,4 +132,5 @@ TEST(ClimbStairsTest, SampleTest4)
     EXPECT_NE(13, climbStairsFA(6));
     EXPECT_EQ(14, climbStairsFA(6));
     EXPECT_EQ(13, climbStairsDS1(6));
+    EXPECT_EQ(13, climbStairsDS2(6));
 }
