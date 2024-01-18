@@ -132,12 +132,41 @@ static int climbStairsDS3(int n)
     return dp[n];
 }
 
+//! @brief Fibonacci number solution
+//! @param[in] n Number of steps to reach the top, can climb 1 or 2 steps
+//! @return Number of distinct ways can climb to the top
+static int climbStairsDS4(int n)
+{
+    //! @details https://leetcode.com/problems/climbing-stairs/editorial/
+    //!
+    //!          Time complexity O(n), single loop up to n for nth Fibonacci num
+    //!          Space complexity O(1)
+
+    if (n == 1)
+    {
+        return 1;
+    }
+
+    int first {1};
+    int second {2};
+
+    for (int i = 3; i <= n; ++i)
+    {
+        const int third {first + second};
+        first  = second;
+        second = third;
+    }
+
+    return second;
+}
+
 TEST(ClimbStairsTest, SampleTest1)
 {
     EXPECT_EQ(2, climbStairsFA(2));
     EXPECT_EQ(2, climbStairsDS1(2));
     EXPECT_EQ(2, climbStairsDS2(2));
     EXPECT_EQ(2, climbStairsDS3(2));
+    EXPECT_EQ(2, climbStairsDS4(2));
 }
 
 TEST(climbStairsTest, SampleTest2)
@@ -146,6 +175,7 @@ TEST(climbStairsTest, SampleTest2)
     EXPECT_EQ(3, climbStairsDS1(3));
     EXPECT_EQ(3, climbStairsDS2(3));
     EXPECT_EQ(3, climbStairsDS3(3));
+    EXPECT_EQ(3, climbStairsDS4(3));
 }
 
 TEST(ClimbStairsTest, SampleTest3)
@@ -155,6 +185,7 @@ TEST(ClimbStairsTest, SampleTest3)
     EXPECT_EQ(8, climbStairsDS1(5));
     EXPECT_EQ(8, climbStairsDS2(5));
     EXPECT_EQ(8, climbStairsDS3(5));
+    EXPECT_EQ(8, climbStairsDS4(5));
 }
 
 TEST(ClimbStairsTest, SampleTest4)
@@ -164,4 +195,5 @@ TEST(ClimbStairsTest, SampleTest4)
     EXPECT_EQ(13, climbStairsDS1(6));
     EXPECT_EQ(13, climbStairsDS2(6));
     EXPECT_EQ(13, climbStairsDS3(6));
+    EXPECT_EQ(13, climbStairsDS4(6));
 }
