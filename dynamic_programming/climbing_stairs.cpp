@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <cmath>
 #include <functional>
 #include <vector>
 
@@ -160,6 +161,24 @@ static int climbStairsDS4(int n)
     return second;
 }
 
+//! @brief Binet's Formula solution, skip Binet's Method using matrices
+//! @param[in] n Number of steps to reach the top, can climb 1 or 2 steps
+//! @return Number of distinct ways can climb to the top
+static int climbStairsDS5(int n)
+{
+    //! @details https://leetcode.com/problems/climbing-stairs/editorial/
+    //!
+    //!          Time complexity O(1), editorial says Java's pow method takes
+    //!          log n time but in C++ std::pow is O(1) 
+    //!          Space complexity O(1)
+
+    const double sqrt5 {std::sqrt(5.0)};
+    const double phi {(1.0 + sqrt5) / 2.0};
+    const double psi {(1.0 - sqrt5) / 2.0};
+    return static_cast<int>(
+        (std::pow(phi, n + 1.0) - std::pow(psi, n + 1.0)) / sqrt5);
+}
+
 TEST(ClimbStairsTest, SampleTest1)
 {
     EXPECT_EQ(2, climbStairsFA(2));
@@ -167,6 +186,7 @@ TEST(ClimbStairsTest, SampleTest1)
     EXPECT_EQ(2, climbStairsDS2(2));
     EXPECT_EQ(2, climbStairsDS3(2));
     EXPECT_EQ(2, climbStairsDS4(2));
+    EXPECT_EQ(2, climbStairsDS5(2));
 }
 
 TEST(climbStairsTest, SampleTest2)
@@ -176,6 +196,7 @@ TEST(climbStairsTest, SampleTest2)
     EXPECT_EQ(3, climbStairsDS2(3));
     EXPECT_EQ(3, climbStairsDS3(3));
     EXPECT_EQ(3, climbStairsDS4(3));
+    EXPECT_EQ(3, climbStairsDS5(3));
 }
 
 TEST(ClimbStairsTest, SampleTest3)
@@ -186,6 +207,7 @@ TEST(ClimbStairsTest, SampleTest3)
     EXPECT_EQ(8, climbStairsDS2(5));
     EXPECT_EQ(8, climbStairsDS3(5));
     EXPECT_EQ(8, climbStairsDS4(5));
+    EXPECT_EQ(8, climbStairsDS5(5));
 }
 
 TEST(ClimbStairsTest, SampleTest4)
@@ -196,4 +218,5 @@ TEST(ClimbStairsTest, SampleTest4)
     EXPECT_EQ(13, climbStairsDS2(6));
     EXPECT_EQ(13, climbStairsDS3(6));
     EXPECT_EQ(13, climbStairsDS4(6));
+    EXPECT_EQ(13, climbStairsDS5(6));
 }
