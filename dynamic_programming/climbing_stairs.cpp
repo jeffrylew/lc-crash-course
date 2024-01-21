@@ -54,18 +54,18 @@ static int climbStairsDS1(int n)
     //!          Space complexity O(n), the depth of the recursion tree can go
     //!          up to n.
 
-    std::function<int(int)> dp = [](int step) -> int {
-        if (step > n)
+    std::function<int(int)> dp = [](int curr_step) -> int {
+        if (curr_step > n)
         {
             return 0;
         }
 
-        if (step == n)
+        if (curr_step == n)
         {
             return 1;
         }
 
-        return dp(step + 1) + dp(step + 2);
+        return dp(curr_step + 1) + dp(curr_step + 2);
     };
 
     return dp(0);
@@ -84,23 +84,23 @@ static int climbStairsDS2(int n)
 
     std:vector<int> memo(n + 1);
 
-    std::function<int(int)> dp = [&](int step) -> int {
-        if (step > n)
+    std::function<int(int)> dp = [&](int curr_step) -> int {
+        if (curr_step > n)
         {
             return 0;
         }
 
-        if (step == n)
+        if (curr_step == n)
         {
             return 1;
         }
 
-        if (memo[i] > 0)
+        if (memo[curr_step] > 0)
         {
-            return memo[i];
+            return memo[curr_step];
         }
 
-        return memo[i] = dp(step + 1) + dp(step + 2);
+        return memo[curr_step] = dp(curr_step + 1) + dp(curr_step + 2);
     };
 
     return dp(0);
@@ -125,9 +125,9 @@ static int climbStairsDS3(int n)
     dp[1] = 1;
     dp[2] = 2;
 
-    for (int i = 3; i <= n; ++i)
+    for (int curr_step = 3; curr_step <= n; ++curr_step)
     {
-        dp[i] = dp[i - 1] + dp[i - 2];
+        dp[curr_step] = dp[curr_step - 1] + dp[curr_step - 2];
     }
 
     return dp[n];
@@ -151,7 +151,7 @@ static int climbStairsDS4(int n)
     int first {1};
     int second {2};
 
-    for (int i = 3; i <= n; ++i)
+    for (int curr_step = 3; curr_step <= n; ++curr_step)
     {
         const int third {first + second};
         first  = second;
