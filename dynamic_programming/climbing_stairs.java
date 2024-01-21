@@ -1,18 +1,18 @@
 public class SolutionDS1
 {
-    public int climb_Stairs(int i, int n)
+    public int climb_Stairs(int curr_step, int n)
     {
-        if (i > n)
+        if (curr_step > n)
         {
             return 0;
         }
 
-        if (i == n)
+        if (curr_step == n)
         {
             return 1;
         }
 
-        return climb_Stairs(i + 1, n) + climb_Stairs(i + 2, n);
+        return climb_Stairs(curr_step + 1, n) + climb_Stairs(curr_step + 2, n);
     }
 
     public int climbStairs(int n)
@@ -23,25 +23,27 @@ public class SolutionDS1
 
 public class SolutionDS2
 {
-    public int climb_Stairs(int i, int n, int memo[])
+    public int climb_Stairs(int curr_step, int n, int memo[])
     {
-        if (i > n)
+        if (curr_step > n)
         {
             return 0;
         }
 
-        if (i == n)
+        if (curr_step == n)
         {
             return 1;
         }
 
-        if (memo[i] > 0)
+        if (memo[curr_step] > 0)
         {
-            return memo[i];
+            return memo[curr_step];
         }
 
-        memo[i] = climb_Stairs(i + 1, n, memo) + climb_Stairs(i + 2, n, memo);
-        return memo[i];
+        memo[curr_step] =
+            climb_Stairs(curr_step + 1, n, memo)
+            + climb_Stairs(curr_step + 2, n, memo);
+        return memo[curr_step];
     }
 
     public int climbStairs(int n)
