@@ -74,3 +74,25 @@ public class SolutionDS3
         return dp[n];
     }
 }
+
+public class SolutionDS4
+{
+    public int climbStairs(int n)
+    {
+        if (n == 1)
+        {
+            return 1;
+        }
+
+        int first = 1;
+        int second = 2;
+        for (int curr_step = 3; curr_step <= n; curr_step++)
+        {
+            int third = first + second;
+            first = second;
+            second = third;
+        }
+
+        return second;
+    }
+}
