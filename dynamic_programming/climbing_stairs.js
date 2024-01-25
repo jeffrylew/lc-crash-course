@@ -50,3 +50,25 @@ var climbStairsDS2 = function(n) {
 
     return climb_Stairs(0);
 };
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairsDS3 = function(n) {
+    if (n == 1)
+    {
+        return 1;
+    }
+
+    let dp = new Array(n + 1).fill(0);
+    dp[1] = 1;
+    dp[2] = 2;
+
+    for (let curr_step = 3; curr_step <= n; curr_step++)
+    {
+        dp[curr_step] = dp[curr_step - 1] + dp[curr_step - 2];
+    }
+
+    return dp[n];
+};
