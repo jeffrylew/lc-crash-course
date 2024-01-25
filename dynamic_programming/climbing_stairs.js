@@ -72,3 +72,25 @@ var climbStairsDS3 = function(n) {
 
     return dp[n];
 };
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairsDS4 = function(n) {
+    if (n == 1)
+    {
+        return 1;
+    }
+
+    let first = 1;
+    let second = 2;
+    for (let curr_step = 3; curr_step <= n; curr_step++)
+    {
+        let third = first + second;
+        first = second;
+        second = third;
+    }
+
+    return second;
+};
