@@ -94,3 +94,15 @@ var climbStairsDS4 = function(n) {
 
     return second;
 };
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairsDS5 = function(n) {
+    const sqrt5 = Math.sqrt(5);
+    const phi = (1 + sqrt5) / 2;
+    const psi = (1 - sqrt5) / 2;
+
+    return Math.floor((Math.pow(phi, n + 1) - Math.pow(psi, n + 1)) / sqrt5);
+};
