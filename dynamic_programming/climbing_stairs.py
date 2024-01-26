@@ -46,3 +46,18 @@ def climbStairsDS3(n: int) -> int:
         dp[curr_step] = dp[curr_step - 1] + dp[curr_step - 2]
 
     return dp[n]
+
+
+def climbStairsDS4(n: int) -> int:
+    if n == 1:
+        return 1
+
+    first = 1
+    second = 2
+
+    for curr_step in range(3, n + 1):
+        third = first + second
+        first = second
+        second = third
+
+    return second
