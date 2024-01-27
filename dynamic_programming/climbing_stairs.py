@@ -1,3 +1,4 @@
+import math
 from functools import cache
 
 
@@ -61,3 +62,11 @@ def climbStairsDS4(n: int) -> int:
         second = third
 
     return second
+
+
+def climbStairsDS5(n: int) -> int:
+    sqrt5 = math.sqrt(5)
+    phi = (1 + sqrt5) / 2
+    psi = (1 - sqrt5) / 2
+
+    return math.floor((phi ** (n + 1) - psi ** (n + 1)) / sqrt5)
