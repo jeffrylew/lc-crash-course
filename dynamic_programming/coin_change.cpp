@@ -164,11 +164,46 @@ static int coinChangeDS2(std::vector<int> coins, int amount)
 
 } // static int coinChangeDS2( ...
 
+//! @brief Bottom up dynamic programming solution
+//! @param[in] coins Vector of coins of different denominations
+//! @param[in] amount Target total amount of money
+//! @return Fewest number of coins to make amount or -1 if cannot create amount
+static int coinChangeDS3(std::vector<int> coins, int amount)
+{
+    //! @details https://leetcode.com/problems/coin-change/editorial/
+    //!
+    //!          Time complexity O(S * N) where S = amount and N = coins.size(),
+    //!          which is the number of denominations. For each amount in [1, S]
+    //!          there are N denominations (i.e. N iterations).
+    //!          Space complexity O(S) for the memoization vector.
+
+    std::vector<int> dp(amount + 1, amount + 1);
+    dp[0] = 0;
+
+    for (int curr_amount = 1; curr_amount <= amount; ++curr_amount)
+    {
+        for (const int coin : coins)
+        {
+            if (curr_amount - coin < 0)
+            {
+                continue;
+            }
+
+            dp[curr_amount] =
+                std::min(dp[curr_amount], dp[curr_amount - coin] + 1);
+        }
+    }
+
+    return dp[amount] == (amount + 1) ? -1 : dp[amount];
+
+} // static int coinChangeDS3( ...
+
 TEST(CoinChangeTest, SampleTest1)
 {
     EXPECT_EQ(3, coinChangeFA({1, 2, 5}, 11));
     EXPECT_EQ(3, coinChangeDS1({1, 2, 5}, 11));
     EXPECT_EQ(3, coinChangeDS2({1, 2, 5}, 11));
+    EXPECT_EQ(3, coinChangeDS3({1, 2, 5}, 11));
 }
 
 TEST(CoinChangeTest, SampleTest2)
@@ -177,6 +212,7 @@ TEST(CoinChangeTest, SampleTest2)
     EXPECT_EQ(0, coinChangeFA({2}, 3));
     EXPECT_EQ(-1, coinChangeDS1({2}, 3));
     EXPECT_EQ(-1, coinChangeDS2({2}, 3));
+    EXPECT_EQ(-1, coinChangeDS3({2}, 3));
 }
 
 TEST(CoinChangeTest, SampleTest3)
@@ -184,4 +220,5 @@ TEST(CoinChangeTest, SampleTest3)
     EXPECT_EQ(0, coinChangeFA({1}, 0));
     EXPECT_EQ(0, coinChangeDS1({1}, 0));
     EXPECT_EQ(0, coinChangeDS2({1}, 0));
+    EXPECT_EQ(0, coinChangeDS3({1}, 0));
 }
