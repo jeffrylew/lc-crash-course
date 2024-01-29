@@ -73,7 +73,7 @@ static int coinChangeDS1(std::vector<int> coins, int amount)
     //!
     //!          Time complexity O(S ^ N) where S = amount and N = coins.size(),
     //!          which is the number of denominations. For each amount in [0, S]
-    //!          there are N denominations that can be chosen.
+    //!          there are N denominations creating N additional subproblems.
     //!          Space complexity O(S) for the recursion stack
 
     std::function<int(int)> get_min_coins = [&](int remaining_amt) {
@@ -110,10 +110,65 @@ static int coinChangeDS1(std::vector<int> coins, int amount)
 
 } // static int coinChangeDS1( ...
 
+//! @brief Top down dynamic programming solution
+//! @param[in] coins Vector of coins of different denominations
+//! @param[in] amount Target total amount of money
+//! @return Fewest number of coins to make amount or -1 if cannot create amount
+static int coinChangeDS2(std::vector<int> coins, int amount)
+{
+    //! @details https://leetcode.com/problems/coin-change/editorial/
+    //!
+    //!          Time complexity O(S * N) where S = amount and N = coins.size(),
+    //!          which is the number of denominations. For each amount in [0, S]
+    //!          there are N denominations (i.e. N iterations).
+    //!          Space complexity O(S) for the memoization vector.
+
+    std::vector<int> memo(amount + 1);
+
+    //! Get min num of coins needed to make change for remaining_amt
+    std::function<int(int)> get_min_coins = [&](int remaining_amt) {
+        if (remaining_amt < 0)
+        {
+            return -1;
+        }
+
+        if (remaining_amt == 0)
+        {
+            return 0;
+        }
+
+        if (memo[remaining_amt] != 0)
+        {
+            return memo[remaining_amt];
+        }
+
+        int min_count {amount + 1};
+
+        for (const int coin : coins)
+        {
+            const int count {get_min_coins(remaining_amt - coin)};
+
+            if (count == -1)
+            {
+                continue;
+            }
+
+            min_count = std::min(min_count, count + 1);
+        }
+
+        memo[remaining_amt] = min_count == (amount + 1) ? -1 : min_count;
+        return memo[remaining_amt];
+    };
+
+    return get_min_coins(amount);
+
+} // static int coinChangeDS2( ...
+
 TEST(CoinChangeTest, SampleTest1)
 {
     EXPECT_EQ(3, coinChangeFA({1, 2, 5}, 11));
     EXPECT_EQ(3, coinChangeDS1({1, 2, 5}, 11));
+    EXPECT_EQ(3, coinChangeDS2({1, 2, 5}, 11));
 }
 
 TEST(CoinChangeTest, SampleTest2)
@@ -121,10 +176,12 @@ TEST(CoinChangeTest, SampleTest2)
     EXPECT_NE(-1, coinChangeFA({2}, 3));
     EXPECT_EQ(0, coinChangeFA({2}, 3));
     EXPECT_EQ(-1, coinChangeDS1({2}, 3));
+    EXPECT_EQ(-1, coinChangeDS2({2}, 3));
 }
 
 TEST(CoinChangeTest, SampleTest3)
 {
     EXPECT_EQ(0, coinChangeFA({1}, 0));
     EXPECT_EQ(0, coinChangeDS1({1}, 0));
+    EXPECT_EQ(0, coinChangeDS2({1}, 0));
 }
