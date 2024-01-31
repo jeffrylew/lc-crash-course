@@ -1,5 +1,7 @@
 class SolutionDS1
 {
+    private int total_amount;
+
     private int get_min_coins(int[] coins, int remaining_amt)
     {
         if (remaining_amt < 0)
@@ -12,7 +14,7 @@ class SolutionDS1
             return 0;
         }
 
-        int min_count = amount + 1;
+        int min_count = total_amount + 1;
 
         for (int coin : coins)
         {
@@ -26,11 +28,12 @@ class SolutionDS1
             min_count = std::min(min_count, count + 1);
         }
 
-        return min_count == (amount + 1) ? -1 : min_count;
+        return min_count == (total_amount + 1) ? -1 : min_count;
     }
 
     public int coinChange(int[] coins, int amount)
     {
+        total_amount = amount;
         return get_min_coins(coins, amount);
     }
 }
