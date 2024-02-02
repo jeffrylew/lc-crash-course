@@ -84,3 +84,27 @@ class SolutionDS2
         return get_min_coins(coins, amount);
     }
 }
+
+public int coinChangeDS3(int[] coins, int amount)
+{
+    int[] dp = new int[amount + 1];
+    Arrays.fill(dp, amount + 1);
+
+    dp[0] = 0;
+
+    for (int remaining_amt = 1; remaining_amt <= amount; remaining_amt++)
+    {
+        for (int coin : coins)
+        {
+            if (remaining_amt - coin < 0)
+            {
+                continue;
+            }
+
+            dp[remaining_amt] =
+                Math.min(dp[remaining_amt], dp[remaining_amt - coin] + 1);
+        }
+    }
+
+    return dp[amount] == (amount + 1) ? -1 : dp[amount];
+}
