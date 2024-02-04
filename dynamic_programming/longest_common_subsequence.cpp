@@ -54,7 +54,54 @@ static int longestCommonSubsequenceDS1(std::string text1, std::string text2)
 
 } // static int longestCommonSubsequenceDS1( ...
 
+//! @brief First attempt bottom up DP solution
+//! @param[in] text1 First string
+//! @param[in] text2 Second string
+//! @return Length of longest common subsequence between text1 and text2
+static int longestCommonSubsequenceFA(std::string text1, std::string text2)
+{
+    //! @details leetcode.com/problems/longest-common-subsequence/description/
+    //!
+    //!          Time complexity O(M * N), M = text1.size() and N = text2.size()
+    //!          Space complexity O(M * N)
+
+    std::vector<std::vector<int>> lcs(
+        text1.size() + 1U, std::vector<int>(text2.size() + 1U, 0));
+
+    for (auto idx1 = static_cast<int>(text1.size()) - 1; idx1 >= 0; --idx1)
+    {
+        for (auto idx2 = static_cast<int>(text2.size()) - 1; idx2 >= 0; --idx2)
+        {
+            if (text1[idx1] == text2[idx2])
+            {
+                lcs[idx1][idx2] = 1 + lcs[idx1 + 1][idx2 + 1];
+            }
+            else
+            {
+                lcs[idx1][idx2] =
+                    std::max(lcs[idx1 + 1][idx2], lcs[idx1][idx2 + 1]);
+            }
+        }
+    }
+
+    return lcs[0][0];
+
+} // static int longestCommonSubsequenceFA( ...
+
 TEST(LongestCommonSubsequenceTest, SampleTest1)
 {
     EXPECT_EQ(3, longestCommonSubsequenceDS1("abcde", "ace"));
+    EXPECT_EQ(3, longestCommonSubsequenceFA("abcde", "ace"));
+}
+
+TEST(LongestCommonSubsequenceTest, SampleTest2)
+{
+    EXPECT_EQ(3, longestCommonSubsequenceDS1("abc", "abc"));
+    EXPECT_EQ(3, longestCommonSubsequenceFA("abc", "abc"));
+}
+
+TEST(LongestCommonSubsequenceTest, SampleTest3)
+{
+    EXPECT_EQ(0, longestCommonSubsequenceDS1("abc", "def"));
+    EXPECT_EQ(0, longestCommonSubsequenceFA("abc", "def"));
 }
