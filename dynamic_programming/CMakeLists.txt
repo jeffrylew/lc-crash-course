@@ -4,6 +4,7 @@ set(
   "coin_change"
   "fibonacci_numbers"
   "house_robber"
+  "longest_common_subsequence"
   "longest_increasing_subsequence"
   "min_cost_climbing_stairs"
   "solving_questions_with_brainpower"
