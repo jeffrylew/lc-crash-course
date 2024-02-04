@@ -54,7 +54,7 @@ static int longestCommonSubsequenceDS1(std::string text1, std::string text2)
 
 } // static int longestCommonSubsequenceDS1( ...
 
-//! @brief First attempt bottom up DP solution
+//! @brief First attempt bottom up DP solution, pretty much matches editorial
 //! @param[in] text1 First string
 //! @param[in] text2 Second string
 //! @return Length of longest common subsequence between text1 and text2
