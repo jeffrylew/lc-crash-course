@@ -77,3 +77,29 @@ var coinChangeDS2 = function(coins, amount) {
 
     return get_min_coins(amount);
 };
+
+/**
+ * @param {number[]} coins
+ * @param {number} amount
+ * @return {number}
+ */
+var coinChangeDS3 = function(coins, amount) {
+    let dp = new Array(amount + 1).fill(amount + 1);
+    dp[0] = 0;
+
+    for (let remaining_amt = 1; remaining_amt <= amount; remaining_amt++)
+    {
+        for (const coin of coins)
+        {
+            if (remaining_amt - coin < 0)
+            {
+                continue;
+            }
+
+            dp[remaining_amt] =
+                Math.min(dp[remaining_amt], dp[remaining_amt - coin] + 1);
+        }
+    }
+
+    return dp[amount] == (amount + 1) ? -1 : dp[amount];
+};
