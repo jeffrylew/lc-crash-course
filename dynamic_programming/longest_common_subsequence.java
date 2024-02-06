@@ -49,3 +49,28 @@ class SolutionDS1
         return get_lcs(0, 0);
     }
 }
+
+public int longestCommonSubsequenceDS2(String text1, String text2)
+{
+    int text1_len = text1.length();
+    int text2_len = text2.length();
+
+    int lcs[][] = new int[text1_len + 1][text2_len + 1];
+    for (int idx1 = text1_len - 1; idx1 >= 0; idx1--)
+    {
+        for (int idx2 = text2_len - 1; idx2 >= 0; idx2--)
+        {
+            if (text1.charAt(idx1) == text2.charAt(idx2))
+            {
+                lcs[idx1][idx2] = 1 + lcs[idx1 + 1][idx2 + 1];
+            }
+            else
+            {
+                lcs[idx1][idx2] =
+                    Math.max(lcs[idx1 + 1][idx2], lcs[idx1][idx2 + 1]);
+            }
+        }
+    }
+
+    return lcs[0][0];
+}
