@@ -94,12 +94,54 @@ static int maxProfitDS1(int k, std::vector<int> prices)
 
 } // static int maxProfitDS1( ...
 
+//! @brief Get max profit with at most k transactions
+//! @param[in] k Number of transactions
+//! @param[in] prices Vector of stock prices where prices[i] is price on ith day
+//! @return Max profit can achieve with at most k transactions
+static int maxProfitDS2(int k, std::vector<int> prices)
+{
+    std::vector<std::vector<std::vector<int>>> dp(
+        prices.size() + 1U, std::vector(2, std::vector(k + 1, 0)));
+
+    for (int curr_day = static_cast<int>(prices.size()) - 1;
+         curr_day >= 0;
+         --curr_day)
+    {
+        for (int remain_tx = 1; remain_tx <= k; ++remain_tx)
+        {
+            for (int holding_stock = 0; holding_stock < 2; ++holding_stock)
+            {
+                int max_profit {dp[curr_day + 1][holding_stock][remain_tx]};
+                if (holding_stock == 1)
+                {
+                    max_profit = std::max(
+                        max_profit,
+                        dp[curr_day + 1][0][remain_tx - 1] + prices[curr_day]);
+                }
+                else
+                {
+                    max_profit = std::max(
+                        max_profit,
+                        dp[curr_day + 1][1][remain_tx] - prices[curr_day]);
+                }
+
+                dp[curr_day][holding_stock][remain_tx] = max_profit;
+            }
+        }
+    }
+
+    return dp[0][0][k];
+
+} // static int maxProfitDS2( ...
+
 TEST(MaxProfitTest, SampleTest1)
 {
     EXPECT_EQ(2, maxProfitDS1(2, {2, 4, 1}));
+    EXPECT_EQ(2, maxProfitDS2(2, {2, 4, 1}));
 }
 
 TEST(MaxProfitTest, SampleTest2)
 {
     EXPECT_EQ(7, maxProfitDS1(2, {3, 2, 6, 5, 0, 3}));
+    EXPECT_EQ(7, maxProfitDS2(2, {3, 2, 6, 5, 0, 3}));
 }
