@@ -50,3 +50,36 @@ class SolutionDS1
         return get_max_profit(0, 0, k);
     }
 }
+
+public int maxProfitDS2(int k, int[] prices)
+{
+    int num_days = prices.length;
+    int[][][] dp = new int[num_days + 1][2][k + 1];
+
+    for (int curr_day = num_days - 1; curr_day >= 0; curr_day--)
+    {
+        for (int remain_tx = 1; remain_tx <= k; remain_tx++)
+        {
+            for (int holding_stock = 0; holding_stock < 2; holding_stock++)
+            {
+                int max_profit = dp[curr_day + 1][holding_stock][remain_tx];
+                if (holding_stock == 1)
+                {
+                    max_profit = Math.max(max_profit,
+                                          dp[curr_day + 1][0][remain_tx - 1]
+                                          + prices[curr_day]);
+                }
+                else
+                {
+                    max_profit = Math.max(max_profit,
+                                          dp[curr_day + 1][1][remain_tx]
+                                          - prices[curr_day]);
+                }
+
+                dp[curr_day][holding_stock][remain_tx] = max_profit;
+            }
+        }
+    }
+
+    return dp[0][0][k];
+}
