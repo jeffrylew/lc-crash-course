@@ -7,6 +7,7 @@ set(
   "house_robber"
   "longest_common_subsequence"
   "longest_increasing_subsequence"
+  "maximum_value_of_k_coins_from_piles"
   "min_cost_climbing_stairs"
   "solving_questions_with_brainpower"
 )
