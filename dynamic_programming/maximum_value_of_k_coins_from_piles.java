@@ -20,7 +20,7 @@ class SolutionDS1
         int curr_value = 0;
 
         for (int coin = 0;
-             coin < Math.min(remain_coins, piles.get(i).size());
+             coin < Math.min(remain_coins, piles.get(curr_pile).size());
              coin++)
         {
             curr_value += piles.get(curr_pile).get(coin);
@@ -47,4 +47,33 @@ class SolutionDS1
         this.piles = piles;
         return get_max_value(0, k);
     }
+}
+
+public int maxValueOfCoinsDS2(List<List<Integer>> piles, int k)
+{
+    int num_piles = piles.size();
+    int[][] dp = new int[num_piles + 1][k + 1];
+
+    for (int curr_pile = num_piles - 1; curr_pile >= 0; curr_pile--)
+    {
+        for (int remain_coins = 1; remain_coins <= k; remain_coins++)
+        {
+            // Skip this pile
+            dp[curr_pile][remain_coins] = dp[curr_pile + 1][remain_coins];
+
+            int curr_value = 0;
+            for (int coin = 0;
+                 coin < Math.min(remain_coins, piles.get(curr_pile).size());
+                 coin++)
+            {
+                curr_value += piles.get(curr_pile).get(coin);
+                dp[curr_pile][remain_coins] =
+                    Math.max(dp[curr_pile][remain_coins],
+                             dp[curr_pile + 1][remain_coins - coin - 1]
+                             + curr_value);
+            }
+        }
+    }
+
+    return dp[0][k];
 }
