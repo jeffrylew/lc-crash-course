@@ -41,3 +41,40 @@ var maxValueOfCoinsDS1 = function(piles, k) {
 
     return get_max_value(0, k);
 };
+
+/**
+ * @param {number[][]} piles
+ * @param {number} k
+ * @return {number}
+ */
+var maxValueOfCoinsDS2 = function(piles, k) {
+    const num_piles = piles.length;
+    let dp = [];
+    for (let curr_pile = 0; curr_pile <= num_piles; curr_pile++)
+    {
+        dp.push(new Array(k + 1).fill(0));
+    }
+
+    for (let curr_pile = num_piles - 1; curr_pile >= 0; curr_pile--)
+    {
+        for (let remain_coins = 1; remain_coins <= k; remain_coins++)
+        {
+            // Skip this pile
+            dp[curr_pile][remain_coins] = dp[curr_pile + 1][remain_coins];
+
+            let curr_value = 0;
+            for (let coin = 0;
+                 coin < Math.min(remain_coins, piles[curr_pile].length);
+                 coin++)
+            {
+                curr_value += piles[curr_pile][coin];
+                dp[curr_pile][remain_coins] =
+                    Math.max(dp[curr_pile][remain_coins],
+                             dp[curr_pile + 1][remain_coins - coin - 1]
+                             + curr_value);
+            }
+        }
+    }
+
+    return dp[0][k];
+};
