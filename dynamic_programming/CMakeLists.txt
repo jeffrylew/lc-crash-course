@@ -1,6 +1,7 @@
 set(
   cpp_files
   "best_time_to_buy_and_sell_stock_iv"
+  "best_time_to_buy_and_sell_stock_with_tx_fee"
   "climbing_stairs"
   "coin_change"
   "fibonacci_numbers"
