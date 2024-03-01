@@ -54,14 +54,62 @@ static int maxProfitFA(std::vector<int> prices, int fee)
 
 } // static int maxProfitFA( ...
 
+//! @brief Dynamic programming discussion solutio to get max profit
+//! @param[in] prices Vector of stock prices, prices[i] = price on ith day
+//! @param[in] fee    Transaction fee
+//! @return Maximum profit you can achieve
+static int maxProfitDS1(std::vector<int> prices, int fee)
+{
+    //! @details Time complexity O(N) where N = prices.size(). Iterate from
+    //!          day 1 to N - 1, which contains N - 1 steps. At each step, we
+    //!          update free[curr_day] and hold[curr_day] which takes O(1).
+    //!          Space complexity O(N). Created two vectors of length N to
+    //!          record the max profit with two states on each day.
+
+    const auto num_days = static_cast<int>(prices.size());
+
+    //! Stores max profit without holding stock
+    //! free[0] = 0 since we make no profit with an empty hand on first day
+    std::vector<int> free(prices.size(), 0);
+
+    //! Stores max profit while holding stock
+    std::vector<int> hold(prices.size(), 0);
+
+    //! In order to hold a stock on day 0, we have no other choice but to buy it
+    //! for prices[0]
+    hold[0] = -prices[0];
+
+    for (int curr_day = 1; curr_day < num_days; ++curr_day)
+    {
+        //! Case when sell stock on curr_day: Profit is max while holding stock
+        //! on prior day (hold[curr_day - 1]) plus profit from selling stock
+        //! (prices[curr_day] - fee) vs. doing nothing on curr_day
+        free[curr_day] = std::max(free[curr_day - 1],
+                                  hold[curr_day - 1] + prices[curr_day] - fee);
+
+        //! Case when buy stock on curr_day: Profit is max without holding stock
+        //! on prior day (free[curr_day - 1]) plus profit from buying stock
+        //! (-prices[curr_day]) vs. doing nothing on curr_day
+        hold[curr_day] = std::max(hold[curr_day - 1],
+                                  free[curr_day - 1] - prices[curr_day]);
+    }
+
+    //! Get max profit from last day (free[num_days - 1]). There is no point in
+    //! ending the problem while still holding stock so might as well sell it on
+    //! the last day.
+    return free[num_days - 1];
+}
+
 TEST(MaxProfitTest, SampleTest1)
 {
     EXPECT_EQ(8, maxProfitFA({1, 3, 2, 8, 4, 9}, 2));
+    EXPECT_EQ(8, maxProfitDS1({1, 3, 2, 8, 4, 9}, 2));
 }
 
 TEST(MaxProfitTest, SampleTest2)
 {
     EXPECT_EQ(6, maxProfitFA({1, 3, 7, 5, 10, 3}, 3));
+    EXPECT_EQ(6, maxProfitDS1({1, 3, 7, 5, 10, 3}, 3));
 }
 
 TEST(MaxProfitTest, TimeLimitExceeded)
