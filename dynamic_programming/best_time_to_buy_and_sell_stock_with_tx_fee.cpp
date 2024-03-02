@@ -4,7 +4,7 @@
 #include <functional>
 #include <vector>
 
-//! @brief First attempt solutio to get max profit
+//! @brief First attempt solution to get max profit
 //! @param[in] prices Vector of stock prices, prices[i] = price on ith day
 //! @param[in] fee    Transaction fee
 //! @return Maximum profit you can achieve
@@ -54,13 +54,15 @@ static int maxProfitFA(std::vector<int> prices, int fee)
 
 } // static int maxProfitFA( ...
 
-//! @brief Dynamic programming discussion solutio to get max profit
+//! @brief Dynamic programming discussion solution to get max profit
 //! @param[in] prices Vector of stock prices, prices[i] = price on ith day
 //! @param[in] fee    Transaction fee
 //! @return Maximum profit you can achieve
 static int maxProfitDS1(std::vector<int> prices, int fee)
 {
-    //! @details Time complexity O(N) where N = prices.size(). Iterate from
+    //! @details https://leetcode.com/problems
+    //!          /best-time-to-buy-and-sell-stock-with-transaction-fee/editorial
+    //!          Time complexity O(N) where N = prices.size(). Iterate from
     //!          day 1 to N - 1, which contains N - 1 steps. At each step, we
     //!          update free[curr_day] and hold[curr_day] which takes O(1).
     //!          Space complexity O(N). Created two vectors of length N to
@@ -100,16 +102,53 @@ static int maxProfitDS1(std::vector<int> prices, int fee)
     return free[num_days - 1];
 }
 
+//! @brief Space optimized dynamic programming discussion solution
+//! @param[in] prices Vector of stock prices, prices[i] = price on ith day
+//! @param[in] fee    Transaction fee
+//! @return Maximum profit you can achieve
+static int maxProfitDS2(std::vector<int> prices, int fee)
+{
+    //! @details https://leetcode.com/problems
+    //!          /best-time-to-buy-and-sell-stock-with-transaction-fee/editorial
+    //!
+    //!          Time complexity O(N) where N = prices.size().
+    //!          Space complexity O(1). Only need to update three parameters
+    //!          hold_init, free, and hold.
+
+    const auto num_days = static_cast<int>(prices.size());
+
+    //! Represents max profits in two states on current day
+    int free {};
+    int hold {-prices[0]};
+
+    for (int curr_day = 1; curr_day < num_days; ++curr_day)
+    {
+        //! hold = max(hold, free - prices[curr_day])
+        //! free = max(free, hold + prices[curr_day] - fee)
+        //!
+        //! To avoid modifying hold before updating free, use hold_init which
+        //! records the max profit for holding a stock on curr_day - 1
+
+        int hold_init {hold};
+        hold = std::max(hold, free - prices[curr_day]);
+        free = std::max(free, hold_init + prices[curr_day] - fee);
+    }
+
+    return free;
+}
+
 TEST(MaxProfitTest, SampleTest1)
 {
     EXPECT_EQ(8, maxProfitFA({1, 3, 2, 8, 4, 9}, 2));
     EXPECT_EQ(8, maxProfitDS1({1, 3, 2, 8, 4, 9}, 2));
+    EXPECT_EQ(8, maxProfitDS2({1, 3, 2, 8, 4, 9}, 2));
 }
 
 TEST(MaxProfitTest, SampleTest2)
 {
     EXPECT_EQ(6, maxProfitFA({1, 3, 7, 5, 10, 3}, 3));
     EXPECT_EQ(6, maxProfitDS1({1, 3, 7, 5, 10, 3}, 3));
+    EXPECT_EQ(6, maxProfitDS2({1, 3, 7, 5, 10, 3}, 3));
 }
 
 TEST(MaxProfitTest, TimeLimitExceeded)
