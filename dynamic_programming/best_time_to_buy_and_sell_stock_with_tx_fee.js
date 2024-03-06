@@ -22,3 +22,23 @@ var maxProfitDS1 = function(prices, fee) {
 
     return free[num_days - 1];
 };
+
+/**
+ * @param {number[]} prices
+ * @param {number} fee
+ * @return {number}
+ */
+var maxProfitDS2 = function(prices, fee) {
+    const num_days = prices.length;
+    let free = 0;
+    let hold = -prices[0];
+
+    for (let curr_day = 1; curr_day < num_days; curr_day++)
+    {
+        const hold_init = hold;
+        hold = Math.max(hold, free - prices[curr_day]);
+        free = Math.max(free, hold_init + prices[curr_day] - fee);
+    }
+
+    return free;
+};
