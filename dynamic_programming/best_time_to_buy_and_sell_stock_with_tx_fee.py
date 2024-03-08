@@ -13,3 +13,15 @@ def maxProfitDS1(prices: list[int], fee: int) -> int:
                              hold[curr_day - 1] + prices[curr_day] - fee)
 
     return free[-1]
+
+
+def maxProfitDS2(prices: list[int], fee: int) -> int:
+    num_days = len(prices)
+    hold, free = -prices[0], 0
+
+    for curr_day in range(1, num_days):
+        hold_init = hold
+        hold = max(hold, free - prices[curr_day])
+        free = max(free, hold_init + prices[curr_day] - fee)
+
+    return free
