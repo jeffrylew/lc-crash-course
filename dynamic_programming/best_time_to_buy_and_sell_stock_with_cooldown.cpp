@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 #include <vector>
 
 //! @brief First attempt solution to find max profit with cooldown after selling
@@ -47,12 +48,31 @@ static int maxProfitFA(std::vector<int> prices)
     return get_max_profit(0, 0);
 }
 
+static int maxProfitDS1(std::vector<int> prices)
+{
+    int sold {std::numeric_limits<int>::min()};
+    int hold {std::numeric_limits<int>::min()};
+    int reset {};
+
+    for (const int price : prices)
+    {
+        const int pre_sold {sold};
+        sold  = held + price;
+        held  = std::max(held, reset - price);
+        reset = std::max(reset, pre_sold);
+    }
+
+    return std::max(sold, reset);
+}
+
 TEST(MaxProfitTest, SampleTest1)
 {
     EXPECT_EQ(3, maxProfitFA({1, 2, 3, 0, 2}));
+    EXPECT_EQ(3, maxProfitDS1({1, 2, 3, 0, 2}));
 }
 
 TEST(MaxProfitTest, SampleTest2)
 {
     EXPECT_EQ(0, maxProfitFA({1}));
+    EXPECT_EQ(0, maxProfitDS1({1}));
 }
