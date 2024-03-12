@@ -65,14 +65,43 @@ static int maxProfitDS1(std::vector<int> prices)
     return std::max(sold, reset);
 }
 
+static int maxProfitDS2(std::vector<int> prices)
+{
+    std::vector<int> max_profit(prices.size() + 2U);
+
+    const auto num_days = static_cast<int>(prices.size());
+
+    for (int curr_day = num_days - 1; curr_day >= 0; --curr_day)
+    {
+        int case1 {};
+
+        //! Case 1) Buy and sell the stock
+        for (int sell = curr_day + 1; sell < num_days; ++sell)
+        {
+            int profit {prices[sell] - prices[curr_day] + max_profit[sell + 2]};
+            case1 = std::max(profit, case1);
+        }
+
+        //! Case 2) No transaction with the stock
+        int case2 {max_profit[curr_day + 1]};
+
+        //! Wrap up the two cases
+        max_profit[curr_day] = std::max(case1, case2);
+    }
+
+    return max_profit[0];
+}
+
 TEST(MaxProfitTest, SampleTest1)
 {
     EXPECT_EQ(3, maxProfitFA({1, 2, 3, 0, 2}));
     EXPECT_EQ(3, maxProfitDS1({1, 2, 3, 0, 2}));
+    EXPECT_EQ(3, maxProfitDS2({1, 2, 3, 0, 2}));
 }
 
 TEST(MaxProfitTest, SampleTest2)
 {
     EXPECT_EQ(0, maxProfitFA({1}));
     EXPECT_EQ(0, maxProfitDS1({1}));
+    EXPECT_EQ(0, maxProfitDS2({1}));
 }
