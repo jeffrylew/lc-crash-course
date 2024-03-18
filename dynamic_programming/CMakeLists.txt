@@ -12,6 +12,7 @@ set(
   "maximum_value_of_k_coins_from_piles"
   "min_cost_climbing_stairs"
   "solving_questions_with_brainpower"
+  "unique_paths"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
