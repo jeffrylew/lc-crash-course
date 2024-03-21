@@ -85,14 +85,51 @@ static int uniquePathsBottomUpDS1(int m, int n)
 
 } // static int uniquePathsBottomUpDS1( ...
 
+//! @brief Space-optimized bottom up dynamic programming discussion solution
+//! @param[in] m One dimension of an m x n grid
+//! @param[in] n Another dimension of an m x n grid
+//! @return Number of unique paths to bottom right by only moving down or right
+static int uniquePathsBottomUpDS2(int m, int n)
+{
+    //! @details https://leetcode.com/problems/unique-paths/description/
+    //!
+    //!          Time complexity O(n * m) since work done at each state is O(1)
+    //!          Space complexity O(n)
+
+    std::vector<int> dp(n, 0);
+    dp[0] = 1;
+
+    for (int row = 0; row < m; ++row)
+    {
+        std::vector<int> next_row(n, 0);
+
+        for (int col = 0; col < n; ++col)
+        {
+            next_row[col] += dp[col];
+
+            if (col > 0)
+            {
+                next_row[col] += next_row[col - 1];
+            }
+        }
+
+        dp = std::move(next_row);
+    }
+
+    return dp[n - 1];
+
+} // static int uniquePathsBottomUpDS2( ...
+
 TEST_CASE(UniquePathsTest, SampleTest1)
 {
     EXPECT_EQ(28, uniquePathsTopDown(3, 7));
     EXPECT_EQ(28, uniquePathsBottomUpDS1(3, 7));
+    EXPECT_EQ(28, uniquePathsBottomUpDS2(3, 7));
 }
 
 TEST_CASE(uniquePathsTest, SampleTest2)
 {
     EXPECT_EQ(3, uniquePathsTopDown(3, 2));
     EXPECT_EQ(3, uniquePathsBottomUpDS1(3, 2));
+    EXPECT_EQ(3, uniquePathsBottomUpDS2(3, 2));
 }
