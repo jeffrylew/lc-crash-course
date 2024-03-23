@@ -15,19 +15,19 @@ class SolutionDS1
             return memo[row][col];
         }
 
-        int ways = 0;
+        int num_ways = 0;
         if (row > 0)
         {
-            ways += dp(row - 1, col);
+            num_ways += dp(row - 1, col);
         }
 
         if (col > 0)
         {
-            ways += dp(row, col - 1);
+            num_ways += dp(row, col - 1);
         }
 
-        memo[row][col] = ways;
-        return ways;
+        memo[row][col] = num_ways;
+        return num_ways;
     }
 
     public int uniquePaths(int m, int n)
