@@ -1,0 +1,46 @@
+#include <gtest/gtest.h>
+
+#include <algorithm>
+#include <functional>
+#include <limits>
+#include <vector>
+
+//! @brief Get top left to bottom right path that minimizes sum of numbers
+//! @param[in] grid Reference to 2D vector for m x n grid of non-negative ints
+//! @return Minimum path sum
+static int minPathSumDS1(const std::vector<std::vector<int>>& grid)
+{
+    const auto num_rows = static_cast<int>(grid.size());
+    const auto num_cols = static_cast<int>(grid[0].size());
+
+    std::vector<std::vector<int>> memo(
+        grid.size(), std::vector(grid[0].size(), -1));
+
+    std::function<int(int, int)> dp = [&](int row, int col) {
+        if (row + col == 0)
+        {
+            //! Base case
+            return grid[row][col];
+
+            if (memo[row][col] != -1)
+            {
+                return memo[row][col];
+            }
+
+            int min_sum {std::numeric_limits<int>::max()};
+            if (row > 0)
+            {
+                min_sum = std::min(min_sum, dp(row - 1, col));
+            }
+
+            if (col > 0)
+            {
+                min_sum = std::min(min_sum, dp(row, col - 1));
+            }
+
+            return memo[row][col] = grid[row][col] + min_sum;
+        }
+    };
+
+    return dp(num_rows - 1, num_cols - 1);
+}
