@@ -11,6 +11,7 @@ set(
   "longest_increasing_subsequence"
   "maximum_value_of_k_coins_from_piles"
   "min_cost_climbing_stairs"
+  "minimum_path_sum"
   "solving_questions_with_brainpower"
   "unique_paths"
 )
