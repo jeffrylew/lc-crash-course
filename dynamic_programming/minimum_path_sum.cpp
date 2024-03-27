@@ -10,6 +10,11 @@
 //! @return Minimum path sum
 static int minPathSumDS1(const std::vector<std::vector<int>>& grid)
 {
+    //! @details https://leetcode.com/problems/minimum-path-sum/
+    //!
+    //!          Time complexity O(m * n)
+    //!          Space complexity O(m * n)
+
     const auto num_rows = static_cast<int>(grid.size());
     const auto num_cols = static_cast<int>(grid[0].size());
 
@@ -43,4 +48,18 @@ static int minPathSumDS1(const std::vector<std::vector<int>>& grid)
     };
 
     return dp(num_rows - 1, num_cols - 1);
+}
+
+TEST(MinPathSumTest, SampleTest1)
+{
+    const std::vector<std::vector<int>> grid {{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
+
+    EXPECT_EQ(7, minPathSumDS1(grid));
+}
+
+TEST(MinPathSumTest, SampleTest2)
+{
+    const std::vector<std::vector<int>> grid {{1, 2, 3}, {4, 5, 6}};
+
+    EXPECT_EQ(12, minPathSumDS1(grid));
 }
