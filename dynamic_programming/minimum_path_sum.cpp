@@ -26,25 +26,25 @@ static int minPathSumDS1(const std::vector<std::vector<int>>& grid)
         {
             //! Base case
             return grid[row][col];
-
-            if (memo[row][col] != -1)
-            {
-                return memo[row][col];
-            }
-
-            int min_sum {std::numeric_limits<int>::max()};
-            if (row > 0)
-            {
-                min_sum = std::min(min_sum, dp(row - 1, col));
-            }
-
-            if (col > 0)
-            {
-                min_sum = std::min(min_sum, dp(row, col - 1));
-            }
-
-            return memo[row][col] = grid[row][col] + min_sum;
         }
+
+        if (memo[row][col] != -1)
+        {
+            return memo[row][col];
+        }
+
+        int min_sum {std::numeric_limits<int>::max()};
+        if (row > 0)
+        {
+            min_sum = std::min(min_sum, dp(row - 1, col));
+        }
+
+        if (col > 0)
+        {
+            min_sum = std::min(min_sum, dp(row, col - 1));
+        }
+
+        return memo[row][col] = grid[row][col] + min_sum;
     };
 
     return dp(num_rows - 1, num_cols - 1);
