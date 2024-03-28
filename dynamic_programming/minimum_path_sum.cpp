@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <functional>
 #include <limits>
+#include <utility>
 #include <vector>
 
 //! @brief Get top left to bottom right path that minimizes sum of numbers
@@ -56,6 +57,11 @@ static int minPathSumDS1(const std::vector<std::vector<int>>& grid)
 //! @return Minimum path sum from top left to bottom right
 static int minPathSumDS2(const std::vector<std::vector<int>>& grid)
 {
+    //! @details https://leetcode.com/problems/minimum-path-sum/
+    //!
+    //!          Time complexity O(m * n)
+    //!          Space complexity O(m * n)
+
     const auto num_rows = static_cast<int>(grid.size());
     const auto num_cols = static_cast<int>(grid[0].size());
 
@@ -90,12 +96,52 @@ static int minPathSumDS2(const std::vector<std::vector<int>>& grid)
 
 } // static int minPathSumDS2( ...
 
+//! @brief Space optimized bottom up dynamic programming solution
+//! @param[in] grid Reference to 2D vector for m x n grid of non-negative ints
+//! @return Minimum path sum from top left to bottom right
+static int minPathSumDS3(const std::vector<std::vector<int>>& grid)
+{
+    //! @details https://leetcode.com/problems/minimum-path-sum/
+    //!
+    //!          Time complexity O(m * n)
+    //!          Space complexity O(n)
+
+    const auto num_rows = static_cast<int>(grid.size());
+    const auto num_cols = static_cast<int>(grid[0].size());
+
+    std::vector<int> dp(num_cols, std::numeric_limits<int>::max());
+    dp[0] = 0;
+
+    for (int row = 0; row < num_rows; ++row)
+    {
+        std::vector<int> next_row(num_cols, 0);
+
+        for (int col = 0; col < num_cols; ++col)
+        {
+            next_row[col] = dp[col];
+
+            if (col > 0)
+            {
+                next_row[col] = std::min(next_row[col], next_row[col - 1]);
+            }
+
+            next_row[col] += grid[row][col];
+        }
+
+        dp = std::move(next_row);
+    }
+
+    return dp[num_cols - 1];
+
+} // static int minPathSumDS3( ...
+
 TEST(MinPathSumTest, SampleTest1)
 {
     const std::vector<std::vector<int>> grid {{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
 
     EXPECT_EQ(7, minPathSumDS1(grid));
     EXPECT_EQ(7, minPathSumDS2(grid));
+    EXPECT_EQ(7, minPathSumDS3(grid));
 }
 
 TEST(MinPathSumTest, SampleTest2)
@@ -104,4 +150,5 @@ TEST(MinPathSumTest, SampleTest2)
 
     EXPECT_EQ(12, minPathSumDS1(grid));
     EXPECT_EQ(12, minPathSumDS2(grid));
+    EXPECT_EQ(12, minPathSumDS3(grid));
 }
