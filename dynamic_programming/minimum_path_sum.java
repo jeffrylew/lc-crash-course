@@ -81,3 +81,34 @@ public int minPathSumDS2(int[][] grid)
 
     return dp[num_rows - 1][num_cols - 1];
 }
+
+public int minPathSumDS3(int[][] grid)
+{
+    int num_rows = grid.length;
+    int num_cols = grid[0].length;
+
+    int[] dp = new int[num_cols];
+    Arrays.fill(dp, Integer.MAX_VALUE);
+    dp[0] = 0;
+
+    for (int row = 0; row < num_rows; row++)
+    {
+        int[] next_row = new int[num_cols];
+
+        for (int col = 0; col < num_cols; col++)
+        {
+            next_row[col] = dp[col];
+
+            if (col > 0)
+            {
+                next_row[col] = Math.min(next_row[col], next_row[col - 1]);
+            }
+
+            next_row[col] += grid[row][col];
+        }
+
+        dp = next_row;
+    }
+
+    return dp[num_cols - 1];
+}
