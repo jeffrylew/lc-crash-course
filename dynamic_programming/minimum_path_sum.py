@@ -19,3 +19,26 @@ def minPathSumDS1(grid: list[list[int]]) -> int:
     num_rows = len(grid)
     num_cols = len(grid[0])
     return dp(num_rows - 1, num_cols - 1)
+
+
+def minPathSumDS2(grid: list[list[int]]) -> int:
+    num_rows = len(grid)
+    num_cols = len(grid[0])
+    dp = [[0] * num_cols for _ in range(num_rows)]
+    dp[0][0] = grid[0][0]
+
+    for row in range(num_rows):
+        for col in range(num_cols):
+            if row + col == 0:
+                continue
+
+            min_sum = float("inf")
+            if row > 0:
+                min_sum = min(min_sum, dp[row - 1][col])
+
+            if col > 0:
+                min_sum = min(min_sum, dp[row][col - 1])
+
+            dp[row][col] = grid[row][col] + min_sum
+
+    return dp[num_rows - 1][num_cols - 1]
