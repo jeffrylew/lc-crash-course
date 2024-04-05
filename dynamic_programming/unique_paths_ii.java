@@ -1,0 +1,55 @@
+public int uniquePathsWithObstacles(int[][] obstacleGrid)
+{
+    // If starting cell has an obstacle then return
+    // since there are no paths to the destination
+    if (obstacleGrid[0][0] == 1)
+    {
+        return 0;
+    }
+
+    int num_rows = obstacleGrid.length;
+    int num_cols = obstacleGrid[0].length;
+
+    // Assuming cannot modify input, create a copy
+    int[][] grid = new int[num_rows][];
+    for (int row = 0; row < num_rows; row++)
+    {
+        grid[row] = obstacleGrid[row].clone();
+    }
+
+    // Number of ways of reaching the starting cell is 1
+    grid[0][0] = 1;
+
+    // Fill values for first column
+    for (int row = 1; row < num_rows; row++)
+    {
+        grid[row][0] = (grid[row][0] == 0 && grid[row - 1][0] == 1) ? 1 : 0;
+    }
+
+    // Fill values for first row
+    for (int col = 1; col < num_cols; col++)
+    {
+        grid[0][col] = (grid[0][col] == 0 && grid[0][col - 1] == 1) ? 1 : 0;
+    }
+
+    // Fill values starting from (1, 1)
+    // Number of ways of reaching cell[row][col] is
+    // cell[row - 1][col] + cell[row][col - 1]
+    for (int row = 1; row < num_rows; row++)
+    {
+        for (int col = 1; col < num_cols; col++)
+        {
+            if (grid[row][col] == 0)
+            {
+                grid[row][col] = grid[row - 1][col] + grid[row][col - 1];
+            }
+            else
+            {
+                grid[row][col] = 0;
+            }
+        }
+    }
+
+    // Return value stored in bottom right corner
+    return grid[num_rows - 1][num_cols - 1];
+}
