@@ -14,6 +14,7 @@ set(
   "minimum_path_sum"
   "solving_questions_with_brainpower"
   "unique_paths"
+  "unique_paths_ii"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
