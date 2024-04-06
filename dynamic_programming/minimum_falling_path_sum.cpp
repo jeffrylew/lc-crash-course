@@ -52,12 +52,65 @@ static int minFallingPathSumFA(const std::vector<std::vector<int>>& matrix)
 
 } // static int minFallingPathSumFA( ...
 
+//! @brief Brute force discussion solution to get min sum of falling paths
+//! @param[in] matrix Reference to n x n vector of ints
+//! @return Minimum sum of any falling path through matrix
+static int minFallingPathSumDS1(const std::vector<std::vector<int>>& matrix)
+{
+    //! @details leetcode.com/problems/minimum-falling-path-sum/editorial
+    //!
+    //!          Time complexity O(N * 3 ^ N) where N = matrix.size(). Solution
+    //!          takes form of a 3-ary recursion tree where there are three
+    //!          possibilities for every node in the tree. The max depth of the
+    //!          recursion tree is equal to num rows in the matrix (= N). Each
+    //!          level of the recursion tree contains approximately 3 ^ level
+    //!          nodes so the max number of nodes at level N is ~3 ^ N. Thus the
+    //!          time complexity is roughly O(N * 3 ^ N).
+    //!          Space complexity O(N) for recursion stack space. The max depth
+    //!          of the tree is N so will not have more than N recursive calls
+    //!          on the call stack at any time.
+
+    const auto num_rows = static_cast<int>(matrix.size());
+    const auto num_cols = static_cast<int>(matrix[0].size());
+
+    std::function<int(int, int)> findMinFallingPathSum = [&](int row, int col) {
+        //! Check if outside the left or right matrix boundary
+        if (col < 0 || col == num_cols)
+        {
+            return std::numeric_limits<int>::max();
+        }
+
+        //! Check if reached last row
+        if (row == num_rows - 1)
+        {
+            return matrix[row][col];
+        }
+
+        //! Calculate min falling path sum starting from each possible next step
+        const int left {findMinFallingPathSum(row + 1, col - 1)};
+        const int middle {findMinFallingPathSum(row + 1, col)};
+        const int right {findMinFallingPathSum(row + 1, col + 1)};
+
+        return std::min({left, middle, right}) + matrix[row][col];
+    };
+
+    int minFallingSum {std::numeric_limits<int>::max()};
+    for (int col = 0; col < num_cols; ++col)
+    {
+        minFallingSum = std::min(minFallingSum, findMinFallingPathSum(0, col));
+    }
+
+    return minFallingSum;
+
+} // static int minFallingPathSumDS1( ...
+
 TEST(MinFallingPathSumTest, SampleTest1)
 {
     const std::vector<std::vector<int>> matrix {
         {2, 1, 3}, {6, 5, 4}, {7, 8, 9}};
 
     EXPECT_EQ(13, minFallingPathSumFA(matrix));
+    EXPECT_EQ(13, minFallingPathSumDS1(matrix));
 }
 
 TEST(MinFallingPathSumTest, SampleTest2)
@@ -65,4 +118,5 @@ TEST(MinFallingPathSumTest, SampleTest2)
     const std::vector<std::vector<int>> matrix {{-19, 57}, {-40, -5}};
 
     EXPECT_EQ(-59, minFallingPathSumFA(matrix));
+    EXPECT_EQ(-59, minFallingPathSumDS1(matrix));
 }
