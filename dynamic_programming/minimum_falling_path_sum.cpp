@@ -111,7 +111,13 @@ static int minFallingPathSumDS2(const std::vector<std::vector<int>>& matrix)
 {
     //! @details leetcode.com/problems/minimum-falling-path-sum/editorial
     //!
-    //!          Time complexity O(
+    //!          Time complexity O(N ^ 2). For every cell in the matrix, compute
+    //!          the result once and update memo. For subsequent calls, using
+    //!          the stored results takes O(1). There are N^2 cells in matrix
+    //!          and thus N^2 dp states.
+    //!          Space complexity O(N ^ 2). The max depth of the tree is N so
+    //!          can't have more than N recursive calls on the stack at any time
+    //!          The 2D matrix memo uses O(N ^ 2) space.
 
     int minFallingSum {std::numeric_limits<int>::max()};
 
