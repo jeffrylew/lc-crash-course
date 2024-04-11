@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <utility>
 #include <vector>
 
 //! @brief First attempt solution to get min sum of falling paths through matrix
@@ -217,6 +218,58 @@ static int minFallingPathSumDS3(const std::vector<std::vector<int>>& matrix)
 
 } // static int minFallingPathSumDS3( ...
 
+//! @brief Space optimized bottom up dynamic programming discussion solution
+//! @param[in] matrix Reference to n x n vector of ints
+//! @return Minimum sum of any falling path through matrix
+static int minFallingPathSumDS4(const std::vector<std::vector<int>>& matrix)
+{
+    //! @details leetcode.com/problems/minimum-falling-path-sum/editorial
+    //!
+    //!          Time complexity O(N ^ 2) where N = matrix.size(). The nested
+    //!          loop takes N^2 time and it takes O(N) to find min falling path.
+    //!          Space complexity O(N) for two 1D vectors dp and currentRow
+
+    const auto num_rows = static_cast<int>(matrix.size());
+    const auto num_cols = static_cast<int>(matrix[0].size());
+
+    std::vector<int> dp(matrix[0].size() + 1U, 0);
+    
+    for (int row = num_rows - 1; row >= 0; --row)
+    {
+        std::vector<int> currentRow(matrix[0].size() + 1U, 0);
+
+        for (int col = 0; col < num_cols; ++col)
+        {
+            if (col == 0)
+            {
+                currentRow[col] =
+                    std::min(dp[col], dp[col + 1]) + matrix[row][col];
+            }
+            else if (col == num_cols - 1)
+            {
+                currentRow[col] =
+                    std::min(dp[col - 1], dp[col]) + matrix[row][col];
+            }
+            else
+            {
+                currentRow[col] = std::min({dp[col - 1], dp[col], dp[col + 1]})
+                                  + matrix[row][col];
+            }
+        }
+
+        dp = std::move(currentRow);
+    }
+
+    int minFallingSum {std::numeric_limits<int>::max()};
+    for (int col = 0; col < num_cols; ++col)
+    {
+        minFallingSum = std::min(minFallingSum, dp[col]);
+    }
+
+    return minFallingSum;
+
+} // static int minFallingPathSumDS4( ...
+
 TEST(MinFallingPathSumTest, SampleTest1)
 {
     const std::vector<std::vector<int>> matrix {
@@ -226,6 +279,7 @@ TEST(MinFallingPathSumTest, SampleTest1)
     EXPECT_EQ(13, minFallingPathSumDS1(matrix));
     EXPECT_EQ(13, minFallingPathSumDS2(matrix));
     EXPECT_EQ(13, minFallingPathSumDS3(matrix));
+    EXPECT_EQ(13, minFallingPathSumDS4(matrix));
 }
 
 TEST(MinFallingPathSumTest, SampleTest2)
@@ -236,4 +290,5 @@ TEST(MinFallingPathSumTest, SampleTest2)
     EXPECT_EQ(-59, minFallingPathSumDS1(matrix));
     EXPECT_EQ(-59, minFallingPathSumDS2(matrix));
     EXPECT_EQ(-59, minFallingPathSumDS3(matrix));
+    EXPECT_EQ(-59, minFallingPathSumDS4(matrix));
 }
