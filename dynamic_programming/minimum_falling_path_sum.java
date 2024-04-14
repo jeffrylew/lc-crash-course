@@ -86,3 +86,41 @@ class SolutionDS2
         return minFallingSum;
     }
 }
+
+public int minFallingPathSumDS3(int[][] matrix)
+{
+    int num_rows = matrix.length;
+    int num_cols = matrix[0].length;
+
+    int dp[][] = new int[num_rows + 1][num_cols + 1];
+    for (int row = num_rows - 1; row >= 0; row--)
+    {
+        for (int col = 0; col < num_cols; col++)
+        {
+            if (col == 0)
+            {
+                dp[row][col] = Math.min(dp[row + 1][col], dp[row + 1][col + 1])
+                               + matrix[row];
+            }
+            else if (col == num_cols - 1)
+            {
+                dp[row][col] = Math.min(dp[row + 1][col], dp[row + 1][col - 1])
+                               + matrix[row];
+            }
+            else
+            {
+                dp[row][col] =
+                    Math.min(dp[row + 1][col - 1],
+                             Math.min(dp[row + 1][col], dp[row + 1][col + 1]))
+                    + matrix[row][col];
+            }
+        }
+    }
+
+    int minFallingSum = Integer.MAX_VALUE;
+    for (int col = 0; col < num_cols; col++)
+    {
+        minFallingSum = Math.min(minFallingSum, dp[0][col]);
+    }
+    return minFallingPathSum;
+}
