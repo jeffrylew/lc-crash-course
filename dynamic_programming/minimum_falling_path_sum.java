@@ -124,3 +124,43 @@ public int minFallingPathSumDS3(int[][] matrix)
     }
     return minFallingPathSum;
 }
+
+public int minFallingPathSumDS4(int[][] matrix)
+{
+    int num_rows = matrix.length;
+    int num_cols = matrix[0].length;
+
+    int dp[] = new int[num_cols + 1];
+    for (int row = num_rows - 1; row >= 0; row--)
+    {
+        int currentRow[] = new int[num_cols + 1];
+        for (int col = 0; col < num_cols; col++)
+        {
+            if (col == 0)
+            {
+                currentRow[col] =
+                    Math.min(dp[col], dp[col + 1]) + matrix[row][col];
+            }
+            else if (col == num_cols - 1)
+            {
+                currentRow[col] =
+                    Math.min(dp[col - 1], dp[col]) + matrix[row][col];
+            }
+            else
+            {
+                currentRow[col] = Math.min(dp[col - 1],
+                                           Math.min(dp[col], dp[col + 1]))
+                                  + matrix[row][col];
+            }
+        }
+
+        dp = currentRow;
+    }
+
+    int minFallingSum = Integer.MAX_VALUE;
+    for (int col = 0; col < num_cols; col++)
+    {
+        minFallingSum = Math.min(minFallingSum, dp[col]);
+    }
+    return minFallingSum;
+}
