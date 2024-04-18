@@ -128,3 +128,46 @@ var minFallingPathSumDS3 = function(matrix) {
     }
     return minFallingSum;
 };
+
+/**
+ * @param {number[][]} matrix
+ * @return {number}
+ */
+var minFallingPathSumDS4 = function(matrix) {
+    const num_rows = matrix.length;
+    const num_cols = matrix[0].length;
+
+    let dp = new Array(num_cols + 1).fill(0);
+    for (let row = num_rows - 1; row >= 0; row--)
+    {
+        let currentRow = new Array(num_cols + 1).fill(0);
+
+        for (let col = 0; col < num_cols; col++)
+        {
+            if (col == 0)
+            {
+                currentRow[col] =
+                    Math.min(dp[col], dp[col + 1]) + matrix[row][col];
+            }
+            else if (col == num_cols - 1)
+            {
+                currentRow[col] =
+                    Math.min(dp[col - 1], dp[col]) + matrix[row][col];
+            }
+            else
+            {
+                currentRow[col] = Math.min(dp[col - 1], dp[col], dp[col + 1])
+                                  + matrix[row][col];
+            }
+        }
+
+        dp = currentRow;
+    }
+
+    let minFallingSum = Number.MAX_SAFE_INTEGER;
+    for (let col = 0; col < num_cols; col++)
+    {
+        minFallingSum = Math.min(minFallingSum, dp[col]);
+    }
+    return minFallingSum;
+};
