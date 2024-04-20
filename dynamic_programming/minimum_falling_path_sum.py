@@ -85,3 +85,23 @@ def minFallingPathSumDS3(matrix: list[list[int]]) -> int:
                                 + matrix[row][col])
 
     return min(dp[0][:num_cols])
+
+
+def minFallingPathSumDS4(matrix: list[list[int]]) -> int:
+    num_rows = len(matrix)
+    num_cols = len(matrix[0])
+    dp = [0] * (num_cols + 1)
+
+    for row in range(num_rows - 1, -1, -1):
+        current_row = [0] * (num_cols + 1)
+        for col in range(0, num_cols):
+            if col == 0:
+                current_row[col] = min(dp[col], dp[col + 1]) + matrix[row][col]
+            elif col == num_cols - 1:
+                current_row[col] = min(dp[col - 1], dp[col]) + matrix[row][col]
+            else:
+                current_row[col] = (min(dp[col - 1], dp[col], dp[col + 1])
+                                    + matrix[row][col])
+        dp = current_row
+
+    return min(dp[:num_cols])
