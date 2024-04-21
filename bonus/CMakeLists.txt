@@ -1,5 +1,6 @@
 set(
   cpp_files
+  "brightest_position_on_street"
   "car_pooling"
 )
 
