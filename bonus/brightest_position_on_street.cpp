@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iterator>
 #include <limits>
+#include <utility>
 #include <vector>
 
 //! @brief First attempt solution to get smallest brightest position on street
@@ -55,11 +56,55 @@ static int brightestPositionFA(const std::vector<std::vector<int>>& lights)
 
 } // static int brightestPositionFA( ...
 
+//! @brief Discussion solution to get smallest brightest position on street
+//! @param[in] lights Reference to vector of lights[i] = [position_i, range_i]
+//! @return Get brightest position (if multiple are brightest, get smallest)
+static int brightestPositionDS(const std::vector<std::vector<int>>& lights)
+{
+    //! @details leetcode.com/problems/brightest-position-on-street/description
+    //!
+    //!          Time complexity O(N * log N) where N = lights.size()
+    //!          Space complexity O(N) for brightness_changes
+
+    std::vector<std::pair<int, int>> brightness_changes;
+    for (const auto& pos_range : lights)
+    {
+        const int position {pos_range[0]};
+        const int radius {pos_range[1]};
+
+        //! When enter a light's coverage, brightness increases by 1
+        brightness_changes.emplace_back(position - radius, 1);
+
+        //! When exit a light's coverage, brightness decreases by 1
+        brightness_changes.emplace_back(position + radius + 1, -1);
+    }
+
+    std::sort(brightness_changes.begin(), brightness_changes.end());
+
+    int brightest_pos {};
+    int curr_brightness {};
+    int max_brightness {};
+
+    for (const auto& [position, brightness] : brightness_changes)
+    {
+        curr_brightness += brightness;
+        if (curr_brightness > max_brightness)
+        {
+            max_brightness = curr_brightness;
+            brightest_pos  = position;
+        }
+    }
+
+    return brightest_pos;
+
+} // static int brightestPositionDS( ...
+
 TEST(BrightestPositionTest, SampleTest1)
 {
     const std::vector<std::vector<int>> lights {{-3, 2}, {1, 2}, {3, 3}};
 
     EXPECT_EQ(-1, brightestPositionFA(lights));
+    EXPECT_EQ(-1, brightestPositionDS(lights));
 }
 
 TEST(BrightestPositionTest, SampleTest2)
@@ -67,6 +112,7 @@ TEST(BrightestPositionTest, SampleTest2)
     const std::vector<std::vector<int>> lights {{1, 0}, {0, 1}};
 
     EXPECT_EQ(1, brightestPositionFA(lights));
+    EXPECT_EQ(1, brightestPositionDS(lights));
 }
 
 TEST(BrightestPositionTest, SampleTest3)
@@ -74,6 +120,7 @@ TEST(BrightestPositionTest, SampleTest3)
     const std::vector<std::vector<int>> lights {{1, 2}};
 
     EXPECT_EQ(-1, brightestPositionFA(lights));
+    EXPECT_EQ(-1, brightestPositionDS(lights));
 }
 
 TEST(BrightestPositionTest, MemoryLimitExceededTest)
