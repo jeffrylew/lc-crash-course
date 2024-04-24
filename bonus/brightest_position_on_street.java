@@ -10,7 +10,23 @@ public int findBrightestPosition(int[][] lights)
         brightness_changes.add(new int[] {position + radius + 1, -1});
     }
 
-    Collections.sort(brightness_changes, (a, b) -> Integer.compare(a[0], b[0]));
+    // Discussion solution is incorrect since Collections.sort needs to account
+    // for both elements of each int[] in brightness_changes. Incorrect solution
+    // at https://leetcode.com/explore/interview/card
+    //    /leetcodes-interview-crash-course-data-structures-and-algorithms/714
+    //    /bonus/4688/
+    // and is commented out in the following two lines
+    // Collections.sort(
+    //    brightness_changes, (lhs, rhs) -> Integer.compare(lhs[0], rhs[0]));
+    Collections.sort(brightness_changes, new Comparator<int[]>() {
+        public int compare(int[] lhs, int[] rhs) {
+            if (lhs[0] == rhs[0])
+            {
+                return Integer.compare(lhs[1], rhs[1]);
+            }
+
+            return Integer.compare(lhs[0], rhs[0]);
+        }});
 
     int brightest_pos = 0;
     int curr_brightness = 0;
