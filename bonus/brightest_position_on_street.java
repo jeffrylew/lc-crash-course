@@ -16,10 +16,10 @@ public int findBrightestPosition(int[][] lights)
     int curr_brightness = 0;
     int max_brightness = 0;
 
-    for (int idx = 0; idx < brightess_changes.size(); idx++)
+    for (int idx = 0; idx < brightness_changes.size(); idx++)
     {
-        int position = brightess_changes.get(idx)[0];
-        int brightness = brightess_changes.get(idx)[1];
+        int position = brightness_changes.get(idx)[0];
+        int brightness = brightness_changes.get(idx)[1];
 
         curr_brightness += brightness;
         if (curr_brightness > max_brightness)
