@@ -2,9 +2,10 @@
 
 #include <unordered_map>
 
+template <typename T>
 struct TrieNode
 {
-    int data {};
+    T data {};
 
     std::unordered_map<char, TrieNode> children {};
 };
