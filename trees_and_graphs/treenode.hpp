@@ -1,3 +1,5 @@
+#pragma once
+
 struct TreeNode
 {
     int       val {};
