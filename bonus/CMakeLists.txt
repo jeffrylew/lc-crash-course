@@ -3,6 +3,7 @@ set(
   "brightest_position_on_street"
   "build_trie"
   "car_pooling"
+  "search_suggestions_system"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
