@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -24,9 +25,10 @@ static TrieNode<int> buildTrie(const std::vector<std::string>& words)
         auto* curr = &root;
         for (const char letter : word)
         {
-            auto [child_it, exists] = curr->children.try_emplace(letter, {});
+            auto [child_it, exists] = curr->children.try_emplace(
+                letter, std::make_unique<TrieNode<int>>());
 
-            curr = &(child_it->second);
+            curr = child_it->second.get();
         }
 
         //! At this point we have a full word at curr
