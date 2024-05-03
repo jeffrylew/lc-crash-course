@@ -4,6 +4,7 @@ set(
   "build_trie"
   "car_pooling"
   "search_suggestions_system"
+  "single_number"
 )
 
 foreach(cpp_file IN ITEMS ${cpp_files})
