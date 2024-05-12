@@ -3,6 +3,7 @@ set(
   "brightest_position_on_street"
   "build_trie"
   "car_pooling"
+  "hamming_distance"
   "implement_trie"
   "search_suggestions_system"
   "single_number"
