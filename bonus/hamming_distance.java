@@ -21,10 +21,26 @@ public int hammingDistanceDS2(int x, int y)
     {
         if (x_xor_y % 2 == 1)
         {
-            hamming_distance += 1;
+            hamming_distance++;
         }
 
         x_xor_y = x_xor_y >> 1;
+    }
+
+    return hamming_distance;
+}
+
+public int hammingDistanceDS3(int x, int y)
+{
+    int x_xor_y = x ^ y;
+    int hamming_distance = 0;
+
+    while (x_xor_y != 0)
+    {
+        hamming_distance++;
+
+        // Remove the rightmost bit of '1'
+        x_xor_y = x_xor_y & (x_xor_y - 1);
     }
 
     return hamming_distance;
