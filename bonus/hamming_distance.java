@@ -11,3 +11,21 @@ public int hammingDistanceDS1(int x, int y)
 
     return Integer.bitCount(x ^ y);
 }
+
+public int hammingDistanceDS2(int x, int y)
+{
+    int x_xor_y = x ^ y;
+    int hamming_distance = 0;
+
+    while (x_xor_y != 0)
+    {
+        if (x_xor_y % 2 == 1)
+        {
+            hamming_distance += 1;
+        }
+
+        x_xor_y = x_xor_y >> 1;
+    }
+
+    return hamming_distance;
+}
