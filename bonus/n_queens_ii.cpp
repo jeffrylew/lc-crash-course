@@ -19,8 +19,9 @@ static int totalNQueensDS1(int n)
     //! diagonals: Top left to bottom right. Values in diagonal share row - col
     //! antiDiagonals: Top right to bottom left. Values share row + col
     //! cols: Stores the columns in [0, n) already occupied. One queen per col
+    //! @note Default capture by reference since [=] triggers address sanitizer
     const std::function<int(int, int, int, int)> backtrack =
-        [=](int row, int diagonals, int antiDiagonals, int cols) {
+        [&](int row, int diagonals, int antiDiagonals, int cols) {
             //! Base case: N queens have been placed
             if (row == n)
             {
@@ -63,7 +64,8 @@ static int totalNQueensDS1(int n)
         };
 
     return backtrack(0, 0, 0, 0);
-}
+
+} // static int totalNQueensDS1( ...
 
 TEST(TotalNQueensTest, SampleTest1)
 {
