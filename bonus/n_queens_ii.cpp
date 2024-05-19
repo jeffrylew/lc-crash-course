@@ -38,9 +38,9 @@ static int totalNQueensDS1(int n)
                 const int currCol {1 << col};
 
                 //! If the queen is not placeable
-                if (cols & currCol              // col in cols already occupied
-                    || diagonals & currDiagonal // currDiagonal already occupied
-                    || antiDiagonals & currAntiDiagonal) // Already occupied
+                if ((cols & currCol) != 0              // currCol occupied
+                    || (diagonals & currDiagonal) != 0 // currDiagonal occupied
+                    || (antiDiagonals & currAntiDiagonal) != 0) // Occupied
                 {
                     continue;
                 }
@@ -99,9 +99,9 @@ static int totalNQueensDS2(int n)
             const int currCol {1 << col};
 
             //! If the queen is not placeable
-            if (cols & currCol              // col in cols already occupied
-                || diagonals & currDiagonal // currDiagonal already occupied
-                || antiDiagonals & currAntiDiagonal) // Already occupied
+            if ((cols & currCol) != 0              // currCol occupied
+                || (diagonals & currDiagonal) != 0 // currDiagonal occupied
+                || (antiDiagonals & currAntiDiagonal) != 0) // Occupied
             {
                 continue;
             }
