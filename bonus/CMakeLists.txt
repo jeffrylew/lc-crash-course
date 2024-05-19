@@ -5,6 +5,7 @@ set(
   "car_pooling"
   "hamming_distance"
   "implement_trie"
+  "meeting_rooms"
   "search_suggestions_system"
   "single_number"
 )
