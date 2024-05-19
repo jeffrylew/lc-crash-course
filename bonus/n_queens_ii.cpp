@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <functional>
+#include <unordered_set>
 
 //! @brief Get number of distinct solutions to the n-queens puzzle
 //! @param[in] n Number of queens to place on an n x n chessboard
@@ -127,8 +128,61 @@ static int totalNQueensDS2(int n)
 
 } // static int totalNQueensDS2( ...
 
+//! @brief Discussion solution copied from backtracking/n_queens_ii.cpp
+//! @param[in] n Number of queens to place on an n x n chessboard
+//! @return Number of distinct solutions to the n-queens puzzle
+static int totalNQueensDS3(int n)
+{
+    std::unordered_set<int> diagonals;
+    std::unordered_set<int> antiDiagonals;
+    std::unordered_set<int> cols;
+
+    const std::function<int(int)> backtrack = [&](int row) {
+        //! Base case: N queens have been placed
+        if (row == n)
+        {
+            return 1;
+        }
+
+        int num_solutions {};
+        for (int col = 0; col < n; ++col)
+        {
+            const int currDiagonal {row - col};
+            const int currAntiDiagonal {row + col};
+
+            //! If the queen is not placeable
+            if (cols.count(col) > 0
+                || diagonals.count(currDiagonal) > 0
+                || antiDiagonals.count(currAntiDiagonal) > 0)
+            {
+                continue;
+            }
+
+            //! "Add" the queen to the board
+            cols.insert(col);
+            diagonals.insert(currDiagonal);
+            antiDiagonals.insert(currAntiDiagonal);
+
+            //! Move onto the next row with the updated board state
+            num_solutions += backtrack(row + 1);
+
+            //! "Remove" the queen from the board since we have already
+            //! explored all valid paths using the above function call
+            cols.erase(col);
+            diagonals.erase(currDiagonal);
+            antiDiagonals.erase(currAntiDiagonal);
+        }
+
+        return num_solutions;
+    };
+
+    return backtrack(0);
+
+} // static int totalNQueensDS3( ...
+
 TEST(TotalNQueensTest, SampleTest1)
 {
     EXPECT_EQ(2, totalNQueensDS1(4));
     EXPECT_EQ(2, totalNQueensDS2(4));
+    EXPECT_EQ(2, totalNQueensDS3(4));
 }
