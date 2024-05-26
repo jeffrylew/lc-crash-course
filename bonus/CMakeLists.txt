@@ -6,6 +6,7 @@ set(
   "hamming_distance"
   "implement_trie"
   "meeting_rooms"
+  "merge_intervals"
   "n_queens_ii"
   "search_suggestions_system"
   "single_number"
