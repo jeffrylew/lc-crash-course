@@ -5,6 +5,7 @@ set(
   "car_pooling"
   "hamming_distance"
   "implement_trie"
+  "insert_interval"
   "meeting_rooms"
   "merge_intervals"
   "n_queens_ii"
