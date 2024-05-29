@@ -57,6 +57,53 @@ static std::vector<std::vector<int>> insertFA(
 
 } // static std::vector<std::vector<int>> insertFA( ...
 
+//! @brief Linear search discussion solution
+//! @param[in] intervals Reference to vector of non-overlapping sorted intervals
+//! @param[in] newInterval Reference to vector containing interval to insert
+//! @return Sorted intervals vector with newInterval inserted and no overlaps
+static std::vector<std::vector<int>> insertDS1(
+    const std::vector<std::vector<int>>& intervals,
+    const std::vector<int>&              newInterval)
+{
+    //! @details https://leetcode.com/problems/insert-interval/editorial/
+    //!
+    //!          Time complexity O(N) where N = number of intervals. Iterate
+    //!          through intervals once and each interval is considered and
+    //!          processed only once.
+    //!          Space complexity O(1). Only use result vector to store output.
+
+    const auto num_intervals = static_cast<int>(intervals.size());
+    int        idx {};
+
+    std::vector<std::vector<int>> res {};
+
+    //! Case 1: No overlapping case before the merge intervals
+    //! Compare ending point of intervals to starting point of newInterval
+    while (idx < num_intervals && intervals[idx][1] < newInterval[0])
+    {
+        res.push_back(intervals[idx++]);
+    }
+
+    //! Case 2: Overlapping case and merging of intervals
+    auto to_add = newInterval
+    while (idx < num_intervals && to_add[1] >= intervals[idx][0])
+    {
+        to_add[0] = std::min(to_add[0], intervals[idx][0]);
+        to_add[1] = std::max(to_add[1], intervals[idx][1]);
+        ++idx;
+    }
+    res.push_back(std::move(to_add));
+
+    //! Case 3: No overlapping of intervals after newInterval merged
+    while (idx < num_intervals)
+    {
+        res.push_back(intervals[idx++]);
+    }
+
+    return res;
+
+} // static std::vector<std::vector<int>> insertDS1( ...
+
 TEST(InsertTest, SampleTest1)
 {
     const std::vector<std::vector<int>> intervals {{1, 3}, {6, 9}};
@@ -64,6 +111,7 @@ TEST(InsertTest, SampleTest1)
     const std::vector<std::vector<int>> expected_output {{1, 5}, {6, 9}};
 
     EXPECT_EQ(expected_output, insertFA(intervals, newInterval));
+    EXPECT_EQ(expected_output, insertDS1(intervals, newInterval));
 }
 
 TEST(InsertTest, SampleTest2)
@@ -75,6 +123,7 @@ TEST(InsertTest, SampleTest2)
         {1, 2}, {3, 10}, {12, 16}};
 
     EXPECT_EQ(expected_output, insertFA(intervals, newInterval));
+    EXPECT_EQ(expected_output, insertDS1(intervals, newInterval));
 }
 
 TEST(InsertTest, SampleTest3)
@@ -84,4 +133,5 @@ TEST(InsertTest, SampleTest3)
     const std::vector<std::vector<int>> expected_output {{0, 0}, {1, 5}};
 
     EXPECT_NE(expected_output, insertFA(intervals, newInterval));
+    EXPECT_EQ(expected_output, insertDS1(intervals, newInterval));
 }
