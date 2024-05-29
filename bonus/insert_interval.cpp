@@ -70,21 +70,24 @@ static std::vector<std::vector<int>> insertDS1(
     //!          Time complexity O(N) where N = number of intervals. Iterate
     //!          through intervals once and each interval is considered and
     //!          processed only once.
-    //!          Space complexity O(1). Only use result vector to store output.
+    //!          Space complexity O(1) to create to_add vector, which has a
+    //!          constant size of 2 elements. If the input newInterval can be
+    //!          modified, then the space complexity remains O(1). Only use
+    //!          result vector to store output.
 
     const auto num_intervals = static_cast<int>(intervals.size());
     int        idx {};
 
     std::vector<std::vector<int>> res {};
 
-    //! Case 1: No overlapping case before the merge intervals
+    //! Case 1: No overlapping before merging intervals
     //! Compare ending point of intervals to starting point of newInterval
     while (idx < num_intervals && intervals[idx][1] < newInterval[0])
     {
         res.push_back(intervals[idx++]);
     }
 
-    //! Case 2: Overlapping case and merging of intervals
+    //! Case 2: Overlapping and merging intervals
     auto to_add = newInterval
     while (idx < num_intervals && to_add[1] >= intervals[idx][0])
     {
@@ -94,7 +97,7 @@ static std::vector<std::vector<int>> insertDS1(
     }
     res.push_back(std::move(to_add));
 
-    //! Case 3: No overlapping of intervals after newInterval merged
+    //! Case 3: No overlapping after merging newInterval
     while (idx < num_intervals)
     {
         res.push_back(intervals[idx++]);
