@@ -107,6 +107,74 @@ static std::vector<std::vector<int>> insertDS1(
 
 } // static std::vector<std::vector<int>> insertDS1( ...
 
+//! @brief Binary search discussion solution
+//! @param[in] intervals Reference to vector of non-overlapping sorted intervals
+//! @param[in] newInterval Reference to vector containing interval to insert
+//! @return Sorted intervals vector with newInterval inserted and no overlaps
+static std::vector<std::vector<int>> insertDS2(
+    const std::vector<std::vector<int>>& intervals,
+    const std::vector<int>&              newInterval)
+{
+    //! @details https://leetcode.com/problems/insert-interval/editorial/
+    //!
+    //!          Time complexity O(N), where N = number of intervals. Binary
+    //!          search to find insert position of newInterval takes O(log N).
+    //!          However, insertion of newInterval can take O(N) in the worst
+    //!          case, as it could involve shifting elements within the vector.
+    //!          The overall time complexity is O(N + log N), or O(N).
+    //!          Space complexity O(N). Needed to store the result res and for
+    //!          the intervals_copy vector.
+
+    //! If intervals is empty, return a vector containing newInterval
+    if (intervals.empty())
+    {
+        return {newInterval};
+    }
+
+    const auto num_intervals = static_cast<int>(intervals.size());
+
+    int left {};
+    int right {num_intervals - 1};
+
+    //! Binary search to find the position to insert newInterval
+    while (left <= right)
+    {
+        const int mid {left + (right - left) / 2};
+
+        if (intervals[mid][0] < newInterval[0])
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            right = mid - 1;
+        }
+    }
+
+    //! Insert newInterval at the found position
+    auto intervals_copy = intervals;
+    intervals_copy.insert(intervals_copy.begin() + left, newInterval);
+
+    //! Merge overlapping intervals
+    std::vector<std::vector<int>> res {};
+    for (auto& interval : intervals_copy)
+    {
+        //! If res is empty or there is no overlap, add interval to result
+        if (res.empty() || res.back()[1] < interval[0])
+        {
+            res.push_back(std::move(interval));
+        }
+        else
+        {
+            //! If there is overlap, update end of last interval in res to merge
+            res.back()[1] = std::max(res.back()[1], interval[1]);
+        }
+    }
+
+    return res;
+
+} // static std::vector<std::vector<int>> insertDS2( ...
+
 TEST(InsertTest, SampleTest1)
 {
     const std::vector<std::vector<int>> intervals {{1, 3}, {6, 9}};
@@ -115,6 +183,7 @@ TEST(InsertTest, SampleTest1)
 
     EXPECT_EQ(expected_output, insertFA(intervals, newInterval));
     EXPECT_EQ(expected_output, insertDS1(intervals, newInterval));
+    EXPECT_EQ(expected_output, insertDS2(intervals, newInterval));
 }
 
 TEST(InsertTest, SampleTest2)
@@ -127,6 +196,7 @@ TEST(InsertTest, SampleTest2)
 
     EXPECT_EQ(expected_output, insertFA(intervals, newInterval));
     EXPECT_EQ(expected_output, insertDS1(intervals, newInterval));
+    EXPECT_EQ(expected_output, insertDS2(intervals, newInterval));
 }
 
 TEST(InsertTest, SampleTest3)
@@ -137,4 +207,5 @@ TEST(InsertTest, SampleTest3)
 
     EXPECT_NE(expected_output, insertFA(intervals, newInterval));
     EXPECT_EQ(expected_output, insertDS1(intervals, newInterval));
+    EXPECT_EQ(expected_output, insertDS2(intervals, newInterval));
 }
