@@ -6,6 +6,7 @@ set(
   "hamming_distance"
   "implement_trie"
   "insert_interval"
+  "maximum_product_after_k_increments"
   "meeting_rooms"
   "merge_intervals"
   "n_queens_ii"
