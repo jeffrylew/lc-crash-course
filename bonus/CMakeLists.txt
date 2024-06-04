@@ -3,6 +3,7 @@ set(
   "brightest_position_on_street"
   "build_trie"
   "car_pooling"
+  "find_the_divisibility_array_of_a_string"
   "hamming_distance"
   "implement_trie"
   "insert_interval"
