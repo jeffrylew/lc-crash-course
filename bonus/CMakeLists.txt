@@ -11,6 +11,7 @@ set(
   "meeting_rooms"
   "merge_intervals"
   "n_queens_ii"
+  "network_delay_time"
   "search_suggestions_system"
   "single_number"
 )
