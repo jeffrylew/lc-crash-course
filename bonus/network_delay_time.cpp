@@ -69,10 +69,10 @@ static int networkDelayTimeDS(const std::vector<std::vector<int>>& times,
         }
     }
 
-    int min_time {std::numeric_limits<int>::min()};
-    for (int node = 0; node < n; ++node)
+    int min_time {};
+    for (const auto& distance : distances)
     {
-        min_time = std::max(min_time, distances[node]);
+        min_time = std::max(min_time, distance);
     }
 
     return min_time == std::numeric_limits<int>::max() ? -1 : min_time;
