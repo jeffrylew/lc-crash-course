@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <functional>
+#include <limits>
 #include <queue>
 #include <unordered_map>
 #include <utility>
@@ -77,6 +78,78 @@ static int findCheapestPriceFA(int                                  n,
 
 } // static int findCheapestPriceFA( ...
 
+//! @brief Breadth First Search discussion solution
+//! @param[in] n       Number of cities
+//! @param[in] flights Reference to vector, flights[i] = [from_i, to_i, price_i]
+//! @param[in] src     Source city
+//! @param[in] dst     Destination city
+//! @param[in] k       Max number of stops from src to dst
+//! @return Cheapest price from src to dst with k stops max, else -1 if no route
+static int findCheapestPriceDS1(int                                  n,
+                                const std::vector<std::vector<int>>& flights,
+                                int                                  src,
+                                int                                  dst,
+                                int                                  k)
+{
+    //! @details https://leetcode.com/problems/cheapest-flights-within-k-stops
+    //!
+    //!          Time complexity O(n + E * k) where n = number of cities, k is
+    //!          the max number of stops, and E = number of flights. Depending
+    //!          on improvements in the minimum cost for each city, may process
+    //!          each flight/edge multiple times. However, the max number of
+    //!          times a flight/edge can be processed is limited by k since that
+    //!          is the number of levels investigated. In the worst case, this
+    //!          takes O(E * k) time. We also need O(E) to initialize the
+    //!          adjacency vector and O(n) to initialize the costs vector.
+    //!          Space complexity O(n + E * k). We are processing at most E * k
+    //!          edges so the queue uses O(E * k) in the worst case. Also need
+    //!          O(E) for the adjacency vector and O(n) for the costs vector.
+
+    //! Adjacency list contains all neighbors of city and
+    //! corresponding price it takes to move to a neighbor
+    std::vector<std::vector<std::pair<int, int>>> adj(n);
+    for (const auto& flight : flights)
+    {
+        adj[flight[0]].emplace_back(flight[1], flight[2]);
+    }
+
+    //! costs stores min price to reach city from src
+    std::vector<int> costs(n, std::numeric_limits<int>::max());
+
+    //! city_cost stores <city, cost> pairs
+    std::queue<std::pair<int, int>> city_cost {};
+    city_cost.emplace(src, 0);
+
+    int stops {};
+    while (stops <= k && !city_cost.empty())
+    {
+        auto level_size = static_cast<int>(city_cost.size());
+
+        //! Iterate on current level
+        while (level_size-- > 0)
+        {
+            const auto [curr_city, cost_to_curr_city] = city_cost.front();
+            city_cost.pop();
+
+            //! Iterate over neighbors of popped city
+            for (const auto& [neighbor, price] : adj[curr_city])
+            {
+                if (cost_to_curr_city + price >= costs[neighbor])
+                {
+                    continue;
+                }
+
+                costs[neighbor] = cost_to_curr_city + price;
+                city_cost.emplace(neighbor, costs[neighbor]);
+            }
+        }
+        ++stops;
+    }
+
+    return costs[dst] == std::numeric_limits<int>::max() ? -1 : costs[dst];
+
+} // static int findCheapestPriceDS1( ...
+
 TEST(FindCheapestPriceTest, SampleTest1)
 {
     const std::vector<std::vector<int>> flights {
@@ -88,6 +161,7 @@ TEST(FindCheapestPriceTest, SampleTest1)
     constexpr int k {1};
 
     EXPECT_EQ(700, findCheapestPriceFA(n, flights, src, dst, k));
+    EXPECT_EQ(700, findCheapestPriceDS1(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest2)
@@ -101,6 +175,7 @@ TEST(FindCheapestPriceTest, SampleTest2)
     constexpr int k {1};
 
     EXPECT_EQ(200, findCheapestPriceFA(n, flights, src, dst, k));
+    EXPECT_EQ(200, findCheapestPriceDS1(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest3)
@@ -114,6 +189,7 @@ TEST(FindCheapestPriceTest, SampleTest3)
     constexpr int k {0};
 
     EXPECT_EQ(500, findCheapestPriceFA(n, flights, src, dst, k));
+    EXPECT_EQ(500, findCheapestPriceDS1(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest4)
@@ -128,4 +204,5 @@ TEST(FindCheapestPriceTest, SampleTest4)
 
     EXPECT_NE(7, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(9, findCheapestPriceFA(n, flights, src, dst, k));
+    EXPECT_EQ(7, findCheapestPriceDS1(n, flights, src, dst, k));
 }
