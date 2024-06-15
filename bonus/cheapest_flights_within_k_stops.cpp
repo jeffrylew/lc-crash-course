@@ -4,6 +4,7 @@
 #include <functional>
 #include <limits>
 #include <queue>
+#include <tuple>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -200,6 +201,85 @@ static int findCheapestPriceDS2(int                                  n,
 
 } // static int findCheapestPriceDS2( ...
 
+//! @brief Dijkstra discussion solution
+//! @param[in] n       Number of cities
+//! @param[in] flights Reference to vector, flights[i] = [from_i, to_i, price_i]
+//! @param[in] src     Source city
+//! @param[in] dst     Destination city
+//! @param[in] k       Max number of stops from src to dst
+//! @return Cheapest price from src to dst with k stops max, else -1 if no route
+static int findCheapestPriceDS3(int                                  n,
+                                const std::vector<std::vector<int>>& flights,
+                                int                                  src,
+                                int                                  dst,
+                                int                                  k)
+{
+    //! @details https://leetcode.com/problems/cheapest-flights-within-k-stops
+    //!
+    //!          Time complexity O(n + E * k * log(E * k)) where E = number of
+    //!          flights and n = number of cities.  Assume city A is popped out
+    //!          of the min_heap during an iteration. If nflights_from_src taken
+    //!          to visit A are more than num_flights[A] then do not iterate
+    //!          over A's neighbors. Otherwise, nflights_from_src can be less
+    //!          than num_flights[A] a total of k times. A can be popped the
+    //!          first time with k flights, followed by k - 1 flights, etc.
+    //!          until 1 flight. The same argument is valid for any other city.
+    //!          Thus, each flight can only be processed k times, resulting in
+    //!          O(E * k) elements processed. It takes O(E * k * log(E * k)) for
+    //!          the min_heap to push or pop E * k elements. Add O(n) time for
+    //!          using the num_flights vector (construction is linear to n, (3)
+    //!          from https://en.cppreference.com/w/cpp/container/vector/vector)
+    //!          Space complexity O(n + E * k). adj vector requires O(E) space.
+    //!          num_flights vector requires O(n). The min_heap can only have
+    //!          O(E * k) elements.
+
+    //! Adjacency list adj[X] contains neighboring cities of X and price to move
+    std::vector<std::vector<std::pair<int, int>>> adj(n);
+    for (const auto& flight : flights)
+    {
+        adj[flight[0]].emplace_back(flight[1], flight[2]);
+    }
+
+    //! Stores minimum number of flights to reach a city from src. Initialize
+    //! with large values to indicate we haven't reached any cities yet
+    std::vector<int> num_flights(n, std::numeric_limits<int>::max());
+
+    //! Stores <cost from src city, current city, number of flights from src>
+    std::priority_queue<std::tuple<int, int, int>,
+                        std::vector<std::tuple<int, int, int>>,
+                        std::greater<std::tuple<int, int, int>>> min_heap {};
+    min_heap.emplace(0, src, 0);
+
+    while (!min_heap.empty())
+    {
+        const auto [cost_from_src, city, nflights_from_src] = min_heap.top();
+        min_heap.pop();
+
+        //! Already encountered a path with a lower cost and fewer flights
+        //! or the number of flights exceeds the limit
+        if (nflights_from_src > num_flights[city] || nflights_from_src > k + 1)
+        {
+            continue;
+        }
+
+        num_flights[city] = nflights_from_src;
+
+        if (city == dst)
+        {
+            return cost_from_src;
+        }
+
+        for (const auto& [neighbor, price] : adj[city])
+        {
+            min_heap.emplace(
+                cost_from_src + price, neighbor, nflights_from_src + 1);
+        }
+    }
+
+    return -1;
+
+} // static int findCheapestPriceDS3( ...
+
 TEST(FindCheapestPriceTest, SampleTest1)
 {
     const std::vector<std::vector<int>> flights {
@@ -213,6 +293,7 @@ TEST(FindCheapestPriceTest, SampleTest1)
     EXPECT_EQ(700, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(700, findCheapestPriceDS1(n, flights, src, dst, k));
     EXPECT_EQ(700, findCheapestPriceDS2(n, flights, src, dst, k));
+    EXPECT_EQ(700, findCheapestPriceDS3(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest2)
@@ -228,6 +309,7 @@ TEST(FindCheapestPriceTest, SampleTest2)
     EXPECT_EQ(200, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(200, findCheapestPriceDS1(n, flights, src, dst, k));
     EXPECT_EQ(200, findCheapestPriceDS2(n, flights, src, dst, k));
+    EXPECT_EQ(200, findCheapestPriceDS3(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest3)
@@ -243,6 +325,7 @@ TEST(FindCheapestPriceTest, SampleTest3)
     EXPECT_EQ(500, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(500, findCheapestPriceDS1(n, flights, src, dst, k));
     EXPECT_EQ(500, findCheapestPriceDS2(n, flights, src, dst, k));
+    EXPECT_EQ(500, findCheapestPriceDS3(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest4)
@@ -259,4 +342,5 @@ TEST(FindCheapestPriceTest, SampleTest4)
     EXPECT_EQ(9, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(7, findCheapestPriceDS1(n, flights, src, dst, k));
     EXPECT_EQ(7, findCheapestPriceDS2(n, flights, src, dst, k));
+    EXPECT_EQ(7, findCheapestPriceDS3(n, flights, src, dst, k));
 }
