@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <functional>
 #include <limits>
 #include <queue>
@@ -150,6 +151,55 @@ static int findCheapestPriceDS1(int                                  n,
 
 } // static int findCheapestPriceDS1( ...
 
+//! @brief Bellman Ford discussion solution
+//! @param[in] n       Number of cities
+//! @param[in] flights Reference to vector, flights[i] = [from_i, to_i, price_i]
+//! @param[in] src     Source city
+//! @param[in] dst     Destination city
+//! @param[in] k       Max number of stops from src to dst
+//! @return Cheapest price from src to dst with k stops max, else -1 if no route
+static int findCheapestPriceDS2(int                                  n,
+                                const std::vector<std::vector<int>>& flights,
+                                int                                  src,
+                                int                                  dst,
+                                int                                  k)
+{
+    //! @details https://leetcode.com/problems/cheapest-flights-within-k-stops
+    //!
+    //!          Time complexity O((n + E) * k) where n = number of cities and
+    //!          E = number of flights. Iterating over all flights (k + 1) times
+    //!          takes O(E * k). At the start and end of each iteration, also
+    //!          swap costs vectors, which takes O(n * k) for all iterations.
+    //!          This gives O(E * k + n * k) = O((n + E) * k)
+    //!          Space complexity O(n) for costs and temp vectors which use O(n)
+
+    //! Costs from source to all other cities
+    std::vector<int> costs(n, std::numeric_limits<int>::max());
+    costs[src] = 0;
+
+    //! Run only k + 1 times since want minimum cost in k flights
+    for (int num_flights = 0; num_flights <= k; ++num_flights)
+    {
+        //! Create copy of costs vector
+        auto temp = costs;
+
+        for (const auto& flight : flights)
+        {
+            if (costs[flight[0]] != std::numeric_limits<int>::max())
+            {
+                temp[flight[1]] = std::min(temp[flight[1]],
+                                           costs[flight[0]] + flight[2]);
+            }
+        }
+
+        //! Copy/move temp vector into costs
+        costs = std::move(temp);
+    }
+
+    return costs[dst] == std::numeric_limits<int>::max() ? -1 : costs[dst];
+
+} // static int findCheapestPriceDS2( ...
+
 TEST(FindCheapestPriceTest, SampleTest1)
 {
     const std::vector<std::vector<int>> flights {
@@ -162,6 +212,7 @@ TEST(FindCheapestPriceTest, SampleTest1)
 
     EXPECT_EQ(700, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(700, findCheapestPriceDS1(n, flights, src, dst, k));
+    EXPECT_EQ(700, findCheapestPriceDS2(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest2)
@@ -176,6 +227,7 @@ TEST(FindCheapestPriceTest, SampleTest2)
 
     EXPECT_EQ(200, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(200, findCheapestPriceDS1(n, flights, src, dst, k));
+    EXPECT_EQ(200, findCheapestPriceDS2(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest3)
@@ -190,6 +242,7 @@ TEST(FindCheapestPriceTest, SampleTest3)
 
     EXPECT_EQ(500, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(500, findCheapestPriceDS1(n, flights, src, dst, k));
+    EXPECT_EQ(500, findCheapestPriceDS2(n, flights, src, dst, k));
 }
 
 TEST(FindCheapestPriceTest, SampleTest4)
@@ -205,4 +258,5 @@ TEST(FindCheapestPriceTest, SampleTest4)
     EXPECT_NE(7, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(9, findCheapestPriceFA(n, flights, src, dst, k));
     EXPECT_EQ(7, findCheapestPriceDS1(n, flights, src, dst, k));
+    EXPECT_EQ(7, findCheapestPriceDS2(n, flights, src, dst, k));
 }
