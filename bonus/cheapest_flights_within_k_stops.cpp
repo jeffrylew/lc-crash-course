@@ -178,7 +178,7 @@ static int findCheapestPriceDS2(int                                  n,
     std::vector<int> costs(n, std::numeric_limits<int>::max());
     costs[src] = 0;
 
-    //! Run only k + 1 times since want minimum cost in k flights
+    //! Run only k + 1 times since want minimum cost in k stops
     for (int num_flights = 0; num_flights <= k; ++num_flights)
     {
         //! Create copy of costs vector
