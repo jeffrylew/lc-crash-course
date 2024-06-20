@@ -58,3 +58,38 @@ var findCheapestPriceDS1 = function(n, flights, src, dst, k)
 
     return costs[dst] === Number.MAX_SAFE_INTEGER ? -1 : costs[dst];
 };
+
+/**
+ * @param {number} n
+ * @param {number[][]} flights
+ * @param {number} src
+ * @param {number} dst
+ * @param {number} k
+ * @return {number}
+ */
+var findCheapestPriceDS2 = function(n, flights, src, dst, k)
+{
+    // Costs from src to all other cities
+    let costs = new Array(n).fill(Number.MAX_SAFE_INTEGER);
+    costs[src] = 0;
+
+    // Run only k + 1 times since want minimum cost in k stops
+    for (let num_flights = 0; num_flights <= k; num_flights++)
+    {
+        // Create copy of costs array
+        let temp = [...costs];
+
+        for (const [from, to, price] of flights)
+        {
+            if (costs[from] != Number.MAX_SAFE_INTEGER)
+            {
+                temp[to] = Math.min(temp[to], costs[from] + price);
+            }
+        }
+
+        // Copy temp array into costs
+        costs = temp;
+    }
+
+    return costs[dst] == Number.MAX_SAFE_INTEGER ? -1 : costs[dst];
+};
