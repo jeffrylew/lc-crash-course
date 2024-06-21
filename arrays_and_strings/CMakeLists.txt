@@ -8,6 +8,7 @@ set(
   "find_length"
   "find_length_of_binary_str"
   "is_subsequence"
+  "k_radius_subarray_averages"
   "maximum_average_subarray"
   "max_consecutive_ones_3"
   "min_start_value"
