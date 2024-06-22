@@ -90,12 +90,65 @@ static std::vector<int> getAveragesDS1(std::vector<int> nums, int k)
 
 } // static std::vector<int> getAveragesDS1( ...
 
+//! @brief Sliding window discussion solution to get k-radius averages
+//! @param[in] nums Vector of n integers to get k-radius averages from
+//! @param[in] k    Radius of subarray spanning i - k and i + k
+//! @return Vector of k-radius subarray averages
+static std::vector<int> getAveragesDS2(std::vector<int> nums, int k)
+{
+    //! @details https://leetcode.com/problems/k-radius-subarray-averages
+    //!
+    //!          Time complexity O(n) where n = nums.size(). Initializing the
+    //!          averages vector with -1 takes O(n). Iterating over nums vector
+    //!          to find the k-radius average of each index also takes O(n).
+    //!          Space complexity O(1). The output averages vector is not
+    //!          considered as additional space.
+
+    //! When a single element is considered then its average is the num itself
+    if (k == 0)
+    {
+        return nums;
+    }
+
+    const int        window_size {2 * k + 1};
+    const auto       nums_size = static_cast<int>(nums.size());
+    std::vector<int> averages(nums.size(), -1);
+
+    //! Case when any index does not have k elements on either side
+    if (window_size > nums_size)
+    {
+        return averages;
+    }
+
+    //! Get sum of first window in nums vector. Could use std::accumulate here
+    long long window_sum {};
+    for (int idx = 0; idx < window_size; ++idx)
+    {
+        window_sum += nums[idx];
+    }
+    averages[k] = static_cast<int>(window_sum / window_size);
+
+    //! Iterate on rest of indices that have at least k elements on either side
+    for (int idx = window_size; idx < nums_size; ++idx)
+    {
+        //! Remove discarded element and add new element for current window sum
+        //! idx is index of newly inserted element
+        //! (idx - window_size) is index of last removed element
+        window_sum        = window_sum - nums[idx - window_size] + nums[idx];
+        averages[idx - k] = static_cast<int>(window_sum / window_size);
+    }
+
+    return averages;
+
+} // static std::vector<int> getAveragesDS2( ...
+
 TEST(GetAveragesTest, SampleTest1)
 {
     const std::vector<int> expected_output {-1, -1, -1, 5, 4, 4, -1, -1, -1};
 
     EXPECT_EQ(expected_output, getAveragesFA({7, 4, 3, 9, 1, 8, 5, 2, 6}, 3));
     EXPECT_EQ(expected_output, getAveragesDS1({7, 4, 3, 9, 1, 8, 5, 2, 6}, 3));
+    EXPECT_EQ(expected_output, getAveragesDS2({7, 4, 3, 9, 1, 8, 5, 2, 6}, 3));
 }
 
 TEST(GetAveragesTest, SampleTest2)
@@ -104,6 +157,7 @@ TEST(GetAveragesTest, SampleTest2)
 
     EXPECT_EQ(expected_output, getAveragesFA({100000}, 0));
     EXPECT_EQ(expected_output, getAveragesDS1({100000}, 0));
+    EXPECT_EQ(expected_output, getAveragesDS2({100000}, 0));
 }
 
 TEST(GetAveragesTest, SampleTest3)
@@ -112,4 +166,5 @@ TEST(GetAveragesTest, SampleTest3)
 
     EXPECT_EQ(expected_output, getAveragesFA({8}, 100000));
     EXPECT_EQ(expected_output, getAveragesDS1({8}, 100000));
+    EXPECT_EQ(expected_output, getAveragesDS2({8}, 100000));
 }
