@@ -38,3 +38,43 @@ public int[] getAveragesDS1(int[] nums, int k)
 
     return averages;
 }
+
+public int[] getAveragesDS2(int[] nums, int k)
+{
+    // When a single element is considered then its average is the num itself
+    if (k == 0)
+    {
+        return nums;
+    }
+
+    int windowSize = 2 * k + 1;
+    int nums_len = nums.length;
+    int[] averages = new int[nums_len];
+    Arrays.fill(averages, -1);
+
+    // Case when all indices do not have k elements on either side
+    if (windowSize > nums_len)
+    {
+        return averages;
+    }
+
+    // Get sum of first window in nums vector
+    long windowSum = 0;
+    for (int idx = 0; idx < windowSize; ++idx)
+    {
+        windowSum += nums[idx];
+    }
+    averages[k] = (int) (windowSum / windowSize);
+
+    // Iterate on rest of indices that have at least k elements on either side
+    for (int idx = windowSize; idx < nums_size; ++idx)
+    {
+        // Remove discarded element and add new element for current window sum
+        // idx is index of newly inserted element
+        // (idx - windowSize) is index of last removed element
+        windowSum = windowSum - nums[idx - windowSize] + nums[idx];
+        averages[idx - k] = (int) (windowSum / windowSize);
+    }
+
+    return averages;
+}
