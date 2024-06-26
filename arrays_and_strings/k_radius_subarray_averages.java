@@ -20,14 +20,14 @@ public int[] getAveragesDS1(int[] nums, int k)
     // Generate prefix array for nums
     // prefix[idx + 1] is the sum of all elements from index 0 to idx
     long[] prefix = new long[nums_len + 1];
-    for (int idx = 0; idx < nums_len; ++idx)
+    for (int idx = 0; idx < nums_len; idx++)
     {
         prefix[idx + 1] = prefix[idx] + nums[idx];
     }
 
-    // Only iterate on indices that have at least k elements on either size
+    // Only iterate on indices that have at least k elements on either side
     // i.e. Indices from k (inclusive) to nums_len - k (exclusive)
-    for (int idx = k; idx < (nums_len - k); ++idx)
+    for (int idx = k; idx < (nums_len - k); idx++)
     {
         int leftBound = idx - k;
         int rightBound = idx + k;
@@ -67,7 +67,7 @@ public int[] getAveragesDS2(int[] nums, int k)
     averages[k] = (int) (windowSum / windowSize);
 
     // Iterate on rest of indices that have at least k elements on either side
-    for (int idx = windowSize; idx < nums_size; ++idx)
+    for (int idx = windowSize; idx < nums_size; idx++)
     {
         // Remove discarded element and add new element for current window sum
         // idx is index of newly inserted element
