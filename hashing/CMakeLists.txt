@@ -2,6 +2,7 @@ set(
   cpp_files
   "are_occurrences_equal"
   "check_if_sentence_is_pangram"
+  "contiguous_array"
   "count_number_of_nice_subarrays"
   "counting_elements"
   "equal_row_and_column_pairs"
