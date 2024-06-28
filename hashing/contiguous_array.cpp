@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <unordered_map>
 #include <vector>
 
 //! @brief Get max length of a contiguous subarray with an equal number of 0, 1
@@ -115,7 +116,7 @@ static int findMaxLengthDS2(std::vector<int> nums)
 
     for (int idx = 0; idx < nums_size; ++idx)
     {
-        count = count + (nums[idx] == 0 ? -1 : 1);
+        count += (nums[idx] == 0 ? -1 : 1);
 
         const int idx_in_2n_plus_1 {count + nums_size};
         if (arr_of_counts[idx_in_2n_plus_1] >= -1)
@@ -132,11 +133,53 @@ static int findMaxLengthDS2(std::vector<int> nums)
 
 } // static int findMaxLengthDS2( ...
 
+//! @brief Hashmap discussion solution
+//! @param[in] nums Vector of binary integers 0 and 1
+//! @return Max length of a contiguous subarray with an equal number of 0 and 1
+static int findMaxLengthDS3(std::vector<int> nums)
+{
+    //! @details https://leetcode.com/problems/contiguous-array/editorial/
+    //!
+    //!          Time complexity O(N) where N = nums.size(). The entire vector
+    //!          is traversed only once.
+    //!          Space complexity O(N). The max size of map count_idx will be N
+    //!          if all elements are either 0 or 1.
+
+    //! Map of <count, index>. <0, -1> implies sum is 0 before index 0
+    //! It stores the first index when count is encountered
+    std::unordered_map<int, int> count_idx {};
+    count_idx.emplace(0, -1);
+
+    int max_len {};
+    int count {};
+
+    for (int idx = 0; idx < static_cast<int>(nums.size()); ++idx)
+    {
+        count += (nums[idx] == 0 ? -1 : 1);
+
+        //! Add <count, idx> if count is not in the map.
+        //! Else, ret is a pair<iterator, bool> to retrieve the index at count
+        auto [it, inserted_new_idx] = count_idx.try_emplace(count, idx);
+        if (!inserted_new_idx)
+        {
+            //! (idx - it->second) is the number of elements between the first
+            //! index when "count" is observed and the current index idx.
+            //! Encountering count twice means the number of zeros and ones are
+            //! equal between the indices.
+            max_len = std::max(max_len, idx - it->second);
+        }
+    }
+
+    return max_len;
+
+} // static int findMaxLengthDS3( ...
+
 TEST(FindMaxLengthTest, SampleTest1)
 {
     EXPECT_EQ(2, findMaxLengthFA({0, 1}));
     EXPECT_EQ(2, findMaxLengthDS1({0, 1}));
     EXPECT_EQ(2, findMaxLengthDS2({0, 1}));
+    EXPECT_EQ(2, findMaxLengthDS3({0, 1}));
 }
 
 TEST(FindMaxLengthTest, SampleTest2)
@@ -144,6 +187,7 @@ TEST(FindMaxLengthTest, SampleTest2)
     EXPECT_EQ(2, findMaxLengthFA({0, 1, 0}));
     EXPECT_EQ(2, findMaxLengthDS1({0, 1, 0}));
     EXPECT_EQ(2, findMaxLengthDS2({0, 1, 0}));
+    EXPECT_EQ(2, findMaxLengthDS3({0, 1, 0}));
 }
 
 TEST(FindMaxLengthTest, SampleTest3)
@@ -154,4 +198,5 @@ TEST(FindMaxLengthTest, SampleTest3)
     EXPECT_NE(6, findMaxLengthFA(nums));
     EXPECT_EQ(6, findMaxLengthDS1(nums));
     EXPECT_EQ(6, findMaxLengthDS2(nums));
+    EXPECT_EQ(6, findMaxLengthDS3(nums));
 }
