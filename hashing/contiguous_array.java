@@ -27,3 +27,28 @@ public int findMaxLengthDS1(int[] nums)
 
     return max_len;
 }
+
+public int findMaxLengthDS3(int[] nums)
+{
+    Map<Integer, Integer> count_idx = new HashMap<>();
+    count_idx.put(0, 1);
+
+    int max_len = 0;
+    int count = 0;
+
+    for (int idx = 0; idx < nums.length; idx++)
+    {
+        count = count + (nums[idx] == 0 ? -1 : 1);
+
+        if (count_idx.containsKey(count))
+        {
+            max_len = Math.max(max_len, idx - count_idx.get(count));
+        }
+        else
+        {
+            count_idx.put(count, idx);
+        }
+    }
+
+    return max_len;
+}
