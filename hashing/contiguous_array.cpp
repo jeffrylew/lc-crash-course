@@ -47,14 +47,59 @@ static int findMaxLengthFA(std::vector<int> nums)
 
 } // static int findMaxLengthFA( ...
 
+//! @brief Brute force discussion solution
+//! @param[in] nums Vector of binary integers 0 and 1
+//! @return Max length of a contiguous subarray with an equal number of 0 and 1
+static int findMaxLengthDS1(std::vector<int> nums)
+{
+    //! @details https://leetcode.com/problems/contiguous-array/editorial/
+    //!
+    //!          Time complexity O(N ^ 2) where N = nums.size(). Consider every
+    //!          possible subarray by traversing over the complete vector for
+    //!          every possible starting point.
+    //!          Space complexity O(1) for zeros and ones.
+
+    int max_len {};
+
+    const auto nums_size = static_cast<int>(nums.size());
+
+    for (int start = 0; start < nums_size; ++start)
+    {
+        int zeros {};
+        int ones {};
+
+        for (int end = start; end < nums_size; ++end)
+        {
+            if (nums[end] == 0)
+            {
+                ++zeros;
+            }
+            else
+            {
+                ++ones;
+            }
+
+            if (zeros == ones)
+            {
+                max_len = std::max(max_len, end - start + 1);
+            }
+        }
+    }
+
+    return max_len;
+
+} // static int findMaxLengthDS1( ...
+
 TEST(FindMaxLengthTest, SampleTest1)
 {
     EXPECT_EQ(2, findMaxLengthFA({0, 1}));
+    EXPECT_EQ(2, findMaxLengthDS1({0, 1}));
 }
 
 TEST(FindMaxLengthTest, SampleTest2)
 {
     EXPECT_EQ(2, findMaxLengthFA({0, 1, 0}));
+    EXPECT_EQ(2, findMaxLengthDS1({0, 1, 0}));
 }
 
 TEST(FindMaxLengthTest, SampleTest3)
@@ -63,4 +108,5 @@ TEST(FindMaxLengthTest, SampleTest3)
 
     EXPECT_EQ(0, findMaxLengthFA(nums));
     EXPECT_NE(6, findMaxLengthFA(nums));
+    EXPECT_EQ(6, findMaxLengthDS1(nums));
 }
