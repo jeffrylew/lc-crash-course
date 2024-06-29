@@ -31,3 +31,32 @@ var findMaxLengthDS1 = function(nums)
 
     return max_len;
 };
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMaxLengthDS3 = function(nums)
+{
+    let count_idx = new Map();
+    count_idx.set(0, -1);
+
+    let max_len = 0;
+    let count = 0;
+
+    for (let idx = 0; idx < nums.length; idx++)
+    {
+        count += (nums[idx] == 0 ? -1 : 1);
+
+        if (count_idx.has(count))
+        {
+            max_len = Math.max(max_len, idx - count_idx.get(count));
+        }
+        else
+        {
+            count_idx.set(count, idx);
+        }
+    }
+
+    return max_len;
+};
