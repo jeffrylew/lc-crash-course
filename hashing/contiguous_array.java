@@ -31,7 +31,7 @@ public int findMaxLengthDS1(int[] nums)
 public int findMaxLengthDS3(int[] nums)
 {
     Map<Integer, Integer> count_idx = new HashMap<>();
-    count_idx.put(0, 1);
+    count_idx.put(0, -1);
 
     int max_len = 0;
     int count = 0;
