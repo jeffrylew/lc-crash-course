@@ -28,6 +28,35 @@ public int findMaxLengthDS1(int[] nums)
     return max_len;
 }
 
+public int findMaxLengthDS2(int[] nums)
+{
+    int nums_len = nums.length;
+
+    int[] arr_of_counts = new int[2 * nums_len + 1];
+    Arrays.fill(arr_of_counts, -2);
+    arr_of_counts[nums_len] = -1;
+
+    int max_len = 0;
+    int count = 0;
+
+    for (int idx = 0; idx < nums_len; idx++)
+    {
+        count = count + (nums[idx] == 0 ? -1 : 1);
+
+        int idx_in_2n_plus_1 = count + nums_len;
+        if (arr_of_counts[idx_in_2n_plus_1] >= -1)
+        {
+            max_len = Math.max(max_len, idx - arr_of_counts[idx_in_2n_plus_1]);
+        }
+        else
+        {
+            arr_of_counts[idx_in_2n_plus_1] = idx;
+        }
+    }
+
+    return max_len;
+}
+
 public int findMaxLengthDS3(int[] nums)
 {
     Map<Integer, Integer> count_idx = new HashMap<>();
